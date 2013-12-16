@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Resource name="jdbc/futboldb" auth="Container" type="javax.sql.DataSource"
+		maxActive="10" maxIdle="5" username="futbol" password="futbol"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/futboldb?autoReconnect=true" />
+	<Realm className="org.apache.catalina.realm.DataSourceRealm"
+		dataSourceName="jdbc/futboldb" localDataSource="true" digest="MD5"
+		userTable="usuarios" userNameCol="username" userCredCol="password"
+		userRoleTable="usuarios" roleNameCol="role" />
+</Context>
