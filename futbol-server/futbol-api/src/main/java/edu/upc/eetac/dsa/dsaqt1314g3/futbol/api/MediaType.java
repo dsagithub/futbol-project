@@ -8,4 +8,8 @@ public interface MediaType {
 //	public final static String BEETER_API_ERROR = "application/vnd.dsa.beeter.error+json";
 //	public final static String BEETER_API_LINK = "application/vnd.dsa.beeter.link+json";
 //	public final static String BEETER_API_LINK_COLLECTION = "application/vnd.dsa.beeter.link.collection+json";
+	
+	public final static String FUTBOL_API_EQUIPO_COLLECTION = "";
+	public final static String FUTBOL_API_EQUIPO = "";
+	
 }
