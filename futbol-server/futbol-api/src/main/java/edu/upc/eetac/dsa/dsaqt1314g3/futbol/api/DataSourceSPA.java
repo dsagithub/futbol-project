@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 public class DataSourceSPA {
 	private DataSource dataSource;
 	private static DataSourceSPA instance;
- 
+
 	private DataSourceSPA() {
 		super();
 		Context envContext = null;
@@ -20,13 +20,13 @@ public class DataSourceSPA {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	public final static DataSourceSPA getInstance() {
 		if (instance == null)
 			instance = new DataSourceSPA();
 		return instance;
 	}
- 
+
 	public DataSource getDataSource() {
 		return dataSource;
 	}

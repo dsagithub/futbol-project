@@ -1,18 +1,14 @@
 package edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.Link;
 
-public class Equipo {
-	
-	private String idEquipo;
+public class Club {
+
 	private String idClub;
 	private String nombre;
-	
-	
 	public String getNombre() {
 		return nombre;
 	}
@@ -22,12 +18,6 @@ public class Equipo {
 	private List<Link> links = new ArrayList<Link>();
 	
 	
-	public String getIdEquipo() {
-		return idEquipo;
-	}
-	public void setIdEquipo(String idEquipo) {
-		this.idEquipo = idEquipo;
-	}
 	public String getIdClub() {
 		return idClub;
 	}
@@ -43,5 +33,6 @@ public class Equipo {
 	public void addLink(Link link) {
 		links.add(link);
 	}
-
+	
+	
 }
