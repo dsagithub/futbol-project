@@ -8,7 +8,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.FutbolError;
 
 public class InternalServerException extends WebApplicationException {
 	public InternalServerException(String message) {
-	super(Response
+		super(Response
 				.status(Response.Status.INTERNAL_SERVER_ERROR)
 				.entity(new FutbolError(Response.Status.INTERNAL_SERVER_ERROR
 						.getStatusCode(), message))

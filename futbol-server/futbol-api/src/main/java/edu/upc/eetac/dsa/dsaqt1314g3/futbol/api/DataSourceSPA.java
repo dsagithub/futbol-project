@@ -30,4 +30,5 @@ public class DataSourceSPA {
 	public DataSource getDataSource() {
 		return dataSource;
 	}
+
 }
