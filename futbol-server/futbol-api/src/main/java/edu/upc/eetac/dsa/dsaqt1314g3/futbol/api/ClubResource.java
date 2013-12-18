@@ -20,7 +20,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
 
 @Path("/")
-public class ClubResource {
+public class ClubResource { /*
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
 	@Context
@@ -102,11 +102,11 @@ public class ClubResource {
 	@GET
 	@Path("/{idClub}")
 	@Produces(MediaType.FUTBOL_API_CLUB)
+
 	
 	
 	
+*/	
 	
 	
-	
-	
-}
+} 	
