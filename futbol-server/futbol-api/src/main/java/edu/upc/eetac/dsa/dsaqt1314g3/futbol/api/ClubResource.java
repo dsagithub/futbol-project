@@ -9,23 +9,16 @@ import javax.sql.DataSource;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.DataSourceSPA;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Club;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CalendarioCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
-import edu.upc.eetac.dsa.dsaqt1314g3.libros.api.BookNotFoundException;
-import edu.upc.eetac.dsa.dsaqt1314g3.libros.api.InternalServerException;
-import edu.upc.eetac.dsa.dsaqt1314g3.libros.api.ServiceUnavailableException;
 
 @Path("/clubs")
 public class ClubResource {
