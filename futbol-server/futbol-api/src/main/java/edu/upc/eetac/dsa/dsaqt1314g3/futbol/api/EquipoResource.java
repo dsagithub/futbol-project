@@ -21,7 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Equipo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.EquipoCollection;
 
-@Path("/clubs/{idClub}")
+@Path("/{idClub}")
 public class EquipoResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@Context
@@ -139,16 +139,20 @@ public class EquipoResource {
 	@POST
 	@Produces(MediaType.FUTBOL_API_EQUIPO)
 	@Consumes(MediaType.FUTBOL_API_EQUIPO)
-	public Equipo crearEquipo(@PathParam("idclub") String idclub, Equipo equipo) {
+	public Equipo crearEquipo(@PathParam("idClub") String idclub, Equipo equipo) {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
-		if (equipo.getNombre().length() > 50) {
-			throw new BadRequestException(
-					"Name length must be less or equal than 50 characters");
+		if (equipo == null) {
+			throw new BadRequestException("Insert name of team");
+		} else {
+			if (equipo.getNombre().length() > 50) {
+				throw new BadRequestException(
+						"Name length must be less or equal than 50 characters");
+			}
 		}
 		try {
 			Statement stmt = conn.createStatement();
@@ -157,8 +161,9 @@ public class EquipoResource {
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
-				int idClub = rs.getInt(1);
-				equipo.setIdClub(Integer.toString(idClub));
+				int idEquipo = rs.getInt(1);
+				equipo.setIdEquipo(Integer.toString(idEquipo));
+				equipo.setIdClub(idclub);
 				rs.close();
 				stmt.close();
 				conn.close();
@@ -175,7 +180,7 @@ public class EquipoResource {
 	@Path("/{idequipo}")
 	@Produces(MediaType.FUTBOL_API_EQUIPO)
 	@Consumes(MediaType.FUTBOL_API_EQUIPO)
-	public Equipo actualizarEquipo(@PathParam("idclub") String idclub,
+	public Equipo actualizarEquipo(@PathParam("idClub") String idclub,
 			@PathParam("idequipo") String idequipo, Equipo equipo) {
 
 		Connection conn = null;
@@ -187,13 +192,15 @@ public class EquipoResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = "update equipo set equipo.nombre='"
-					+ equipo.getNombre() + "' where (equipo.idClub="
-					+ equipo.getIdClub() + " AND equipo.idEquipo='"
-					+ equipo.getIdEquipo() + "')";
+					+ equipo.getNombre() + "' where (equipo.idClub=" + idclub
+					+ " AND equipo.idEquipo='" + idequipo + "')";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new EquipoNotFoundException();
+			equipo.setIdClub(idclub);
+			equipo.setIdEquipo(idequipo);
+			// /setlinks
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
@@ -205,7 +212,7 @@ public class EquipoResource {
 	@DELETE
 	@Path("/{idequipo}")
 	public void borrarEquipo(@PathParam("idequipo") String idequipo,
-			@PathParam("idclub") String idclub) {
+			@PathParam("idClub") String idclub) {
 
 		Connection conn = null;
 		try {
