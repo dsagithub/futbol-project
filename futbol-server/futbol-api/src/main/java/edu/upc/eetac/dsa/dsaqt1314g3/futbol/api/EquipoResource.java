@@ -6,7 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.sql.DataSource;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -130,6 +134,107 @@ public class EquipoResource {
 			throw new InternalServerException(e.getMessage());
 		}
 		return equipo;
+	}
+
+	@POST
+	@Produces(MediaType.FUTBOL_API_EQUIPO)
+	@Consumes(MediaType.FUTBOL_API_EQUIPO)
+	public Equipo crearEquipo(@PathParam("idclub") String idclub, Equipo equipo) {
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServiceUnavailableException(e.getMessage());
+		}
+		if (equipo.getNombre().length() > 50) {
+			throw new BadRequestException(
+					"Name length must be less or equal than 50 characters");
+		}
+		try {
+			Statement stmt = conn.createStatement();
+			String sql = "insert into equipo (idClub,nombre) values ('"
+					+ idclub + "', '" + equipo.getNombre() + "')";
+			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.getGeneratedKeys();
+			if (rs.next()) {
+				int idClub = rs.getInt(1);
+				equipo.setIdClub(Integer.toString(idClub));
+				rs.close();
+				stmt.close();
+				conn.close();
+			} else {
+				throw new EquipoNotFoundException();
+			}
+		} catch (SQLException e) {
+			throw new InternalServerException(e.getMessage());
+		}
+		return equipo;
+	}
+
+	@PUT
+	@Path("/{idequipo}")
+	@Produces(MediaType.FUTBOL_API_EQUIPO)
+	@Consumes(MediaType.FUTBOL_API_EQUIPO)
+	public Equipo actualizarEquipo(@PathParam("idclub") String idclub,
+			@PathParam("idequipo") String idequipo, Equipo equipo) {
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServiceUnavailableException(e.getMessage());
+		}
+		try {
+			Statement stmt = conn.createStatement();
+			String sql = "update equipo set equipo.nombre='"
+					+ equipo.getNombre() + "' where (equipo.idClub="
+					+ equipo.getIdClub() + " AND equipo.idEquipo='"
+					+ equipo.getIdEquipo() + "')";
+
+			int rs2 = stmt.executeUpdate(sql);
+			if (rs2 == 0)
+				throw new EquipoNotFoundException();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			throw new InternalServerException(e.getMessage());
+		}
+		return equipo;
+	}
+
+	@DELETE
+	@Path("/{idequipo}")
+	public void borrarEquipo(@PathParam("idequipo") String idequipo,
+			@PathParam("idclub") String idclub) {
+
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServiceUnavailableException(e.getMessage());
+		}
+		Statement stmt = null;
+		String sql;
+		try {
+			stmt = conn.createStatement();
+			sql = "delete from equipo where (idEquipo=" + idequipo
+					+ " AND idClub='" + idclub + "')";
+
+			int rs2 = stmt.executeUpdate(sql);
+			if (rs2 == 0)
+				throw new BadRequestException("no permitido");
+
+		} catch (SQLException e) {
+			throw new InternalServerException(e.getMessage());
+		} finally {
+			try {
+				conn.close();
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 }
