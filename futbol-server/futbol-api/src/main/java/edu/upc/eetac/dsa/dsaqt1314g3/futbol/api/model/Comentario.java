@@ -1,5 +1,10 @@
 package edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.Link;
+
 public class Comentario {
 	private int idComentario;
 	private String tiempo;
@@ -7,8 +12,15 @@ public class Comentario {
 	private String texto;
 	private String idPartido;
 	private int idUsuario;
+	private List<Link> links = new ArrayList<Link>();
 	
 	
+	public List<Link> getLinks() {
+		return links;
+	}
+	public void setLinks(List<Link> links) {
+		this.links = links;
+	}
 	public int getIdComentario() {
 		return idComentario;
 	}
@@ -46,6 +58,9 @@ public class Comentario {
 		this.idUsuario = idUsuario;
 	}
 	
+	public void addLink(Link link) {
+		links.add(link);
+	}
 	
 	
 
