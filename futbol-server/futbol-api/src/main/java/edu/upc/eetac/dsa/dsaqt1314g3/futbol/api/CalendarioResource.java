@@ -16,34 +16,27 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.DataSourceSPA;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Club;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Calendario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CalendarioCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Club;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
-
-
-
-
-@Path("/")
-public class ClubResource {
+@Path("/campeonato/{idCampeonato}")
+public class CalendarioResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
 	@Context
 	private UriInfo uriInfo;
 	@Context
 	private SecurityContext security;
-
+	
 	@GET
-	@Produces(MediaType.FUTBOL_API_CLUB_COLLECTION)
-	public ClubCollection getclubs(@QueryParam("nombre") String nombre,
+	@Produces(MediaType.FUTBOL_API_CALENDARIO_COLLECTION)
+	public CalendarioCollection getcalendarios(@QueryParam("idPartido") String idPartido,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
 		if ((offset == null) || (length == null))
@@ -66,7 +59,7 @@ public class ClubResource {
 					"Lenght ha de ser entero igual o mayor a 1.");
 		}
 
-		ClubCollection clubs = new ClubCollection();
+		CalendarioCollection Calendarios = new CalendarioCollection();
 
 		Connection conn = null;
 		try {
@@ -79,20 +72,27 @@ public class ClubResource {
 			Statement stmt = conn.createStatement();
 			String sql = null;
 
-			if (nombre != null) {
-				sql = "select * from Club where nombre like '%" + nombre
+			if (idPartido != null) {
+				sql = "select * from Calendario where idPartido like '%" + idPartido 
 						+ "%' LIMIT " + offset + "," + length;
 			} else  {
-				sql = "select * from Club LIMIT" + offset + "," + length;
+				sql = "select * from Calendario LIMIT" + offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-
-				Club club = new Club();
-				club.setIdClub(rs.getString("idClub"));
-				club.setNombre(rs.getString("nombre"));
+				Calendario calendario = new Calendario();
+				calendario.setIdCampeonato(rs.getString("idCampeonato"));
+				calendario.setIdPartido(rs.getString("idPartido"));
+				calendario.setIdEquipoA(rs.getString("idEquipoA"));
+				calendario.setIdEquipoB(rs.getString("idEquipoB"));
+				calendario.setJornada(rs.getString("jornada"));
+				calendario.setFecha(rs.getString("fecha"));
+				calendario.setHora(rs.getString("hora"));
+				
+				
 				// Faltan links!
-				clubs.addClub(club);
+				
+				Calendarios.addCalendario(calendario);
 				icount++;
 			}
 			rs.close();
@@ -103,15 +103,15 @@ public class ClubResource {
 		}
 
 		// links!
-		return clubs;
+		return Calendarios;
 	}
-
+	
 	@GET
-	@Path("/{idClub}")
-	@Produces(MediaType.FUTBOL_API_CLUB)
-	public Club getClub(@PathParam("idClub") String idClub){
+	@Path("/{idPartido}")
+	@Produces(MediaType.FUTBOL_API_CALENDARIO)
+	public Calendario getCalendario(@PathParam("idPartido") String idPartido){
 		
-		Club club = new Club();
+		Calendario calendario = new Calendario();
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -123,17 +123,23 @@ public class ClubResource {
 		try
 		{
 			stmt = conn.createStatement();
-			String sql = "select * from Club where idClub=" + idClub;
+			String sql = "select * from Calendario where idPartido=" + idPartido;
 			rs = stmt.executeQuery(sql);
 			if (rs.next())
 			{
-				club.setIdClub("idClub");
-				club.setNombre("nombre");
+				calendario.setIdCampeonato("idCampeonato");
+				calendario.setIdPartido("idPartido");
+				calendario.setIdEquipoA("idEquipoA");
+				calendario.setIdEquipoB("idEquipoB");
+				calendario.setJornada("jornada");
+				calendario.setFecha("fecha");
+				calendario.setHora("hora");
+				
 				//addlinks
 			}
 			else
 			{
-				throw new ClubNotFoundException("No existe ningún club con esa id");
+				throw new CalendarioNotFoundException("No existe calendario para esa id de partido");
 			}
 		}
 		catch (SQLException e) 
@@ -151,30 +157,33 @@ public class ClubResource {
 				}
 			}
 		
-		return club;
+		return calendario;
 		
 		}
-	
 	@POST
-	@Consumes(MediaType.FUTBOL_API_CLUB)
-	@Produces(MediaType.FUTBOL_API_CLUB)
-	public Club createClub(Club club)
+	@Path("/")
+	@Consumes(MediaType.FUTBOL_API_CALENDARIO)
+	@Produces(MediaType.FUTBOL_API_CALENDARIO)
+	public Calendario createCalendario(Calendario calendario)
 	{
 //		if (!security.isUserInRole("administrator"))
 //		{
 //			throw new ForbiddenException("Solo administrador puede realizar esta acción");
 //		}
 		
-		
-		if (club.getNombre().length()>45){
-			throw new BadRequestException("El nombre del club ha de ser menor de 45 carácteres");
-		}
-		
 		Connection conn = null;
 		try{
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Club (nombre) values('"
-			+ club.getNombre()
+			String sql = "insert into Calendario (idEquipoA, idEquipoB, jornada, fecha, hora ) values('"
+			+ calendario.getIdEquipoA()
+			+ "', '"
+			+ calendario.getIdEquipoB()
+			+ "', '"
+			+calendario.getJornada()
+			+ "', '"
+			+calendario.getFecha()
+			+ "', '"
+			+calendario.getFecha()
 			+"')";
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
@@ -188,7 +197,7 @@ public class ClubResource {
 			conn.close();
 			}
 			else {
-				throw new ClubNotFoundException("");
+				throw new CalendarioNotFoundException("");
 			}
 			
 			
@@ -196,12 +205,12 @@ public class ClubResource {
 		 catch (SQLException e) {
 				throw new InternalServerException(e.getMessage());
 			}
-		return club;
+		return calendario;
 		}
-	
+
 	@DELETE
-	@Path("/{idClub}")
-	public void deleteSting(@PathParam("idClub") String id) {
+	@Path("/{idPartido}")
+	public void deleteSting(@PathParam("idPartido") String id) {
 		Connection conn = null;
 		
 //		if (!security.isUserInRole("administrator"))
@@ -217,10 +226,10 @@ public class ClubResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Club where idClub=" + id;
+			sql = "delete from Calendario where idPartido=" + id;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
-				throw new ClubNotFoundException("No existe ningún club con esa id");
+				throw new CalendarioNotFoundException("No hay partido en el calendario con esta id");
 
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
@@ -233,11 +242,12 @@ public class ClubResource {
 			}
 		}
 	}
+	
 	@PUT
-	@Path("/{idClub}")
-	@Consumes(MediaType.FUTBOL_API_CLUB)
-	@Produces(MediaType.FUTBOL_API_CLUB)
-	public Club updateClub(@PathParam("idClub") String id, Club club) {
+	@Path("/{idPartido}")
+	@Consumes(MediaType.FUTBOL_API_CALENDARIO)
+	@Produces(MediaType.FUTBOL_API_CALENDARIO)
+	public Calendario updateCalendario(@PathParam("idPartido") String id, Calendario calendario) {
 	
 //		if (!security.isUserInRole("administrator"))
 //		{
@@ -252,11 +262,16 @@ public class ClubResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update Club set Club.nombre='" + club.getNombre()
-					  + "' where Club.idClub=" + id;
+			String sql = "update Calendario set Calendario.idEquipoA='" + calendario.getIdEquipoA()
+					+ "',Calendario.idEquipoB='" + calendario.getIdEquipoB()
+					+ "',Calendario.jornada='" + calendario.getJornada()
+					+ "',Calendario.fecha='" + calendario.getFecha()
+					+ "',Calendario.hora='" + calendario.getHora()
+					
+					  + "' where Calendario.idPartido=" + id;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
-				throw new ClubNotFoundException("No existe equipo para actualizar");
+				throw new CalendarioNotFoundException("No existe calendario para actualizar");
 			
 		
 			stmt.close();
@@ -264,11 +279,7 @@ public class ClubResource {
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
 		}
-		return club;
-	} 
-	
+		return calendario;
 	}
-
 	
-
-
+}
