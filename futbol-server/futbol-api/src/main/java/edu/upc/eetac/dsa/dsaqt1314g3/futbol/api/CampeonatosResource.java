@@ -20,21 +20,17 @@ import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Campeonatos;
 
+
+@Path("/campeonato")
 public class CampeonatosResource {
-
-	@Path("/campeonato")
-	public class ClubResource {
-
+		private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		@Context
 		private UriInfo uriInfo;
-		private DataSource ds = DataSourceSPA.getInstance().getDataSource();
-
 		@GET
 		@Path("/{idcampeonato}")
 		@Produces(MediaType.FUTBOL_API_CAMPEONATOS)
 		public Campeonatos getCampeonatos(
 				@PathParam("idcampeonato") int idcampeonato) {
-			CacheControl cc = new CacheControl();
 			Campeonatos campeonato = new Campeonatos();
 			Connection conn = null;
 			Statement stmt = null;
@@ -47,7 +43,7 @@ public class CampeonatosResource {
 			ResultSet rs = null;
 			try {
 				stmt = conn.createStatement();
-				String sql = "select * from Campeonatos where idcampeonatos='"
+				String sql = "select * from Campeonatos where idCampeonatos='"
 						+ idcampeonato + "'";
 				rs = stmt.executeQuery(sql);
 				if (rs.next()) {
@@ -182,4 +178,3 @@ public class CampeonatosResource {
 		
 		
 	}
-}
