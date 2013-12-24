@@ -25,7 +25,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CalendarioCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Club;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
-@Path("/campeonato/{idCampeonato}")
+@Path("/campeonato/{idCampeonato}/")
 public class CalendarioResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
@@ -107,7 +107,7 @@ public class CalendarioResource {
 	}
 	
 	@GET
-	@Path("/{idPartido}")
+	@Path("{idPartido}")
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
 	public Calendario getCalendario(@PathParam("idPartido") String idPartido){
 		
@@ -161,7 +161,6 @@ public class CalendarioResource {
 		
 		}
 	@POST
-	@Path("/")
 	@Consumes(MediaType.FUTBOL_API_CALENDARIO)
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
 	public Calendario createCalendario(Calendario calendario)
@@ -209,7 +208,7 @@ public class CalendarioResource {
 		}
 
 	@DELETE
-	@Path("/{idPartido}")
+	@Path("{idPartido}")
 	public void deleteSting(@PathParam("idPartido") String id) {
 		Connection conn = null;
 		
@@ -244,7 +243,7 @@ public class CalendarioResource {
 	}
 	
 	@PUT
-	@Path("/{idPartido}")
+	@Path("{idPartido}")
 	@Consumes(MediaType.FUTBOL_API_CALENDARIO)
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
 	public Calendario updateCalendario(@PathParam("idPartido") String id, Calendario calendario) {

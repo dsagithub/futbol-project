@@ -82,8 +82,10 @@ public class ClubResource {
 			if (nombre != null) {
 				sql = "select * from Club where nombre like '%" + nombre
 						+ "%' LIMIT " + offset + "," + length;
-			} else  {
-				sql = "select * from Club LIMIT" + offset + "," + length;
+			} 
+			else  {
+				sql = "select * from Club LIMIT " 
+			+ offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
