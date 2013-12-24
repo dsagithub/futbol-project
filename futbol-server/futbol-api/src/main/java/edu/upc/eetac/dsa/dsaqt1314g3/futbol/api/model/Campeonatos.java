@@ -7,10 +7,11 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.Link;
 
 public class Campeonatos {
 
-	private String idcampeonatos;
+	private int idcampeonatos;
 	private String nombre;
 	
 	private List<Link> links = new ArrayList<Link>();
+
 
 	
 	public List<Link> getLinks() {
@@ -19,10 +20,11 @@ public class Campeonatos {
 	public void setLinks(List<Link> links) {
 		this.links = links;
 	}
-	public String getIdcampeonatos() {
+	
+	public int getIdcampeonatos() {
 		return idcampeonatos;
 	}
-	public void setIdcampeonatos(String idcampeonatos) {
+	public void setIdcampeonatos(int idcampeonatos) {
 		this.idcampeonatos = idcampeonatos;
 	}
 	public String getNombre() {

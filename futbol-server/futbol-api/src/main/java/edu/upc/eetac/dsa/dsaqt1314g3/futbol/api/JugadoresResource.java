@@ -21,7 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Jugadores;
 
 
-@Path("/{idclub}/{idequipo}/Jugadores")
+@Path("/{idclub}/{idequipo}/jugadores")
 
 public class JugadoresResource {
 
