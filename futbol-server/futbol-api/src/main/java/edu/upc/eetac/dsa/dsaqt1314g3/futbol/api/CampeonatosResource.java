@@ -21,7 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Campeonatos;
 
 
-@Path("/campeonato")
+@Path("/campeonato2")
 public class CampeonatosResource {
 		private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		@Context
@@ -47,7 +47,7 @@ public class CampeonatosResource {
 						+ idcampeonato + "'";
 				rs = stmt.executeQuery(sql);
 				if (rs.next()) {
-					campeonato.setIdcampeonatos(rs.getInt("idCampeonato"));
+					campeonato.setIdcampeonatos(rs.getInt("idCampeonatos"));
 					campeonato.setNombre(rs.getString("nombre"));
 				} else {
 					throw new CampeonatoNotFoundException();
@@ -72,6 +72,11 @@ public class CampeonatosResource {
 		public void borrarcampeonato(
 				@PathParam("idcampeonato") int idcampeonato ) {
 			Connection conn = null;
+			
+			//if (!security.isUserInRole("administrator"))
+//			{
+//				throw new ForbiddenException("Solo el administrador puede borrar un campeonato");
+//			}
 			try {
 				conn = ds.getConnection();
 			} catch (SQLException e) {
@@ -107,6 +112,11 @@ public class CampeonatosResource {
 		@Consumes(MediaType.FUTBOL_API_CAMPEONATOS)
 		public Campeonatos crearCampeonato( Campeonatos campeonato) {
 			Connection conn = null;
+			
+			//if (!security.isUserInRole("administrator"))
+//			{
+//				throw new ForbiddenException("Solo el administrador puede realizar un post");
+//			}	
 
 
 			try {
@@ -120,7 +130,7 @@ public class CampeonatosResource {
 			}
 			try {
 				Statement stmt = conn.createStatement();
-				String sql = "insert into Campeonatos (idCampeonato,nombre) values ('"
+				String sql = "insert into Campeonatos (idCampeonatos,nombre) values ('"
 						+ campeonato.getIdcampeonatos() + "', '" + campeonato.getNombre() + "')";
 				stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 				ResultSet rs = stmt.getGeneratedKeys();
@@ -148,10 +158,14 @@ public class CampeonatosResource {
 		public Campeonatos actualizarCampeonato(
 				
 
-				@PathParam("idcampeonato") int idcampeonato) {
+				@PathParam("idcampeonato") int idcampeonato , Campeonatos campeonato) {
 
+			//if (!security.isUserInRole("administrator"))
+//				{
+//					throw new ForbiddenException("Solo el administrador puede realizar una actualización a los campeonatos");
+//				}
+				
 			Connection conn = null;
-			Campeonatos campeonato = new Campeonatos();
 
 			try {
 				conn = ds.getConnection();
@@ -160,10 +174,10 @@ public class CampeonatosResource {
 			}
 			try {
 				Statement stmt = conn.createStatement();
+				campeonato.setIdcampeonatos(idcampeonato);
 				
-				String sql = "update Campeonatos set Campeonatos.idCampeonatos ="
-						+ campeonato.getNombre() + "' where Campeonato.idCampeonato="
-						+ campeonato.getIdcampeonatos() +  "')";
+				String sql = "update Campeonatos set Campeonatos.nombre='" + campeonato.getNombre()						
+						  + "' where Campeonatos.idCampeonatos=" + idcampeonato;
 
 				int rs2 = stmt.executeUpdate(sql);
 				if (rs2 == 0)
