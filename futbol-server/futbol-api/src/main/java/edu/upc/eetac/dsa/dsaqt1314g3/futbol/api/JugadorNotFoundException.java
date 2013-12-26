@@ -8,7 +8,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.FutbolError;
 
 public class JugadorNotFoundException extends WebApplicationException {
 	
-	private final static String MESSAGE = "User not found";
+	private final static String MESSAGE = "Jugador no encontrado. ¿el jugador que busca juega en el equipo que ha escrito?";
 
 	public JugadorNotFoundException() {
 		super(Response

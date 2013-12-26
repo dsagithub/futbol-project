@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.sql.DataSource;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,11 +15,12 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.CacheControl;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Campeonatos;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
 
 @Path("/campeonato2")
@@ -66,6 +68,8 @@ public class CampeonatosResource {
 
 		}
 
+		
+	//HACER GETCAMPEONATOS CON OFFSET Y TAL
 		
 		@DELETE
 		@Path("/{idcampeonato}")
@@ -190,5 +194,71 @@ public class CampeonatosResource {
 			return campeonato;
 		}
 		
+		@GET
+		@Produces(MediaType.FUTBOL_API_CAMPEONATOS_COLLECTION)
+		public ClubCollection getclubs(@QueryParam("nombre") String nombre,
+				@QueryParam("offset") String offset,
+				@QueryParam("length") String length) {
+			if ((offset == null) || (length == null))
+				throw new BadRequestException("Indica un offset y un length ");
+			int ioffset, ilength, icount = 0;
+			try {
+				ioffset = Integer.parseInt(offset);
+				if (ioffset < 0)
+					throw new NumberFormatException();
+			} catch (NumberFormatException e) {
+				throw new BadRequestException(
+						"Offset es un entero igual o mayor de 0.");
+			}
+			try {
+				ilength = Integer.parseInt(length);
+				if (ilength < 1)
+					throw new NumberFormatException();
+			} catch (NumberFormatException e) {
+				throw new BadRequestException(
+						"Lenght ha de ser entero igual o mayor a 1.");
+			}
+
+			ClubCollection clubs = new ClubCollection();
+
+			Connection conn = null;
+			try {
+				conn = ds.getConnection();
+			} catch (SQLException e) {
+				throw new ServiceUnavailableException(e.getMessage());
+			}
+
+			try {
+				Statement stmt = conn.createStatement();
+				String sql = null;
+
+				if (nombre != null) {
+					sql = "select * from Campeonatos where nombre like '%" + nombre
+							+ "%' LIMIT " + offset + "," + length;
+				} 
+				else  {
+					sql = "select * from Club LIMIT " 
+				+ offset + "," + length;
+				}
+				ResultSet rs = stmt.executeQuery(sql);
+				while (rs.next()) {
+
+					Campeonatos campeonato = new Campeonatos();
+					campeonato.setIdcampeonatos(rs.getInt("idCampeonatos"));
+					campeonato.setNombre(rs.getString("nombre"));
+					//campeonato.addCampeonato(campeonato);
+					icount++;
+				}
+				rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				throw new InternalServerException(e.getMessage());
+			}
+
+			// links!
+			return clubs;
+		}
+
 		
 	}

@@ -19,5 +19,7 @@ public interface MediaType {
 
 	public final static String FUTBOL_API_USER = "application/vnd.futbol.api.user+json";
 	public final static String FUTBOl_API_USER_COLLECTION = "application/vnd.futbol.api.user.collection+json";
+	public final static String FUTBOL_API_CAMPEONATOS_COLLECTION = "application/vnd.futbol.api.campeonatos.collection+json";
+
 
 }
