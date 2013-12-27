@@ -20,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Campeonatos;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CampeonatosCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
 
@@ -196,7 +197,7 @@ public class CampeonatosResource {
 		
 		@GET
 		@Produces(MediaType.FUTBOL_API_CAMPEONATOS_COLLECTION)
-		public ClubCollection getclubs(@QueryParam("nombre") String nombre,
+		public CampeonatosCollection getcampeonatos(
 				@QueryParam("offset") String offset,
 				@QueryParam("length") String length) {
 			if ((offset == null) || (length == null))
@@ -219,7 +220,7 @@ public class CampeonatosResource {
 						"Lenght ha de ser entero igual o mayor a 1.");
 			}
 
-			ClubCollection clubs = new ClubCollection();
+			CampeonatosCollection ccol = new CampeonatosCollection();
 
 			Connection conn = null;
 			try {
@@ -232,21 +233,17 @@ public class CampeonatosResource {
 				Statement stmt = conn.createStatement();
 				String sql = null;
 
-				if (nombre != null) {
-					sql = "select * from Campeonatos where nombre like '%" + nombre
-							+ "%' LIMIT " + offset + "," + length;
-				} 
-				else  {
-					sql = "select * from Club LIMIT " 
+				
+				sql = "select * from Campeonatos LIMIT " 
 				+ offset + "," + length;
-				}
+				
 				ResultSet rs = stmt.executeQuery(sql);
 				while (rs.next()) {
 
 					Campeonatos campeonato = new Campeonatos();
 					campeonato.setIdcampeonatos(rs.getInt("idCampeonatos"));
 					campeonato.setNombre(rs.getString("nombre"));
-					//campeonato.addCampeonato(campeonato);
+					ccol.addCampeonatos(campeonato);
 					icount++;
 				}
 				rs.close();
@@ -256,8 +253,7 @@ public class CampeonatosResource {
 				throw new InternalServerException(e.getMessage());
 			}
 
-			// links!
-			return clubs;
+			return ccol;
 		}
 
 		

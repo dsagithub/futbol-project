@@ -36,9 +36,11 @@ public class CampeonatosCollection {
 		links.add(link);
 	}
 	
-	//public void addCampeonatos(Campeonatos campeonato) {
-		//Campeonatos.add(Campeonatos);
-	//}
+
+	
+	public void addCampeonatos(Campeonatos campeonato) {
+		Campeonatos.add(campeonato);
+	}
 	
 	
 	
