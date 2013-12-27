@@ -25,7 +25,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CampeonatosCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
 
-@Path("/campeonato2")
+@Path("/campeonato")
 public class CampeonatosResource {
 	
 		@Context

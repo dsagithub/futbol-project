@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.sql.DataSource;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,9 +23,9 @@ import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Jugadores;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.JugadoresCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.BadRequestException;
 
-
-@Path("/{idclub}/{idequipo}/jugadores")
+@Path("/club/{idclub}/e/{idequipo}/jugadores")
 
 public class JugadoresResource {
 
@@ -50,7 +49,7 @@ public class JugadoresResource {
          
          try {
                  stmt = conn.createStatement();
-                 String query = "SELECT * FROM Jugadores WHERE dni=" + dni + " and idequipo ="+idequipo+";";
+                 String query = "SELECT * FROM Jugadores WHERE dni='" + dni + "' and idequipo ="+idequipo;
                  ResultSet rs = stmt.executeQuery(query);
                  if (rs.next()) {
                          jugador.setDni(rs.getString("dni"));

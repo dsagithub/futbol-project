@@ -22,7 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Retransmision;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.RetransmisionCollection;
 
-@Path("/campeonato/{idcampeonato}/{idpartido}/retra")
+@Path("/campeonato/{idcampeonato}/calendario/{idpartido}/retra")
 public class RetransResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@Context
@@ -84,6 +84,7 @@ public class RetransResource {
 				Retransmision retra = new Retransmision();
 				retra.setTiempo(rs.getString("tiempo"));
 				retra.setTexto(rs.getString("texto"));
+				retra.setId(rs.getString("id"));
 				// addlink
 				retrans.addRetrans(retra);
 				icount++;
@@ -126,7 +127,7 @@ public class RetransResource {
 			sql = "select * from retransmision where id=" + idretra;
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				// retra.setId(idretra);
+				retra.setId(idretra);
 				retra.setIdPartido(rs.getString("idPartido"));
 				retra.setTiempo(rs.getString("tiempo"));
 				retra.setTexto(rs.getString("texto"));

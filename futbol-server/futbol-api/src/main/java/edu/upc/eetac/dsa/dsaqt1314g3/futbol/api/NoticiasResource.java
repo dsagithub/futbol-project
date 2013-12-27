@@ -29,7 +29,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Noticia;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.NoticiasCollection;
 
 
-@Path("/noticias")
+@Path("/club/{idClub}/noticias")
 public class NoticiasResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	

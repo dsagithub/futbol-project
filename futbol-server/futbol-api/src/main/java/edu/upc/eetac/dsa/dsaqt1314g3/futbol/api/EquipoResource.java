@@ -22,7 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Equipo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.EquipoCollection;
 
-@Path("/{idClub}")
+@Path("/club/{idClub}/e")
 public class EquipoResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@Context

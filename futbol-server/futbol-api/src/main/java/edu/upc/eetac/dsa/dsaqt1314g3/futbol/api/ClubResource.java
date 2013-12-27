@@ -130,8 +130,8 @@ public class ClubResource {
 			rs = stmt.executeQuery(sql);
 			if (rs.next())
 			{
-				club.setIdClub("idClub");
-				club.setNombre("nombre");
+				club.setIdClub(idClub);
+				club.setNombre(rs.getString("nombre"));
 				//addlinks
 			}
 			else

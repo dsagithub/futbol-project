@@ -25,8 +25,9 @@ import javax.ws.rs.core.UriInfo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ComentariosCollection;
 
-
-@Path("/comentarios")
+//hacer funciones segun el nuevo path. Hay cosas que tienes como queryparam que ahora
+//seran path param (ejemplo id partido) Lo mismo para Noticias!!!!
+@Path("/campeonato/{idCampeonato}/calendario/{idPartido}/comentarios")
 public class ComentariosResource {
 private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	

@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.sql.DataSource;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,8 +23,9 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Calendario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CalendarioCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Club;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.BadRequestException;
 
-@Path("/campeonato/{idCampeonato}/")
+@Path("/campeonato/{idCampeonato}/calendario/")
 public class CalendarioResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
@@ -36,7 +36,7 @@ public class CalendarioResource {
 	
 	@GET
 	@Produces(MediaType.FUTBOL_API_CALENDARIO_COLLECTION)
-	public CalendarioCollection getcalendarios(@QueryParam("idPartido") String idPartido,
+	public CalendarioCollection getcalendarios(@PathParam("idCampeonato") String idCampeonato,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
 		if ((offset == null) || (length == null))
@@ -72,12 +72,12 @@ public class CalendarioResource {
 			Statement stmt = conn.createStatement();
 			String sql = null;
 
-			if (idPartido != null) {
-				sql = "select * from Calendario where idPartido like '%" + idPartido 
-						+ "%' LIMIT " + offset + "," + length;
-			} else  {
-				sql = "select * from Calendario LIMIT " + offset + "," + length;
-			}
+			
+				sql = "select * from Calendario where idCampeonato="+ idCampeonato 
+						+" LIMIT " + offset + "," + length;
+			
+				
+			
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Calendario calendario = new Calendario();
@@ -127,13 +127,13 @@ public class CalendarioResource {
 			rs = stmt.executeQuery(sql);
 			if (rs.next())
 			{
-				calendario.setIdCampeonato("idCampeonato");
-				calendario.setIdPartido("idPartido");
-				calendario.setIdEquipoA("idEquipoA");
-				calendario.setIdEquipoB("idEquipoB");
-				calendario.setJornada("jornada");
-				calendario.setFecha("fecha");
-				calendario.setHora("hora");
+				calendario.setIdCampeonato(rs.getString("idCampeonato"));
+				calendario.setIdPartido(rs.getString("idPartido"));
+				calendario.setIdEquipoA(rs.getString("idEquipoA"));
+				calendario.setIdEquipoB(rs.getString("idEquipoB"));
+				calendario.setJornada(rs.getString("jornada"));
+				calendario.setFecha(rs.getString("fecha"));
+				calendario.setHora(rs.getString("hora"));
 				
 				//addlinks
 			}
