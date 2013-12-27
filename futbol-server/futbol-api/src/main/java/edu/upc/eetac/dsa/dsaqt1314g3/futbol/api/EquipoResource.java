@@ -19,6 +19,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.EquiposLinkBuilder;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.FutbolAPILinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Equipo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.EquipoCollection;
 
@@ -82,8 +84,13 @@ public class EquipoResource {
 				equipo.setIdClub(clubid);
 				equipo.setIdEquipo(rs.getString("idEquipo"));
 				equipo.setNombre(rs.getString("nombre"));
-				// equipo.addlink
+				equipo.setCampeonato(rs.getString("idCampeonatos"));
+				equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
+						"self", clubid, equipo.getIdEquipo()));
 				equipos.addEquipo(equipo);
+				equipo.addLink(EquiposLinkBuilder.buildURICalendarioId(uriInfo,
+						"Calendario", equipo.getCampeonato(), offset, length,
+						pattern));
 				icount++;
 			}
 			rs.close();
@@ -94,15 +101,15 @@ public class EquipoResource {
 		}
 		if (ioffset != 0) {
 			String prevoffset = "" + (ioffset - ilength);
-			// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo,prevoffset,
-			// length, username, "prev"));
+			equipos.addLink(EquiposLinkBuilder.buildURIEquipos(uriInfo,
+					prevoffset, length, pattern, "prev", clubid));
 		}
-		// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo, offset,
-		// length, username, "self"));
+		equipos.addLink(EquiposLinkBuilder.buildURIEquipos(uriInfo, offset,
+				length, pattern, "self", clubid));
 		String nextoffset = "" + (ioffset + ilength);
 		if (ilength <= icount) {
-			// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo,
-			// nextoffset, length, username, "next"));
+			equipos.addLink(EquiposLinkBuilder.buildURIEquipos(uriInfo,
+					nextoffset, length, pattern, "next", clubid));
 		}
 		return equipos;
 	}
@@ -129,7 +136,13 @@ public class EquipoResource {
 				equipo.setIdClub(clubid);
 				equipo.setIdEquipo(idequipo);
 				equipo.setNombre(rs.getString("nombre"));
-				// equipo.addlink
+				equipo.setCampeonato(rs.getString("idCampeonatos"));
+				equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
+						"self", clubid, equipo.getIdEquipo()));
+				equipo.addLink(EquiposLinkBuilder.buildURIClubId(uriInfo,
+						"Club", clubid));
+				equipo.addLink(EquiposLinkBuilder.buildURIJugadores(uriInfo,
+						"Jugadores", "0", "15", idequipo, clubid));
 			}
 			rs.close();
 			stmt.close();
@@ -166,8 +179,12 @@ public class EquipoResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "insert into equipo (idClub,nombre) values ('"
-					+ idclub + "', '" + equipo.getNombre() + "')";
+			String sql = "insert into equipo (idClub,idCampeonatos,nombre) values ('"
+					+ idclub
+					+ "', '"
+					+ equipo.getCampeonato()
+					+ "', '"
+					+ equipo.getNombre() + "')";
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
@@ -206,8 +223,9 @@ public class EquipoResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = "update equipo set equipo.nombre='"
-					+ equipo.getNombre() + "' where (equipo.idClub=" + idclub
-					+ " AND equipo.idEquipo='" + idequipo + "')";
+					+ equipo.getNombre() + "', equipo.idCampeonato="
+					+ equipo.getCampeonato() + " where (equipo.idClub="
+					+ idclub + " AND equipo.idEquipo='" + idequipo + "')";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
