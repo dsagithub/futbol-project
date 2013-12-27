@@ -32,7 +32,8 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
 
 
-@Path("/")
+
+@Path("/club/")
 public class ClubResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 
@@ -109,7 +110,7 @@ public class ClubResource {
 	}
 
 	@GET
-	@Path("/{idClub}")
+	@Path("{idClub}")
 	@Produces(MediaType.FUTBOL_API_CLUB)
 	public Club getClub(@PathParam("idClub") String idClub){
 		
@@ -172,25 +173,34 @@ public class ClubResource {
 			throw new BadRequestException("El nombre del club ha de ser menor de 45 carácteres");
 		}
 		
+		if (club.getNombre().length()==0)
+		{
+			throw new BadRequestException("El nombre del club no puede estar vacío");
+		}
 		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServiceUnavailableException(e.getMessage());
+		}
 		try{
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Club (nombre) values('"
+			String sql = "insert into Club (nombre) values ('"
 			+ club.getNombre()
 			+"')";
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
 		// Si no hay lasModified las 2 siguientes lineas sobran
-//			int  clubid = rs.getInt(1);
-//			club.setIdClub(Integer.toString(clubid));
+		int  clubid = rs.getInt(1);
+		club.setIdClub(Integer.toString(clubid));
 			//If con links
 			rs.close();
 			stmt.close();
 			conn.close();
 			}
 			else {
-				throw new ClubNotFoundException("");
+				throw new ClubNotFoundException("Error");
 			}
 			
 			
@@ -202,7 +212,7 @@ public class ClubResource {
 		}
 	
 	@DELETE
-	@Path("/{idClub}")
+	@Path("{idClub}")
 	public void deleteSting(@PathParam("idClub") String id) {
 		Connection conn = null;
 		
@@ -236,7 +246,7 @@ public class ClubResource {
 		}
 	}
 	@PUT
-	@Path("/{idClub}")
+	@Path("{idClub}")
 	@Consumes(MediaType.FUTBOL_API_CLUB)
 	@Produces(MediaType.FUTBOL_API_CLUB)
 	public Club updateClub(@PathParam("idClub") String id, Club club) {
