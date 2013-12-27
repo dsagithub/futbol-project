@@ -241,7 +241,7 @@ public class RetransResource {
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
-				throw new BadRequestException("no permitido");
+				throw new BadRequestException("NO EXISTE");
 
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
