@@ -19,10 +19,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Campeonatos;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CampeonatosCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Jugadores;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.JugadoresCollection;
 
@@ -31,6 +30,8 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.JugadoresCollection;
 
 public class JugadoresResource {
 
+	@Context
+	private SecurityContext security;
 	@Context
     private UriInfo uriInfo;
     private DataSource ds = DataSourceSPA.getInstance().getDataSource();	
@@ -146,10 +147,10 @@ public class JugadoresResource {
     public Jugadores createJugador (@PathParam("idequipo") int idequipo , Jugadores jugador) {
 		
 		
-		//if (!security.isUserInRole("administrator"))
-//		{
-//			throw new ForbiddenException("Solo el administrador puede realizar un post");
-//		}	
+		if (!security.isUserInRole("administrator"))
+		{
+			throw new ForbiddenException("Solo el administrador puede realizar un post");
+		}	
 		if (jugador.getNombre().length() > 50) {
 			throw new BadRequestException(
 					"Name length must be less or equal than 50 characters");
@@ -204,10 +205,10 @@ public class JugadoresResource {
 			@PathParam("dni") String dni) {
 		Connection conn = null;
 	
-		//if (!security.isUserInRole("administrator"))
-//		{
-//			throw new ForbiddenException("Solo el administrador puede borrar un campeonato");
-//		}
+		if (!security.isUserInRole("administrator"))
+		{
+		throw new ForbiddenException("Solo el administrador puede borrar un campeonato");
+		}
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
@@ -246,11 +247,13 @@ public class JugadoresResource {
 			@PathParam("idequipo") int idequipo ,
 			Jugadores jugador
 			) {
+		
+		
 
-		//if (!security.isUserInRole("administrator"))
-//			{
-//				throw new ForbiddenException("Solo el administrador puede realizar una actualización a los campeonatos");
-//			}
+			if (!security.isUserInRole("administrator"))
+			{
+				throw new ForbiddenException("Solo el administrador puede realizar una actualización a los campeonatos");
+			}
 		//Jugadores jugador = new Jugadores();
 		Connection conn = null;
 

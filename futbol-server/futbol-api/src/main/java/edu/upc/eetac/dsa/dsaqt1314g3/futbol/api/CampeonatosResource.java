@@ -17,6 +17,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Campeonatos;
@@ -26,6 +27,9 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
 @Path("/campeonato2")
 public class CampeonatosResource {
+	
+		@Context
+		private SecurityContext security;
 		private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		@Context
 		private UriInfo uriInfo;
@@ -70,7 +74,6 @@ public class CampeonatosResource {
 		}
 
 		
-	//HACER GETCAMPEONATOS CON OFFSET Y TAL
 		
 		@DELETE
 		@Path("/{idcampeonato}")
@@ -78,10 +81,10 @@ public class CampeonatosResource {
 				@PathParam("idcampeonato") int idcampeonato ) {
 			Connection conn = null;
 			
-			//if (!security.isUserInRole("administrator"))
-//			{
-//				throw new ForbiddenException("Solo el administrador puede borrar un campeonato");
-//			}
+			if (!security.isUserInRole("administrator"))
+			{
+				throw new ForbiddenException("Solo el administrador puede borrar un campeonato");
+			}
 			try {
 				conn = ds.getConnection();
 			} catch (SQLException e) {
@@ -118,10 +121,10 @@ public class CampeonatosResource {
 		public Campeonatos crearCampeonato( Campeonatos campeonato) {
 			Connection conn = null;
 			
-			//if (!security.isUserInRole("administrator"))
-//			{
-//				throw new ForbiddenException("Solo el administrador puede realizar un post");
-//			}	
+			if (!security.isUserInRole("administrator"))
+		{
+				throw new ForbiddenException("Solo el administrador puede realizar un post");
+			}	
 
 
 			try {
@@ -165,10 +168,10 @@ public class CampeonatosResource {
 
 				@PathParam("idcampeonato") int idcampeonato , Campeonatos campeonato) {
 
-			//if (!security.isUserInRole("administrator"))
-//				{
-//					throw new ForbiddenException("Solo el administrador puede realizar una actualización a los campeonatos");
-//				}
+			if (!security.isUserInRole("administrator"))
+				{
+					throw new ForbiddenException("Solo el administrador puede realizar una actualización a los campeonatos");
+				}
 				
 			Connection conn = null;
 
