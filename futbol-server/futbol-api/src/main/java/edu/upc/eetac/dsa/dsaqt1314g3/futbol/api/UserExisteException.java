@@ -5,10 +5,10 @@ import javax.ws.rs.core.Response;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.FutbolError;
 
-public class UserNotFoundException extends WebApplicationException {
-	private final static String MESSAGE = "User not found";
+public class UserExisteException extends WebApplicationException {
+	private final static String MESSAGE = "Username exists, select other.";
 
-	public UserNotFoundException() {
+	public UserExisteException() {
 		super(Response
 				.status(Response.Status.NOT_FOUND)
 				.entity(new FutbolError(Response.Status.NOT_FOUND

@@ -19,11 +19,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Equipo;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.EquipoCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Retransmision;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.RetransmisionCollection;
 
-@Path("/{idClub}")
-public class EquipoResource {
+@Path("/campeonato/{idcampeonato}/{idpartido}/retra")
+public class RetransResource {
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@Context
 	private UriInfo uriInfo;
@@ -31,9 +31,10 @@ public class EquipoResource {
 	private SecurityContext security;
 
 	@GET
-	@Path("/")
-	@Produces(MediaType.FUTBOL_API_EQUIPO_COLLECTION)
-	public EquipoCollection getEquipos(@PathParam("idClub") String clubid,
+	@Produces(MediaType.FUTBOL_API_RETRA)
+	// FALTA AÑADIR EL MEDIATYPE
+	public RetransmisionCollection getRetrans(
+			@PathParam("idpartido") String idpart,
 			@QueryParam("pattern") String pattern,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
@@ -59,7 +60,8 @@ public class EquipoResource {
 			throw new BadRequestException(
 					"length must be an integer greater or equal than 1.");
 		}
-		EquipoCollection equipos = new EquipoCollection();
+
+		RetransmisionCollection retrans = new RetransmisionCollection();
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -70,20 +72,21 @@ public class EquipoResource {
 			Statement stmt = conn.createStatement();
 			String sql = null;
 			if (pattern != null) {
-				sql = "select * from equipo where (nombre like '%" + pattern
-						+ "%' and idClub=" + clubid + ")";
+				sql = "select * from retransmision where (nombre like '%"
+						+ pattern + "%' and idPartido=" + idpart + ")"
+						+ " LIMIT " + offset + "," + length;
+				;
 			} else {
-				sql = "select * from equipo where idClub=" + clubid + " LIMIT "
-						+ offset + "," + length;
+				sql = "select * from retransmision where idPartido=" + idpart
+						+ " LIMIT " + offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				Equipo equipo = new Equipo();
-				equipo.setIdClub(clubid);
-				equipo.setIdEquipo(rs.getString("idEquipo"));
-				equipo.setNombre(rs.getString("nombre"));
-				// equipo.addlink
-				equipos.addEquipo(equipo);
+				Retransmision retra = new Retransmision();
+				retra.setTiempo(rs.getString("tiempo"));
+				retra.setTexto(rs.getString("texto"));
+				// addlink
+				retrans.addRetrans(retra);
 				icount++;
 			}
 			rs.close();
@@ -104,15 +107,14 @@ public class EquipoResource {
 			// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo,
 			// nextoffset, length, username, "next"));
 		}
-		return equipos;
+		return retrans;
 	}
 
 	@GET
-	@Path("/{idequipo}")
-	@Produces(MediaType.FUTBOL_API_EQUIPO)
-	public Equipo getEquipo(@PathParam("idClub") String clubid,
-			@PathParam("idequipo") String idequipo) {
-		Equipo equipo = new Equipo();
+	@Path("/{idretra}")
+	@Produces(MediaType.FUTBOL_API_RETRA)
+	public Retransmision getRetra(@PathParam("idretra") String idretra) {
+		Retransmision retra = new Retransmision();
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -122,14 +124,15 @@ public class EquipoResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = null;
-			sql = "select * from equipo where idClub=" + clubid
-					+ " and idEquipo='" + idequipo + "'";
+			sql = "select * from retransmision where id=" + idretra;
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				equipo.setIdClub(clubid);
-				equipo.setIdEquipo(idequipo);
-				equipo.setNombre(rs.getString("nombre"));
-				// equipo.addlink
+				// retra.setId(idretra);
+				retra.setIdPartido(rs.getString("idPartido"));
+				retra.setTiempo(rs.getString("tiempo"));
+				retra.setTexto(rs.getString("texto"));
+				retra.setMedia(rs.getString("media"));
+				// addlink
 			}
 			rs.close();
 			stmt.close();
@@ -137,57 +140,52 @@ public class EquipoResource {
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
 		}
-		return equipo;
+		return retra;
 	}
 
 	@POST
-	@Path("/")
-	@Produces(MediaType.FUTBOL_API_EQUIPO)
-	@Consumes(MediaType.FUTBOL_API_EQUIPO)
-	public Equipo crearEquipo(@PathParam("idClub") String idclub, Equipo equipo) {
+	@Produces(MediaType.FUTBOL_API_RETRA)
+	@Consumes(MediaType.FUTBOL_API_RETRA)
+	public Retransmision crearRetra(@PathParam("idpartido") String idpartido,
+			Retransmision retra) {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
-		if (equipo == null) {
-			throw new BadRequestException("Insert name of team");
-		} else {
-			if (equipo.getNombre().length() > 50) {
-				throw new BadRequestException(
-						"Name length must be less or equal than 50 characters");
-			}
-		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "insert into equipo (idClub,nombre) values ('"
-					+ idclub + "', '" + equipo.getNombre() + "')";
+			String sql = "insert into retransmision (idPartido,tiempo,texto,media) values ('"
+					+ idpartido
+					+ "', '"
+					+ retra.getTiempo()
+					+ "', '"
+					+ retra.getTexto() + "', '" + retra.getMedia() + "')";
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
-				int idEquipo = rs.getInt(1);
-				equipo.setIdEquipo(Integer.toString(idEquipo));
-				equipo.setIdClub(idclub);
+				int id = rs.getInt(1);
+				retra.setId(Integer.toString(id));
+				retra.setIdPartido(idpartido);
 				rs.close();
 				stmt.close();
 				conn.close();
 			} else {
-				throw new EquipoNotFoundException();
+				throw new RetraNotFoundException();
 			}
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
 		}
-		return equipo;
+		return retra;
 	}
 
 	@PUT
-	@Path("/{idequipo}")
-	@Produces(MediaType.FUTBOL_API_EQUIPO)
-	@Consumes(MediaType.FUTBOL_API_EQUIPO)
-	public Equipo actualizarEquipo(@PathParam("idClub") String idclub,
-			@PathParam("idequipo") String idequipo, Equipo equipo) {
-
+	@Path("/{idretra}")
+	@Produces(MediaType.FUTBOL_API_RETRA)
+	@Consumes(MediaType.FUTBOL_API_RETRA)
+	public Retransmision actualizaRetra(@PathParam("idretra") String id,
+			@PathParam("idpartido") String idpartido, Retransmision retra) {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -196,29 +194,30 @@ public class EquipoResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update equipo set equipo.nombre='"
-					+ equipo.getNombre() + "' where (equipo.idClub=" + idclub
-					+ " AND equipo.idEquipo='" + idequipo + "')";
+			String sql = "update retransmision set retransmision.tiempo='"
+					+ retra.getTiempo() + "', retransmision.texto='"
+					+ retra.getTexto() + "',retransmision.media='"
+					+ retra.getMedia() + "' where (retransmision.id=" + id
+					+ " AND retransmision.idPartido='" + idpartido + "')";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
-				throw new EquipoNotFoundException();
-			equipo.setIdClub(idclub);
-			equipo.setIdEquipo(idequipo);
+				throw new RetraNotFoundException();
+			retra.setId(id);
+			retra.setIdPartido(idpartido);
 			// /setlinks
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
 		}
-		return equipo;
+		return retra;
 	}
 
 	@DELETE
-	@Path("/{idequipo}")
-	public void borrarEquipo(@PathParam("idequipo") String idequipo,
-			@PathParam("idClub") String idclub) {
-
+	@Path("/{idretra}")
+	public void borrarRetra(@PathParam("idpartido") String idpartido,
+			@PathParam("idretra") String id) {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -229,8 +228,8 @@ public class EquipoResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from equipo where (idEquipo=" + idequipo
-					+ " AND idClub='" + idclub + "')";
+			sql = "delete from retransmision where (idPartido=" + idpartido
+					+ " AND id='" + id + "')";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
@@ -246,7 +245,5 @@ public class EquipoResource {
 				e.printStackTrace();
 			}
 		}
-
 	}
-
 }
