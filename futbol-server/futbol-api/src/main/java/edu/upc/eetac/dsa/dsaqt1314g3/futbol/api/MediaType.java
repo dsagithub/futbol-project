@@ -9,6 +9,7 @@ public interface MediaType {
 
 	public final static String FUTBOL_API_CLUB = "application/vnd.futbol.api.club+json";
 	public final static String FUTBOL_API_JUGADORES = "application/vnd.futbol.api.jugadores+json";
+	public final static String FUTBOL_API_JUGADORES_COLLECTION = "application/vnd.futbol.api.jugadores.collection+json";
 	public final static String FUTBOL_API_CLUB_COLLECTION = "application/vnd.futbol.api.club.collection+json";
 	public final static String FUTBOL_API_CALENDARIO = "application/vnd.futbol.api.calendario+json";
 	public final static String FUTBOL_API_CALENDARIO_COLLECTION = "application/vnd.futbol.api.calendario.collection+json";
