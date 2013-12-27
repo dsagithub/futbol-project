@@ -76,7 +76,7 @@ public class CalendarioResource {
 				sql = "select * from Calendario where idPartido like '%" + idPartido 
 						+ "%' LIMIT " + offset + "," + length;
 			} else  {
-				sql = "select * from Calendario LIMIT" + offset + "," + length;
+				sql = "select * from Calendario LIMIT " + offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -163,17 +163,24 @@ public class CalendarioResource {
 	@POST
 	@Consumes(MediaType.FUTBOL_API_CALENDARIO)
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
-	public Calendario createCalendario(Calendario calendario)
+	public Calendario createCalendario(Calendario calendario, @PathParam("idCampeonato") String idCampeonato)
 	{
-//		if (!security.isUserInRole("administrator"))
-//		{
-//			throw new ForbiddenException("Solo administrador puede realizar esta acción");
-//		}
+		if (!security.isUserInRole("administrator"))
+		{
+			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+		}
 		
 		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServiceUnavailableException(e.getMessage());
+		}
 		try{
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Calendario (idEquipoA, idEquipoB, jornada, fecha, hora ) values('"
+			String sql = "insert into Calendario (idCampeonato, idEquipoA, idEquipoB, jornada, fecha, hora ) values('"
+			+idCampeonato
+			+ "', '"
 			+ calendario.getIdEquipoA()
 			+ "', '"
 			+ calendario.getIdEquipoB()
@@ -182,21 +189,23 @@ public class CalendarioResource {
 			+ "', '"
 			+calendario.getFecha()
 			+ "', '"
-			+calendario.getFecha()
+			+calendario.getHora()
 			+"')";
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
-		// Si no hay lasModified las 2 siguientes lineas sobran
-//			int  clubid = rs.getInt(1);
-//			club.setIdClub(Integer.toString(clubid));
+			int  idPartido = rs.getInt(1);
+		calendario.setIdPartido(Integer.toString(idPartido));
+		
+
+
 			//If con links
 			rs.close();
 			stmt.close();
 			conn.close();
 			}
 			else {
-				throw new CalendarioNotFoundException("");
+				throw new CalendarioNotFoundException("no encontrado");
 			}
 			
 			
@@ -248,10 +257,10 @@ public class CalendarioResource {
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
 	public Calendario updateCalendario(@PathParam("idPartido") String id, Calendario calendario) {
 	
-//		if (!security.isUserInRole("administrator"))
-//		{
-//			throw new ForbiddenException("Solo administrador puede realizar esta acción");
-//		}
+		if (!security.isUserInRole("administrator"))
+		{
+			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+		}
 		
 		Connection conn = null;
 		try {
