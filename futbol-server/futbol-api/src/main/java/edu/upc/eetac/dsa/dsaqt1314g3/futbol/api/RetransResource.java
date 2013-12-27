@@ -32,7 +32,6 @@ public class RetransResource {
 
 	@GET
 	@Produces(MediaType.FUTBOL_API_RETRA)
-	// FALTA AÑADIR EL MEDIATYPE
 	public RetransmisionCollection getRetrans(
 			@PathParam("idpartido") String idpart,
 			@QueryParam("pattern") String pattern,
@@ -148,6 +147,9 @@ public class RetransResource {
 	@Consumes(MediaType.FUTBOL_API_RETRA)
 	public Retransmision crearRetra(@PathParam("idpartido") String idpartido,
 			Retransmision retra) {
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -186,6 +188,9 @@ public class RetransResource {
 	@Consumes(MediaType.FUTBOL_API_RETRA)
 	public Retransmision actualizaRetra(@PathParam("idretra") String id,
 			@PathParam("idpartido") String idpartido, Retransmision retra) {
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -218,6 +223,9 @@ public class RetransResource {
 	@Path("/{idretra}")
 	public void borrarRetra(@PathParam("idpartido") String idpartido,
 			@PathParam("idretra") String id) {
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();

@@ -208,7 +208,7 @@ public class UserResource {
 	public User updateUSER(@PathParam("username") String username, User user) {
 		if (security.getUserPrincipal().getName() != username) {
 			if (!security.isUserInRole("administrator")) {
-				throw new ForbbidenException();
+				throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
 			}
 		}
 		Connection conn = null;
@@ -245,6 +245,11 @@ public class UserResource {
 	@DELETE
 	@Path("/{username}")
 	public void deleteUser(@PathParam("username") String username) {
+		if (security.getUserPrincipal().getName() != username) {
+			if (!security.isUserInRole("administrator")) {
+				throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+			}
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();

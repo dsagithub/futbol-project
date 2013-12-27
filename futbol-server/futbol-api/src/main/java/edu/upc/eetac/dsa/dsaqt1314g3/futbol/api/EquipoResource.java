@@ -145,6 +145,11 @@ public class EquipoResource {
 	@Produces(MediaType.FUTBOL_API_EQUIPO)
 	@Consumes(MediaType.FUTBOL_API_EQUIPO)
 	public Equipo crearEquipo(@PathParam("idClub") String idclub, Equipo equipo) {
+
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
+
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -188,6 +193,10 @@ public class EquipoResource {
 	public Equipo actualizarEquipo(@PathParam("idClub") String idclub,
 			@PathParam("idequipo") String idequipo, Equipo equipo) {
 
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
+
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -218,6 +227,10 @@ public class EquipoResource {
 	@Path("/{idequipo}")
 	public void borrarEquipo(@PathParam("idequipo") String idequipo,
 			@PathParam("idClub") String idclub) {
+
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 
 		Connection conn = null;
 		try {
