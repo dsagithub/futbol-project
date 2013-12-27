@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.sql.DataSource;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -27,6 +26,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.DataSourceSPA;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Club;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CalendarioCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.BadRequestException;
 
 
 
@@ -163,10 +163,10 @@ public class ClubResource {
 	@Produces(MediaType.FUTBOL_API_CLUB)
 	public Club createClub(Club club)
 	{
-//		if (!security.isUserInRole("administrator"))
-//		{
-//			throw new ForbiddenException("Solo administrador puede realizar esta acción");
-//		}
+		if (!security.isUserInRole("administrator"))
+		{
+			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+		}
 		
 		
 		if (club.getNombre().length()>45){
@@ -216,10 +216,10 @@ public class ClubResource {
 	public void deleteSting(@PathParam("idClub") String id) {
 		Connection conn = null;
 		
-//		if (!security.isUserInRole("administrator"))
-//		{
-//			throw new ForbiddenException("Solo administrador puede realizar esta acción");
-//		}
+		if (!security.isUserInRole("administrator"))
+		{
+			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+		}
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
@@ -251,10 +251,10 @@ public class ClubResource {
 	@Produces(MediaType.FUTBOL_API_CLUB)
 	public Club updateClub(@PathParam("idClub") String id, Club club) {
 	
-//		if (!security.isUserInRole("administrator"))
-//		{
-//			throw new ForbiddenException("Solo administrador puede realizar esta acción");
-//		}
+		if (!security.isUserInRole("administrator"))
+		{
+			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+		}
 		
 		Connection conn = null;
 		try {
