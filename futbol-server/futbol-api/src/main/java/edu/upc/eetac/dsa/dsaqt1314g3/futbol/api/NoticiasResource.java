@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.DataSourceSPA;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.NoticiasLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Noticia;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.NoticiasCollection;
 
@@ -39,7 +40,9 @@ public class NoticiasResource {
 	@GET
 	@Path("/{idnoticia}")
 	@Produces(MediaType.FUTBOL_API_NOTICIA)
-	public Noticia getNoticia(@PathParam("idnoticia") String idNoticia, @Context Request req) {
+	public Noticia getNoticia(@PathParam("idnoticia") String idNoticia,
+			@PathParam("idClub") String idClub,
+			@Context Request req) {
 		CacheControl cc = new CacheControl();
 		Noticia noticia = new Noticia();
 		Connection conn = null;
@@ -62,9 +65,9 @@ public class NoticiasResource {
 				noticia.setContent(rs.getString("content"));
 				noticia.setMedia(rs.getString("media"));
 				noticia.setLastModified(rs.getTimestamp("lastModified"));
+				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
+						"self", idClub, noticia.getIdNoticia()));
 				//----------
-				noticia.addLink(null);
-				noticia.addLink(null);
 			} else {
 				throw new NoticiaNotFoundException();
 			}
@@ -217,7 +220,7 @@ public class NoticiasResource {
 	@GET
 	@Produces(MediaType.FUTBOL_API_NOTICIAS_COLLECTION)
 	public NoticiasCollection getNoticias(@QueryParam("titulo") String titulo,
-			@PathParam("idClub") int idClub,
+			@PathParam("idClub") String idClub,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
 		if ((offset == null) || (length == null))
@@ -251,16 +254,16 @@ public class NoticiasResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = null;
-			if (idClub != 0 && titulo != null) {
+			if (idClub != null && titulo != null) {
 				sql = "select * from Noticias where (titulo like '%" + titulo
 						+ "%' AND idClub like '%" + idClub
 						+ "%') ORDER BY lastModified desc LIMIT " + offset + ","
 						+ length;
-			} else if (idClub == 0 && titulo != null) {
+			} else if (idClub == null && titulo != null) {
 				sql = "select * from Noticias where titulo like '%" + titulo
 						+ "%' ORDER BY lastModified desc LIMIT " + offset + ","
 						+ length;
-			} else if (titulo == null && idClub != 0) {
+			} else if (titulo == null && idClub != null) {
 				sql = "select * from Noticias where idClub like '%" + idClub
 						+ "%' ORDER BY lastModified desc LIMIT " + offset + ","
 						+ length;
@@ -277,6 +280,8 @@ public class NoticiasResource {
 				noticia.setContent(rs.getString("content"));
 				noticia.setMedia(rs.getString("media"));
 				noticia.setLastModified(rs.getTimestamp("lastModified"));
+				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
+						"self", idClub, noticia.getIdNoticia()));
 				//links
 				
 				noticias.addNoticia(noticia);
@@ -290,12 +295,15 @@ public class NoticiasResource {
 		}
 		if (ioffset != 0) {
 			String prevoffset = "" + (ioffset - ilength);
-			//links
+			noticias.addLink(NoticiasLinkBuilder.buildURINoticias(uriInfo,
+					prevoffset, length, "prev", idClub));
 		}
-		//links
+		noticias.addLink(NoticiasLinkBuilder.buildURINoticias(uriInfo, offset,
+				length, "self", idClub));
 		String nextoffset = "" + (ioffset + ilength);
 		if (ilength <= icount) {
-			//links
+			noticias.addLink(NoticiasLinkBuilder.buildURINoticias(uriInfo,
+					nextoffset, length, "next", idClub));
 		}
 		return noticias;
 	}
