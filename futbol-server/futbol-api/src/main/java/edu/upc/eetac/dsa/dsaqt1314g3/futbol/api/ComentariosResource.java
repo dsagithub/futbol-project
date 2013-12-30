@@ -20,24 +20,29 @@ import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.ComentariosLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ComentariosCollection;
 
-//hacer funciones segun el nuevo path. Hay cosas que tienes como queryparam que ahora
-//seran path param (ejemplo id partido) Lo mismo para Noticias!!!!
 @Path("/campeonato/{idCampeonato}/calendario/{idPartido}/comentarios")
 public class ComentariosResource {
 private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
 	@Context
 	private UriInfo uriInfo;
+	@Context
+	private SecurityContext security;
 	
 	@GET
 	@Path("/{idcomentario}")
 	@Produces(MediaType.FUTBOL_API_COMENTARIO)
-	public Comentario getComentario(@PathParam("idcomentario") String idComentario, @Context Request req) {
+	public Comentario getComentario(@PathParam("idcomentario") String idComentario, 
+			@PathParam("idPartido") String idPartido,
+			@PathParam("idCampeonato") String idCampeonato,
+			@Context Request req) {
 		CacheControl cc = new CacheControl();
 		Comentario comentario = new Comentario();
 		Connection conn = null;
@@ -51,18 +56,18 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		
 		try {
 			stmt = conn.createStatement();
-			String sql = "select * from Comentarios where idComentario=" + idComentario;
+			String sql = "select * from Comentarios where idComentarios=" + idComentario;
 			rs = stmt.executeQuery(sql);
 			if (rs.next()) {
-				comentario.setIdComentario(rs.getInt("idComentario"));
+				comentario.setIdComentario(rs.getInt("idComentarios"));
 				comentario.setTiempo(rs.getString("tiempo"));
 				comentario.setMedia(rs.getString("media"));
 				comentario.setTexto(rs.getString("texto"));
 				comentario.setIdPartido(rs.getString("idPartido"));
 				comentario.setIdUsuario(rs.getInt("idUsuario"));
+				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
+						"self",idCampeonato, idPartido, comentario.getIdComentario()));
 				//----------
-				comentario.addLink(null);
-				comentario.addLink(null);
 			} else {
 				throw new ComentarioNotFoundException();
 			}
@@ -94,7 +99,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Comentarios where idComentario=" + idComentario;
+			sql = "delete from Comentarios where idComentarios=" + idComentario;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new ComentarioNotFoundException();
@@ -128,7 +133,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Comentarios (idComentario, tiempo, media, texto, idPartido, idUsuario) values ('"
+			String sql = "insert into Comentarios (idComentarios, tiempo, media, texto, idPartido, idUsuario) values ('"
 					+ comentario.getIdComentario() 	
 					+ "', '"
 					+ comentario.getTiempo()
@@ -176,7 +181,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 					+ "',Comentarios.media='" + comentario.getMedia()
 					+ "',Comentarios.idPartido='" + comentario.getIdPartido() 
 					+ "',Comentarios.idUsuario='" + comentario.getIdUsuario() 
-					+ "' where Comentarios.idComentario=" + idComentario;
+					+ "' where Comentarios.idComentarios=" + idComentario;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new ComentarioNotFoundException();
@@ -191,8 +196,9 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	
 	@GET
 	@Produces(MediaType.FUTBOL_API_COMENTARIOS_COLLECTION)
-	public ComentariosCollection getNoticias(@QueryParam("idComentario") String idComentario,
-			@QueryParam("idPartido") String idPartido,
+	public ComentariosCollection getComentarios(@PathParam("idPartido") String idPartido,
+			@PathParam("idCampeonato") String idCampeonato,
+			@QueryParam("idComentario") String idComentario,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
 		if ((offset == null) || (length == null))
@@ -228,7 +234,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			String sql = null;
 			if (idComentario != null && idPartido != null) {
 				sql = "select * from Comentarios where (idPartido like '%" + idPartido
-						+ "%' AND idComentario like '%" + idComentario
+						+ "%' AND idComentarios like '%" + idComentario
 						+ "%') ORDER BY tiempo desc LIMIT " + offset + ","
 						+ length;
 			} else if (idComentario == null && idPartido != null) {
@@ -236,7 +242,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 						+ "%' ORDER BY tiempo desc LIMIT " + offset + ","
 						+ length;
 			} else if (idPartido == null && idComentario != null) {
-				sql = "select * from Comentarios where idComentario like '%" + idComentario
+				sql = "select * from Comentarios where idComentarios like '%" + idComentario
 						+ "%' ORDER BY tiempo desc LIMIT " + offset + ","
 						+ length;
 			} else {
@@ -246,14 +252,15 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Comentario comentario = new Comentario();
-				comentario.setIdComentario(rs.getInt("idComentario"));
+				comentario.setIdComentario(rs.getInt("idComentarios"));
 				comentario.setTiempo(rs.getString("tiempo"));
 				comentario.setMedia(rs.getString("media"));
 				comentario.setTexto(rs.getString("texto"));
 				comentario.setIdPartido(rs.getString("idPartido"));
 				comentario.setIdUsuario(rs.getInt("idUsuario"));
-				//links
-				
+				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
+						"self",idCampeonato, idPartido, comentario.getIdComentario()));
+				//links			
 				comentarios.addComentario(comentario);
 				icount++;
 			}
@@ -265,12 +272,15 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		}
 		if (ioffset != 0) {
 			String prevoffset = "" + (ioffset - ilength);
-			//links
+			comentarios.addLink(ComentariosLinkBuilder.buildURIComentarios(uriInfo,
+					prevoffset, length, idComentario, "prev", idPartido, idCampeonato));
 		}
-		//links
+		comentarios.addLink(ComentariosLinkBuilder.buildURIComentarios(uriInfo, offset,
+				length, idComentario, "self", idPartido, idCampeonato));
 		String nextoffset = "" + (ioffset + ilength);
 		if (ilength <= icount) {
-			//links
+			comentarios.addLink(ComentariosLinkBuilder.buildURIComentarios(uriInfo,
+					nextoffset, length, idComentario, "next", idPartido, idCampeonato));
 		}
 		return comentarios;
 	}

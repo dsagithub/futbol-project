@@ -217,7 +217,7 @@ public class NoticiasResource {
 	@GET
 	@Produces(MediaType.FUTBOL_API_NOTICIAS_COLLECTION)
 	public NoticiasCollection getNoticias(@QueryParam("titulo") String titulo,
-			@QueryParam("idClub") int idClub,
+			@PathParam("idClub") int idClub,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
 		if ((offset == null) || (length == null))

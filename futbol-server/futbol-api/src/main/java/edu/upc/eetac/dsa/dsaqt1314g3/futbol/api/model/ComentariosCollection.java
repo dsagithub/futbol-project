@@ -34,5 +34,8 @@ public class ComentariosCollection {
 		this.links = links;
 	}
 	
+	public void addLink(Link link){
+		links.add(link);
+	}
 
 }
