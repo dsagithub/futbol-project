@@ -19,6 +19,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.CalendarioLinkBuilder;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.ComentariosLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Calendario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CalendarioCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Club;
@@ -134,7 +136,9 @@ public class CalendarioResource {
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
+				//calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "self", calendario.getIdPartido()));
 				
+
 				//addlinks
 			}
 			else

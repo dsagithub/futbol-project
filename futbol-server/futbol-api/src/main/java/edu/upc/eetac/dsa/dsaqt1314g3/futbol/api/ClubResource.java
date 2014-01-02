@@ -23,6 +23,8 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.DataSourceSPA;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.ClubLinkBuilder;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.EquiposLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Club;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CalendarioCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
@@ -94,7 +96,7 @@ public class ClubResource {
 				Club club = new Club();
 				club.setIdClub(rs.getString("idClub"));
 				club.setNombre(rs.getString("nombre"));
-				// Faltan links!
+				
 				clubs.addClub(club);
 				icount++;
 			}
@@ -132,7 +134,8 @@ public class ClubResource {
 			{
 				club.setIdClub(idClub);
 				club.setNombre(rs.getString("nombre"));
-				//addlinks
+				club.addLink(ClubLinkBuilder.buildURIClubId(uriInfo, "self", club.getIdClub()));
+				
 			}
 			else
 			{
