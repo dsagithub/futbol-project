@@ -21,6 +21,8 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.EquiposLinkBuilder;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.JugadoresLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Jugadores;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.JugadoresCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.BadRequestException;
@@ -56,6 +58,16 @@ public class JugadoresResource {
                          jugador.setNombre(rs.getString("nombre"));
                          jugador.setApellidos(rs.getString("apellidos"));
                          jugador.setIdequipo(rs.getInt("IdEquipo"));
+                         //LINKS ahora
+         				//jugador.addLink(JugadoresLinkBuilder.buildURIJugadorId(uriInfo,
+        					//	"self", idequipo, dni));
+         				
+                         jugador.addLink(JugadoresLinkBuilder.buildURIClubId(uriInfo,
+         						"Club", idclub));
+
+                        jugador.addLink(JugadoresLinkBuilder.buildURIEquipoId(uriInfo,
+         						"Equipo", idclub,  idequipo));
+                         
                  } else
                        throw new JugadorNotFoundException();
          } catch (SQLException e) {
@@ -75,6 +87,7 @@ public class JugadoresResource {
 	@Produces(MediaType.FUTBOL_API_JUGADORES_COLLECTION)
 	public JugadoresCollection getJugadores(@PathParam("idequipo") int idequipo ,
 			@QueryParam("offset") String offset,
+			@QueryParam("pattern") String pattern,
 			@QueryParam("length") String length) {
 		if ((offset == null) || (length == null))
 			throw new BadRequestException("Indica un offset y un length ");
@@ -126,9 +139,21 @@ public class JugadoresResource {
 				jugador.setApellidos(rs.getString("apellidos"));
 				jugador.setDni(rs.getString("dni"));
 				jugador.setNombre(rs.getString("nombre"));
+				
 				jcol.addJugadores(jugador);
+				//Links:
+				
+
+				
 				icount++;
+				String pffset = "" + (ioffset - ilength);
+				String noffset = "" + (ioffset - ilength);
+
+					
+
 			}
+			
+
 			rs.close();
 			stmt.close();
 			conn.close();
@@ -136,6 +161,18 @@ public class JugadoresResource {
 			throw new InternalServerException(e.getMessage());
 		}
 
+		if (ioffset != 0) {
+			String prevoffset = "" + (ioffset - ilength);
+			jcol.addLink(JugadoresLinkBuilder.buildURIJugadores(uriInfo,
+					prevoffset, length,"prev", idequipo));
+		}
+		jcol.addLink(JugadoresLinkBuilder.buildURIJugadores(uriInfo, offset,
+				length,"self", idequipo));
+		String nextoffset = "" + (ioffset + ilength);
+		if (ilength <= icount) {
+			jcol.addLink(JugadoresLinkBuilder.buildURIJugadores(uriInfo,
+					nextoffset, length, "next", idequipo));
+		}
 		return jcol;
 	}
 

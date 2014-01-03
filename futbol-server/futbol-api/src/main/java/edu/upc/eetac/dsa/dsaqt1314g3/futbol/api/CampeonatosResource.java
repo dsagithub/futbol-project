@@ -20,9 +20,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.CampeonatosLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Campeonatos;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CampeonatosCollection;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ClubCollection;
 
 
 @Path("/campeonato")
@@ -53,9 +53,16 @@ public class CampeonatosResource {
 				String sql = "select * from Campeonatos where idCampeonatos='"
 						+ idcampeonato + "'";
 				rs = stmt.executeQuery(sql);
+				String offset = "0";
+				String length = "15";
+				String pattern = null;
 				if (rs.next()) {
 					campeonato.setIdcampeonatos(rs.getInt("idCampeonatos"));
 					campeonato.setNombre(rs.getString("nombre"));
+					campeonato.addLink(CampeonatosLinkBuilder.buildURICampeonatoId(uriInfo, "self", campeonato.getIdcampeonatos()));
+					campeonato.addLink(CampeonatosLinkBuilder.buildURICalendarioId(uriInfo,
+							"Calendario", campeonato.getIdcampeonatos() , offset, length,
+							pattern));
 				} else {
 					throw new CampeonatoNotFoundException();
 				}
@@ -201,6 +208,7 @@ public class CampeonatosResource {
 		@GET
 		@Produces(MediaType.FUTBOL_API_CAMPEONATOS_COLLECTION)
 		public CampeonatosCollection getcampeonatos(
+				@QueryParam("pattern") String pattern,
 				@QueryParam("offset") String offset,
 				@QueryParam("length") String length) {
 			if ((offset == null) || (length == null))
@@ -246,9 +254,37 @@ public class CampeonatosResource {
 					Campeonatos campeonato = new Campeonatos();
 					campeonato.setIdcampeonatos(rs.getInt("idCampeonatos"));
 					campeonato.setNombre(rs.getString("nombre"));
+					campeonato.addLink(CampeonatosLinkBuilder.buildURICalendarioId(uriInfo,
+							"Calendario", campeonato.getIdcampeonatos() , offset, length,
+							pattern));
+					campeonato.addLink(CampeonatosLinkBuilder.buildURICampeonatoId(uriInfo, "self", campeonato.getIdcampeonatos()));
 					ccol.addCampeonatos(campeonato);
+					
+					
+					
 					icount++;
+					String nextoffset = "" + (ioffset + ilength);
+
+					if (ilength <= icount) {
+						
+						ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, nextoffset, length, pattern, "next"));
+
+					}
+					}
+				
+				String prevoffset = "" + (ioffset - ilength);
+				int cuenta = ioffset - ilength;
+				
+				if (cuenta >=  0) {
+				ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, prevoffset, length, pattern, "prev"));
 				}
+				else {
+					
+					ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, "0", length, pattern, "prev"));
+					
+				}
+				ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, offset, length, pattern, "self"));
+
 				rs.close();
 				stmt.close();
 				conn.close();

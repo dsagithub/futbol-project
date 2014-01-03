@@ -34,4 +34,7 @@ public class Campeonatos {
 		this.nombre = nombre;
 	}
 	
+	public void addLink(Link link) {
+		links.add(link);
+	}
 }
