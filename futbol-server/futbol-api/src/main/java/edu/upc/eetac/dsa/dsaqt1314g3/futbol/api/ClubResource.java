@@ -96,9 +96,10 @@ public class ClubResource {
 				Club club = new Club();
 				club.setIdClub(rs.getString("idClub"));
 				club.setNombre(rs.getString("nombre"));
-				
+				club.addLink(ClubLinkBuilder.buildURIEquipos2(uriInfo, "0", "15", null, "Lista equipos", club.getIdClub()));
 				clubs.addClub(club);
 				icount++;
+				
 			}
 			rs.close();
 			stmt.close();
@@ -107,7 +108,18 @@ public class ClubResource {
 			throw new InternalServerException(e.getMessage());
 		}
 
-		// links!
+		
+		if (ioffset != 0) {
+		String prevoffset = "" + (ioffset - ilength);
+		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, prevoffset, length, null, "prev"));
+		
+		}
+		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, offset, length, null, "self"));
+		String nextoffset = "" + (ioffset + ilength);
+		if (ilength <= icount) {
+		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, nextoffset, length, null, "next"));
+	}
+		
 		return clubs;
 	}
 
@@ -135,6 +147,7 @@ public class ClubResource {
 				club.setIdClub(idClub);
 				club.setNombre(rs.getString("nombre"));
 				club.addLink(ClubLinkBuilder.buildURIClubId(uriInfo, "self", club.getIdClub()));
+				
 				
 			}
 			else

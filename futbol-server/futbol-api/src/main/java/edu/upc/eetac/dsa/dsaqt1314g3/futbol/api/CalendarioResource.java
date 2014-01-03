@@ -136,7 +136,7 @@ public class CalendarioResource {
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
-				//calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "self", calendario.getIdPartido()));
+				
 				
 
 				//addlinks
