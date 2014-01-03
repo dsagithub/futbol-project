@@ -23,6 +23,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.ComentariosLinkBuilder;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.NoticiasLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ComentariosCollection;
 
@@ -63,11 +64,13 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				comentario.setTexto(rs.getString("texto"));
 				comentario.setIdPartido(rs.getString("idPartido"));
 				comentario.setIdUsuario(rs.getInt("idUsuario"));
+				//links
 				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
 						"self",idCampeonato, idPartido, comentario.getIdComentario()));
 				comentario.addLink(ComentariosLinkBuilder.buildURICalendarioId(uriInfo,
-						"self",idCampeonato, idPartido));
-				//----------
+						"Calendario",idCampeonato, idPartido));
+				comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
+						"Campeonato",idCampeonato));
 			} else {
 				throw new ComentarioNotFoundException();
 			}
@@ -120,7 +123,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@POST
 	@Consumes(MediaType.FUTBOL_API_COMENTARIO)
 	@Produces(MediaType.FUTBOL_API_COMENTARIO)
-	public Comentario createComentario(Comentario comentario) {
+	public Comentario createComentario(@PathParam("idCampeonato") String idCampeonato, Comentario comentario) {
 		if (comentario.getTexto().length() > 100) {
 			throw new BadRequestException(
 					"texto length must be less or equal than 100 characters");
@@ -149,6 +152,21 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
+				int comentarioid = rs.getInt(1);
+				comentario.setIdComentario(comentarioid);
+				
+				String sql2 = "select Comentarios.tiempo from Comentarios where Comentarios.idComentarios = "
+						+ comentarioid;
+				rs = stmt.executeQuery(sql2);
+				if (rs.next()) {
+					// links
+					comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
+							"self",idCampeonato, comentario.getIdPartido(), comentario.getIdComentario()));
+					comentario.addLink(ComentariosLinkBuilder.buildURICalendarioId(uriInfo,
+							"Calendario",idCampeonato, comentario.getIdPartido()));
+					comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
+							"Campeonato",idCampeonato));
+				}
 				rs.close();
 				stmt.close();
 				conn.close();
@@ -166,7 +184,8 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@Path("/{idcomentario}")
 	@Consumes(MediaType.FUTBOL_API_COMENTARIO)
 	@Produces(MediaType.FUTBOL_API_COMENTARIO)
-	public Comentario updateComentario(@PathParam("idcomentario") int idComentario, Comentario comentario) {
+	public Comentario updateComentario(@PathParam("idCampeonato") String idCampeonato,
+			@PathParam("idcomentario") int idComentario, Comentario comentario) {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -185,7 +204,18 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new ComentarioNotFoundException();
-			//----------
+			sql = "select Comentarios.tiempo from Comentarios where Comentarios.idComentarios = " + idComentario;
+			ResultSet rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				comentario.setIdComentario(idComentario);
+				// links
+				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
+						"self",idCampeonato, comentario.getIdPartido(), comentario.getIdComentario()));
+				comentario.addLink(ComentariosLinkBuilder.buildURICalendarioId(uriInfo,
+						"Calendario",idCampeonato, comentario.getIdPartido()));
+				comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
+						"Campeonato",idCampeonato));
+			}
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
@@ -258,9 +288,13 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				comentario.setTexto(rs.getString("texto"));
 				comentario.setIdPartido(rs.getString("idPartido"));
 				comentario.setIdUsuario(rs.getInt("idUsuario"));
+				//links
 				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
 						"self",idCampeonato, idPartido, comentario.getIdComentario()));
-				//links			
+				comentario.addLink(ComentariosLinkBuilder.buildURICalendarioId(uriInfo,
+						"Calendario",idCampeonato, idPartido));
+				comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
+						"Campeonato",idCampeonato));			
 				comentarios.addComentario(comentario);
 				icount++;
 			}

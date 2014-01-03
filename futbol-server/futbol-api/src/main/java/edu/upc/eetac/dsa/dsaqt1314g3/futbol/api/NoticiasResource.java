@@ -65,7 +65,7 @@ public class NoticiasResource {
 				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
 						"self", idClub, noticia.getIdNoticia()));
 				noticia.addLink(NoticiasLinkBuilder.buildURIClubId(uriInfo,
-						"self", idClub));
+						"club", idClub));
 			} else {
 				throw new NoticiaNotFoundException();
 			}
@@ -123,6 +123,10 @@ public class NoticiasResource {
 			throw new BadRequestException(
 					"title length must be less or equal than 100 characters");
 		}
+		java.util.Date utilDate = new java.util.Date();
+		long lnMilisegundos = utilDate.getTime();
+		java.sql.Timestamp sqlTimestamp = new java.sql.Timestamp(lnMilisegundos);
+		noticia.setLastModified(sqlTimestamp);
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -140,8 +144,8 @@ public class NoticiasResource {
 					+ "', '" 
 					+ noticia.getContent()
 					+ "', '" 
-					+ noticia.getMedia()
-					+ "', '" 
+					+ noticia.getMedia() 
+					+ "', '"
 					+ noticia.getLastModified() + "')";
 					
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
@@ -150,12 +154,16 @@ public class NoticiasResource {
 				int noticiaid = rs.getInt(1);
 				noticia.setIdNoticia(noticiaid);
 				
-				String sql2 = "select Noticias.lastModified from Noticias where Noticias.idNoticia = "
+				String sql2 = "select Noticias.lastModified from Noticias where Noticias.idNoticias = "
 						+ noticiaid;
 				rs = stmt.executeQuery(sql2);
 				if (rs.next()) {
 					noticia.setLastModified(rs.getTimestamp(1));
 					// links
+					noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
+							"self", Integer.toString(noticia.getIdClub()), noticia.getIdNoticia()));
+					noticia.addLink(NoticiasLinkBuilder.buildURIClubId(uriInfo,
+							"club", Integer.toString(noticia.getIdClub())));
 				}
 				rs.close();
 				stmt.close();
@@ -190,12 +198,16 @@ public class NoticiasResource {
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new NoticiaNotFoundException();
-			sql = "select Noticias.lastModified from Noticias where Noticias.idNoticia = " + idNoticia;
+			sql = "select Noticias.lastModified from Noticias where Noticias.idNoticias = " + idNoticia;
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				noticia.setLastModified(rs.getTimestamp("lastModified"));
 				noticia.setIdNoticia(idNoticia);
 				// links
+				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
+						"self", Integer.toString(noticia.getIdClub()), noticia.getIdNoticia()));
+				noticia.addLink(NoticiasLinkBuilder.buildURIClubId(uriInfo,
+						"club", Integer.toString(noticia.getIdClub())));
 			}
 			rs.close();
 			stmt.close();
@@ -273,7 +285,7 @@ public class NoticiasResource {
 				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
 						"self", idClub, noticia.getIdNoticia()));
 				noticia.addLink(NoticiasLinkBuilder.buildURIClubId(uriInfo,
-						"self", idClub));
+						"club", idClub));
 				noticias.addNoticia(noticia);
 				icount++;
 			}
