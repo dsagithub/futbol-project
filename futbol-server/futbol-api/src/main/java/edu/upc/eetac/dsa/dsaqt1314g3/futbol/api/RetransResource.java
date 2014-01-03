@@ -19,6 +19,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.RetransLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Retransmision;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.RetransmisionCollection;
 
@@ -34,6 +35,7 @@ public class RetransResource {
 	@Produces(MediaType.FUTBOL_API_RETRA)
 	public RetransmisionCollection getRetrans(
 			@PathParam("idpartido") String idpart,
+			@PathParam("idcampeonato") String campeonatoid,
 			@QueryParam("pattern") String pattern,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
@@ -85,7 +87,8 @@ public class RetransResource {
 				retra.setTiempo(rs.getString("tiempo"));
 				retra.setTexto(rs.getString("texto"));
 				retra.setId(rs.getString("id"));
-				// addlink
+				retra.addLink(RetransLinkBuilder.buildURIRetraID(uriInfo,
+						"self", campeonatoid, idpart, retra.getId()));
 				retrans.addRetrans(retra);
 				icount++;
 			}
@@ -97,15 +100,15 @@ public class RetransResource {
 		}
 		if (ioffset != 0) {
 			String prevoffset = "" + (ioffset - ilength);
-			// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo,prevoffset,
-			// length, username, "prev"));
+			retrans.addLink(RetransLinkBuilder.buildURIRetrans(uriInfo, "prev",
+					campeonatoid, idpart, prevoffset, length, pattern));
 		}
-		// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo, offset,
-		// length, username, "self"));
+		retrans.addLink(RetransLinkBuilder.buildURIRetrans(uriInfo, "self",
+				campeonatoid, idpart, offset, length, pattern));
 		String nextoffset = "" + (ioffset + ilength);
 		if (ilength <= icount) {
-			// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo,
-			// nextoffset, length, username, "next"));
+			retrans.addLink(RetransLinkBuilder.buildURIRetrans(uriInfo, "next",
+					campeonatoid, idpart, nextoffset, length, pattern));
 		}
 		return retrans;
 	}
@@ -113,7 +116,9 @@ public class RetransResource {
 	@GET
 	@Path("/{idretra}")
 	@Produces(MediaType.FUTBOL_API_RETRA)
-	public Retransmision getRetra(@PathParam("idretra") String idretra) {
+	public Retransmision getRetra(@PathParam("idretra") String idretra,
+			@PathParam("idcampeonato") String idcampeonato,
+			@PathParam("idpartido") String idpartido) {
 		Retransmision retra = new Retransmision();
 		Connection conn = null;
 		try {
@@ -132,7 +137,13 @@ public class RetransResource {
 				retra.setTiempo(rs.getString("tiempo"));
 				retra.setTexto(rs.getString("texto"));
 				retra.setMedia(rs.getString("media"));
-				// addlink
+				retra.addLink(RetransLinkBuilder.buildURIRetraID(uriInfo,
+						"self", idcampeonato, idpartido, idretra));
+				retra.addLink(RetransLinkBuilder.buildURIPartidoId(uriInfo,
+						"Partido", idcampeonato, idpartido));
+				retra.addLink(RetransLinkBuilder.buildURIRetrans(uriInfo,
+						"Lista Retransmisiones", idcampeonato, idpartido, "0",
+						"15", null));
 			}
 			rs.close();
 			stmt.close();
@@ -146,8 +157,9 @@ public class RetransResource {
 	@POST
 	@Produces(MediaType.FUTBOL_API_RETRA)
 	@Consumes(MediaType.FUTBOL_API_RETRA)
-	public Retransmision crearRetra(@PathParam("idpartido") String idpartido,
-			Retransmision retra) {
+	public Retransmision crearRetra(
+			@PathParam("idcampeonato") String idcampeonato,
+			@PathParam("idpartido") String idpartido, Retransmision retra) {
 		if (!security.isUserInRole("administrator")) {
 			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
 		}
@@ -171,6 +183,13 @@ public class RetransResource {
 				int id = rs.getInt(1);
 				retra.setId(Integer.toString(id));
 				retra.setIdPartido(idpartido);
+				retra.addLink(RetransLinkBuilder.buildURIRetraID(uriInfo,
+						"self", idcampeonato, idpartido, retra.getId()));
+				retra.addLink(RetransLinkBuilder.buildURIPartidoId(uriInfo,
+						"Partido", idcampeonato, idpartido));
+				retra.addLink(RetransLinkBuilder.buildURIRetrans(uriInfo,
+						"Lista Retransmisiones", idcampeonato, idpartido, "0",
+						"15", null));
 				rs.close();
 				stmt.close();
 				conn.close();
@@ -188,6 +207,7 @@ public class RetransResource {
 	@Produces(MediaType.FUTBOL_API_RETRA)
 	@Consumes(MediaType.FUTBOL_API_RETRA)
 	public Retransmision actualizaRetra(@PathParam("idretra") String id,
+			@PathParam("idcampeonato") String idcampeonato,
 			@PathParam("idpartido") String idpartido, Retransmision retra) {
 		if (!security.isUserInRole("administrator")) {
 			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
@@ -211,7 +231,13 @@ public class RetransResource {
 				throw new RetraNotFoundException();
 			retra.setId(id);
 			retra.setIdPartido(idpartido);
-			// /setlinks
+			retra.addLink(RetransLinkBuilder.buildURIRetraID(uriInfo, "self",
+					idcampeonato, idpartido, retra.getId()));
+			retra.addLink(RetransLinkBuilder.buildURIPartidoId(uriInfo,
+					"Partido", idcampeonato, idpartido));
+			retra.addLink(RetransLinkBuilder.buildURIRetrans(uriInfo,
+					"Lista Retransmisiones", idcampeonato, idpartido, "0",
+					"15", null));
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {

@@ -17,12 +17,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.DataSourceSPA;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.InternalServerException;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.MediaType;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.ServiceUnavailableException;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.UserNotFoundException;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.UsersLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.User;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.UserCollection;
 
@@ -30,7 +32,8 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.UserCollection;
 public class UserResource {
 
 	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
-
+	@Context
+	private UriInfo uriInfo;
 	@Context
 	private SecurityContext security;
 
@@ -84,7 +87,8 @@ public class UserResource {
 				usuario.setUsername(rs.getString("username"));
 				usuario.setEmail(rs.getString("email"));
 				usuario.setName(rs.getString("nombre"));
-				// user.addlink
+				usuario.addLink(UsersLinkBuilder.buildURIUser(uriInfo, "self",
+						usuario.getUsername()));
 				usuarios.addUser(usuario);
 				icount++;
 			}
@@ -96,15 +100,15 @@ public class UserResource {
 		}
 		if (ioffset != 0) {
 			String prevoffset = "" + (ioffset - ilength);
-			// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo,prevoffset,
-			// length, username, "prev"));
+			usuarios.addLink(UsersLinkBuilder.buildURIUserList(uriInfo,
+					prevoffset, length, pattern, "prev"));
 		}
-		// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo, offset,
-		// length, username, "self"));
+		usuarios.addLink(UsersLinkBuilder.buildURIUserList(uriInfo, offset,
+				length, pattern, "self"));
 		String nextoffset = "" + (ioffset + ilength);
 		if (ilength <= icount) {
-			// stings.addLink(BeeterAPILinkBuilder.buildURIStings(uriInfo,
-			// nextoffset, length, username, "next"));
+			usuarios.addLink(UsersLinkBuilder.buildURIUserList(uriInfo,
+					nextoffset, length, pattern, "next"));
 		}
 		return usuarios;
 	}
@@ -148,7 +152,8 @@ public class UserResource {
 				int isUsuario = rs.getInt(1);
 				user.setIdusuario(Integer.toString(isUsuario));
 				user.setPassword(null);
-				// links
+				user.addLink(UsersLinkBuilder.buildURIUser(uriInfo, "self",
+						user.getUsername()));
 				rs.close();
 				stmt.close();
 				conn.close();
@@ -185,6 +190,8 @@ public class UserResource {
 				user.setName(rs.getString("nombre"));
 				user.setUsername(rs.getString("username"));
 				user.setIdusuario(rs.getString("idUsuario"));
+				user.addLink(UsersLinkBuilder.buildURIUser(uriInfo, "self",
+						username));
 			} else {
 				throw new UserNotFoundException();
 			}
@@ -230,6 +237,8 @@ public class UserResource {
 						+ "') where usuarios.username='" + username + "'";
 				user.setUsername(rs.getString("username"));
 				user.setIdusuario(rs.getString("idUsuario"));
+				user.addLink(UsersLinkBuilder.buildURIUser(uriInfo, "self",
+						user.getUsername()));
 				stmt.executeUpdate(sql);
 			} else {
 				throw new UserNotFoundException();

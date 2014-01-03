@@ -20,7 +20,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.EquiposLinkBuilder;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.FutbolAPILinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Equipo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.EquipoCollection;
 
@@ -33,7 +32,6 @@ public class EquipoResource {
 	private SecurityContext security;
 
 	@GET
-	@Path("/")
 	@Produces(MediaType.FUTBOL_API_EQUIPO_COLLECTION)
 	public EquipoCollection getEquipos(@PathParam("idClub") String clubid,
 			@QueryParam("pattern") String pattern,
@@ -154,7 +152,6 @@ public class EquipoResource {
 	}
 
 	@POST
-	@Path("/")
 	@Produces(MediaType.FUTBOL_API_EQUIPO)
 	@Consumes(MediaType.FUTBOL_API_EQUIPO)
 	public Equipo crearEquipo(@PathParam("idClub") String idclub, Equipo equipo) {
@@ -191,6 +188,12 @@ public class EquipoResource {
 				int idEquipo = rs.getInt(1);
 				equipo.setIdEquipo(Integer.toString(idEquipo));
 				equipo.setIdClub(idclub);
+				equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
+						"self", idclub, equipo.getIdEquipo()));
+				equipo.addLink(EquiposLinkBuilder.buildURIClubId(uriInfo,
+						"Club", idclub));
+				equipo.addLink(EquiposLinkBuilder.buildURIJugadores(uriInfo,
+						"Jugadores", "0", "15", equipo.getIdEquipo(), idclub));
 				rs.close();
 				stmt.close();
 				conn.close();
@@ -232,7 +235,12 @@ public class EquipoResource {
 				throw new EquipoNotFoundException();
 			equipo.setIdClub(idclub);
 			equipo.setIdEquipo(idequipo);
-			// /setlinks
+			equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo, "self",
+					idclub, equipo.getIdEquipo()));
+			equipo.addLink(EquiposLinkBuilder.buildURIClubId(uriInfo, "Club",
+					idclub));
+			equipo.addLink(EquiposLinkBuilder.buildURIJugadores(uriInfo,
+					"Jugadores", "0", "15", equipo.getIdEquipo(), idclub));
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
