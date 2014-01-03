@@ -20,6 +20,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.CalendarioLinkBuilder;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.ClubLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.ComentariosLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Calendario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CalendarioCollection;
@@ -90,10 +91,7 @@ public class CalendarioResource {
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
-				
-				
-				// Faltan links!
-				
+				calendario.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, "0", "15", null, "Lista calendarios", calendario.getIdCampeonato()));
 				Calendarios.addCalendario(calendario);
 				icount++;
 			}
@@ -103,8 +101,20 @@ public class CalendarioResource {
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
 		}
+		
+		if (ioffset != 0) {
+			String prevoffset = "" + (ioffset - ilength);
+			Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, prevoffset, length, null, "prev",idCampeonato));
+			
+			}
+		Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, offset, length, null, "self", idCampeonato));
 
-		// links!
+			String nextoffset = "" + (ioffset + ilength);
+			if (ilength <= icount) {
+				Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, nextoffset, length, null, "next", idCampeonato));
+
+		}
+		
 		return Calendarios;
 	}
 	
@@ -136,10 +146,11 @@ public class CalendarioResource {
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
-				
-				
-
-				//addlinks
+				calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "self",calendario.getIdCampeonato(), calendario.getIdPartido()));
+				calendario.addLink(CalendarioLinkBuilder.buildURIRetransmision(uriInfo, "Retransmisiones", "0", "15",calendario.getIdCampeonato(), idPartido));
+				calendario.addLink(CalendarioLinkBuilder.buildURIComentarios(uriInfo, "comentarios", "0", "15", calendario.getIdCampeonato(), idPartido));
+				calendario.addLink(CalendarioLinkBuilder.buildURICampeonatos(uriInfo, "campeonatos", calendario.getIdCampeonato()));
+			
 			}
 			else
 			{
