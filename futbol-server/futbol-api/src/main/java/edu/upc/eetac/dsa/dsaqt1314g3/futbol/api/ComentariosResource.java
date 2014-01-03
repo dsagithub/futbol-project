@@ -23,7 +23,6 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.ComentariosLinkBuilder;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.NoticiasLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ComentariosCollection;
 
