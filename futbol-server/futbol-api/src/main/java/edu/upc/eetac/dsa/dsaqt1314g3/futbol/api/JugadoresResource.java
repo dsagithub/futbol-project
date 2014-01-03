@@ -28,64 +28,68 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.JugadoresCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.BadRequestException;
 
 @Path("/club/{idclub}/e/{idequipo}/jugadores")
-
 public class JugadoresResource {
 
 	@Context
 	private SecurityContext security;
 	@Context
-    private UriInfo uriInfo;
-    private DataSource ds = DataSourceSPA.getInstance().getDataSource();	
+	private UriInfo uriInfo;
+	private DataSource ds = DataSourceSPA.getInstance().getDataSource();
+
 	@GET
 	@Path("/{dni}")
 	@Produces(MediaType.FUTBOL_API_JUGADORES)
-    public Jugadores getJugador(@PathParam("dni") String dni, @PathParam("idclub") String idclub, @PathParam("idequipo") String idequipo, @Context Request req){
+	public Jugadores getJugador(@PathParam("dni") String dni,
+			@PathParam("idclub") String idclub,
+			@PathParam("idequipo") String idequipo, @Context Request req) {
 		Jugadores jugador = new Jugadores();
 		Connection conn = null;
-        Statement stmt = null;
-         try {
-                 conn = ds.getConnection();
-         } catch (SQLException e) {
-                 throw new ServiceUnavailableException(e.getMessage());
-         }
-         
-         try {
-                 stmt = conn.createStatement();
-                 String query = "SELECT * FROM Jugadores WHERE dni='" + dni + "' and idequipo ="+idequipo;
-                 ResultSet rs = stmt.executeQuery(query);
-                 if (rs.next()) {
-                         jugador.setDni(rs.getString("dni"));
-                         jugador.setNombre(rs.getString("nombre"));
-                         jugador.setApellidos(rs.getString("apellidos"));
-                         jugador.setIdequipo(rs.getInt("IdEquipo"));
-                         //LINKS ahora
-         				//jugador.addLink(JugadoresLinkBuilder.buildURIJugadorId(uriInfo,
-        					//	"self", idequipo, dni));
-         				
-                         jugador.addLink(JugadoresLinkBuilder.buildURIClubId(uriInfo,
-         						"Club", idclub));
-
-                        jugador.addLink(JugadoresLinkBuilder.buildURIEquipoId(uriInfo,
-         						"Equipo", idclub,  idequipo));
-                         
-                 } else
-                       throw new JugadorNotFoundException();
-         } catch (SQLException e) {
-                 throw new InternalServerException(e.getMessage());
-         }
-         finally {
+		Statement stmt = null;
 		try {
-			stmt.close();
-			conn.close();
+			conn = ds.getConnection();
 		} catch (SQLException e) {
+			throw new ServiceUnavailableException(e.getMessage());
 		}
+
+		try {
+			stmt = conn.createStatement();
+			String query = "SELECT * FROM Jugadores WHERE dni='" + dni
+					+ "' and idequipo =" + idequipo;
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				jugador.setDni(rs.getString("dni"));
+				jugador.setNombre(rs.getString("nombre"));
+				jugador.setApellidos(rs.getString("apellidos"));
+				jugador.setIdequipo(rs.getInt("IdEquipo"));
+				// LINKS ahora
+				jugador.addLink(JugadoresLinkBuilder.buildURIJugadorId(uriInfo,
+						"self", idequipo, dni, idclub));
+
+				jugador.addLink(JugadoresLinkBuilder.buildURIClubId(uriInfo,
+						"Club", idclub));
+
+				jugador.addLink(JugadoresLinkBuilder.buildURIEquipoId(uriInfo,
+						"Equipo", idclub, idequipo));
+
+			} else
+				throw new JugadorNotFoundException();
+		} catch (SQLException e) {
+			throw new InternalServerException(e.getMessage());
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+			}
+		}
+		return jugador;
 	}
-	return jugador;
-}
-	
+
 	@GET
 	@Produces(MediaType.FUTBOL_API_JUGADORES_COLLECTION)
-	public JugadoresCollection getJugadores(@PathParam("idequipo") int idequipo ,
+	public JugadoresCollection getJugadores(
+			@PathParam("idequipo") String idequipo,
+			@PathParam("idclub") String idclub,
 			@QueryParam("offset") String offset,
 			@QueryParam("pattern") String pattern,
 			@QueryParam("length") String length) {
@@ -122,14 +126,11 @@ public class JugadoresResource {
 			Statement stmt = conn.createStatement();
 			String sql = null;
 
-			
-			if (idequipo != 0) {
+			if (idequipo != null) {
 				sql = "select * from Jugadores where idequipo like " + idequipo
 						+ " LIMIT " + offset + "," + length;
-			} 
-			else  {
-				sql = "select * from Jugadores LIMIT " 
-			+ offset + "," + length;
+			} else {
+				sql = "select * from Jugadores LIMIT " + offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -139,20 +140,22 @@ public class JugadoresResource {
 				jugador.setApellidos(rs.getString("apellidos"));
 				jugador.setDni(rs.getString("dni"));
 				jugador.setNombre(rs.getString("nombre"));
-				
+				jugador.addLink(JugadoresLinkBuilder.buildURIJugadorId(uriInfo,
+						"self", idequipo, jugador.getDni(), idclub));
+				jugador.addLink(JugadoresLinkBuilder.buildURIClubId(uriInfo,
+						"Club", idclub));
+				jugador.addLink(JugadoresLinkBuilder.buildURIEquipoId(uriInfo,
+						"Equipo", idclub, idequipo));
+
 				jcol.addJugadores(jugador);
-				//Links:
+				// Links:
 				
 
-				
 				icount++;
 				String pffset = "" + (ioffset - ilength);
 				String noffset = "" + (ioffset - ilength);
 
-					
-
 			}
-			
 
 			rs.close();
 			stmt.close();
@@ -164,38 +167,37 @@ public class JugadoresResource {
 		if (ioffset != 0) {
 			String prevoffset = "" + (ioffset - ilength);
 			jcol.addLink(JugadoresLinkBuilder.buildURIJugadores(uriInfo,
-					prevoffset, length,"prev", idequipo));
+					prevoffset, length, "prev", idequipo, idclub));
 		}
 		jcol.addLink(JugadoresLinkBuilder.buildURIJugadores(uriInfo, offset,
-				length,"self", idequipo));
+				length, "self", idequipo, idclub));
 		String nextoffset = "" + (ioffset + ilength);
 		if (ilength <= icount) {
 			jcol.addLink(JugadoresLinkBuilder.buildURIJugadores(uriInfo,
-					nextoffset, length, "next", idequipo));
+					nextoffset, length, "next", idequipo, idclub));
 		}
 		return jcol;
 	}
 
-	
 	@POST
-    @Consumes(MediaType.FUTBOL_API_JUGADORES)
-    @Produces(MediaType.FUTBOL_API_JUGADORES)
-    public Jugadores createJugador (@PathParam("idequipo") int idequipo , Jugadores jugador) {
-		
-		
-		if (!security.isUserInRole("administrator"))
-		{
-			throw new ForbiddenException("Solo el administrador puede realizar un post");
-		}	
+	@Consumes(MediaType.FUTBOL_API_JUGADORES)
+	@Produces(MediaType.FUTBOL_API_JUGADORES)
+	public Jugadores createJugador(@PathParam("idequipo") int idequipo,
+			@PathParam("idclub") String idclub,
+			Jugadores jugador) {
+
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException(
+					"Solo el administrador puede realizar un post");
+		}
 		if (jugador.getNombre().length() > 50) {
 			throw new BadRequestException(
 					"Name length must be less or equal than 50 characters");
 		}
 		if (jugador.getDni() == null) {
-			throw new BadRequestException(
-					"Dni no puede ser null");
+			throw new BadRequestException("Dni no puede ser null");
 		}
-		
+
 		if (jugador.getDni().length() > 50) {
 			throw new BadRequestException(
 					"Dni length must be less or equal than 50 characters");
@@ -210,40 +212,51 @@ public class JugadoresResource {
 		} catch (SQLException e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
-	
+
 		try {
 			Statement stmt = conn.createStatement();
 
-		jugador.setIdequipo(idequipo);
-			
+			jugador.setIdequipo(idequipo);
+
 			String sql = "insert into Jugadores (dni, nombre , apellidos, idequipo) values ('"
-					+ jugador.getDni() + "', '" + jugador.getNombre() + 
-					 "', '" + jugador.getApellidos() +  "', '" + jugador.getIdequipo() +
-					"')";
+					+ jugador.getDni()
+					+ "', '"
+					+ jugador.getNombre()
+					+ "', '"
+					+ jugador.getApellidos()
+					+ "', '"
+					+ jugador.getIdequipo()
+					+ "')";
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
-		
-			
+			jugador.addLink(JugadoresLinkBuilder.buildURIJugadorId(uriInfo,
+					"self", "" + jugador.getIdequipo(), jugador.getDni(), idclub));
+
+			jugador.addLink(JugadoresLinkBuilder.buildURIClubId(uriInfo,
+					"Club", idclub));
+
+			jugador.addLink(JugadoresLinkBuilder.buildURIEquipoId(uriInfo,
+					"Equipo", idclub, "" + jugador.getIdequipo()));
+
 			rs.close();
 			stmt.close();
 			conn.close();
-			
+
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
 		}
-		
+
 		return jugador;
 	}
-	
+
 	@DELETE
 	@Path("/{dni}")
-	public void borrarjugador (
-			@PathParam("dni") String dni) {
+	public void borrarjugador(@PathParam("dni") String dni) {
 		Connection conn = null;
-	
-		if (!security.isUserInRole("administrator"))
-		{
-		throw new ForbiddenException("Solo el administrador puede borrar un campeonato");
+
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException(
+					"Solo el administrador puede borrar un campeonato");
 		}
 		try {
 			conn = ds.getConnection();
@@ -254,8 +267,7 @@ public class JugadoresResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Jugadores where dni='"
-					+ dni + "'";
+			sql = "delete from Jugadores where dni='" + dni + "'";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
@@ -272,25 +284,21 @@ public class JugadoresResource {
 			}
 		}
 
-	}	
-	
+	}
+
 	@PUT
 	@Path("/{dni}")
 	@Produces(MediaType.FUTBOL_API_JUGADORES)
 	@Consumes(MediaType.FUTBOL_API_JUGADORES)
-	public Jugadores actualizarCampeonato(
-			@PathParam("dni") String dni , 
-			@PathParam("idequipo") int idequipo ,
-			Jugadores jugador
-			) {
-		
-		
+	public Jugadores actualizarCampeonato(@PathParam("dni") String dni,
+			@PathParam("idclub") String idclub,
+			@PathParam("idequipo") int idequipo, Jugadores jugador) {
 
-			if (!security.isUserInRole("administrator"))
-			{
-				throw new ForbiddenException("Solo el administrador puede realizar una actualización a los campeonatos");
-			}
-		//Jugadores jugador = new Jugadores();
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException(
+					"Solo el administrador puede realizar una actualización a los campeonatos");
+		}
+		// Jugadores jugador = new Jugadores();
 		Connection conn = null;
 
 		try {
@@ -302,13 +310,23 @@ public class JugadoresResource {
 			Statement stmt = conn.createStatement();
 			jugador.setDni(dni);
 			jugador.setIdequipo(idequipo);
-			String sql = "update Jugadores set Jugadores.nombre='" + jugador.getNombre()
-					+ "',Jugadores.apellidos='" + jugador.getApellidos()					
-					  + "' where Jugadores.dni=" + dni;
+			String sql = "update Jugadores set Jugadores.nombre='"
+					+ jugador.getNombre() + "',Jugadores.apellidos='"
+					+ jugador.getApellidos() + "' where Jugadores.dni=" + dni;
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new CampeonatoNotFoundException();
+			
+			jugador.addLink(JugadoresLinkBuilder.buildURIJugadorId(uriInfo,
+					"self", "" + jugador.getIdequipo(), jugador.getDni(), idclub));
+
+			jugador.addLink(JugadoresLinkBuilder.buildURIClubId(uriInfo,
+					"Club", idclub));
+
+			jugador.addLink(JugadoresLinkBuilder.buildURIEquipoId(uriInfo,
+					"Equipo", idclub, "" + jugador.getIdequipo()));
+
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
@@ -317,12 +335,4 @@ public class JugadoresResource {
 		return jugador;
 	}
 
-	
-	
-	
 }
-
-		
-
-
-
