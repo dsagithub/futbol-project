@@ -17,7 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.ServiceUnavailableException;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.SecurityContext;
@@ -43,7 +42,6 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			@PathParam("idPartido") String idPartido,
 			@PathParam("idCampeonato") String idCampeonato,
 			@Context Request req) {
-		CacheControl cc = new CacheControl();
 		Comentario comentario = new Comentario();
 		Connection conn = null;
 		try {
@@ -67,6 +65,8 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				comentario.setIdUsuario(rs.getInt("idUsuario"));
 				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
 						"self",idCampeonato, idPartido, comentario.getIdComentario()));
+				comentario.addLink(ComentariosLinkBuilder.buildURICalendarioId(uriInfo,
+						"self",idCampeonato, idPartido));
 				//----------
 			} else {
 				throw new ComentarioNotFoundException();
@@ -271,7 +271,11 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			throw new InternalServerException(e.getMessage());
 		}
 		if (ioffset != 0) {
-			String prevoffset = "" + (ioffset - ilength);
+			String prevoffset = null;
+			if ((ioffset - ilength) < 0)
+				prevoffset = "" + (0);
+			else
+				prevoffset = "" + (ioffset - ilength);
 			comentarios.addLink(ComentariosLinkBuilder.buildURIComentarios(uriInfo,
 					prevoffset, length, idComentario, "prev", idPartido, idCampeonato));
 		}

@@ -17,11 +17,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.ServiceUnavailableException;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.DataSourceSPA;
@@ -43,7 +40,6 @@ public class NoticiasResource {
 	public Noticia getNoticia(@PathParam("idnoticia") String idNoticia,
 			@PathParam("idClub") String idClub,
 			@Context Request req) {
-		CacheControl cc = new CacheControl();
 		Noticia noticia = new Noticia();
 		Connection conn = null;
 		try {
@@ -65,9 +61,11 @@ public class NoticiasResource {
 				noticia.setContent(rs.getString("content"));
 				noticia.setMedia(rs.getString("media"));
 				noticia.setLastModified(rs.getTimestamp("lastModified"));
+				//links
 				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
 						"self", idClub, noticia.getIdNoticia()));
-				//----------
+				noticia.addLink(NoticiasLinkBuilder.buildURIClubId(uriInfo,
+						"self", idClub));
 			} else {
 				throw new NoticiaNotFoundException();
 			}
@@ -81,15 +79,6 @@ public class NoticiasResource {
 				throw new InternalServerException(e.getMessage());
 			}
 		}
-		/*EntityTag eTag = new EntityTag(Integer.toString(noticia.getLastModified()
-				.hashCode()));
-		Response.ResponseBuilder rb = req.evaluatePreconditions(eTag);
-		
-		if (rb != null) {
-			return rb.cacheControl(cc).tag(eTag).build();
-		}
-		
-		rb = Response.ok(noticia).cacheControl(cc).tag(eTag);*/
 
 		return noticia;
 		
@@ -280,10 +269,11 @@ public class NoticiasResource {
 				noticia.setContent(rs.getString("content"));
 				noticia.setMedia(rs.getString("media"));
 				noticia.setLastModified(rs.getTimestamp("lastModified"));
+				//links
 				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
 						"self", idClub, noticia.getIdNoticia()));
-				//links
-				
+				noticia.addLink(NoticiasLinkBuilder.buildURIClubId(uriInfo,
+						"self", idClub));
 				noticias.addNoticia(noticia);
 				icount++;
 			}
@@ -294,7 +284,11 @@ public class NoticiasResource {
 			throw new InternalServerException(e.getMessage());
 		}
 		if (ioffset != 0) {
-			String prevoffset = "" + (ioffset - ilength);
+			String prevoffset = null;
+			if ((ioffset - ilength) < 0)
+				prevoffset = "" + (0);
+			else
+				prevoffset = "" + (ioffset - ilength);
 			noticias.addLink(NoticiasLinkBuilder.buildURINoticias(uriInfo,
 					prevoffset, length, "prev", idClub));
 		}
