@@ -132,6 +132,10 @@ public class CampeonatosResource {
 		{
 				throw new ForbiddenException("Solo el administrador puede realizar un post");
 			}	
+			
+			if (campeonato.getNombre() == null) {
+				throw new BadRequestException("Nombre no puede ser null");
+			}
 
 
 			try {
@@ -152,6 +156,10 @@ public class CampeonatosResource {
 				if (rs.next()) {
 					int idCampeonato = rs.getInt(1);
 					campeonato.setIdcampeonatos(idCampeonato);
+					campeonato.addLink(CampeonatosLinkBuilder.buildURICampeonatoId(uriInfo, "self", campeonato.getIdcampeonatos()));
+					campeonato.addLink(CampeonatosLinkBuilder.buildURICalendarioId(uriInfo,
+							"Calendario", campeonato.getIdcampeonatos() , "0", "5",
+							null));
 					rs.close();
 					stmt.close();
 					conn.close();
@@ -181,7 +189,9 @@ public class CampeonatosResource {
 				}
 				
 			Connection conn = null;
-
+			if (campeonato.getNombre() == null) {
+				throw new BadRequestException("Nombre no puede ser null");
+			}
 			try {
 				conn = ds.getConnection();
 			} catch (SQLException e) {
@@ -197,6 +207,11 @@ public class CampeonatosResource {
 				int rs2 = stmt.executeUpdate(sql);
 				if (rs2 == 0)
 					throw new CampeonatoNotFoundException();
+				
+				campeonato.addLink(CampeonatosLinkBuilder.buildURICampeonatoId(uriInfo, "self", campeonato.getIdcampeonatos()));
+				campeonato.addLink(CampeonatosLinkBuilder.buildURICalendarioId(uriInfo,
+						"Calendario", campeonato.getIdcampeonatos() , "0", "5",
+						null));
 				stmt.close();
 				conn.close();
 			} catch (SQLException e) {
