@@ -122,10 +122,16 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@POST
 	@Consumes(MediaType.FUTBOL_API_COMENTARIO)
 	@Produces(MediaType.FUTBOL_API_COMENTARIO)
-	public Comentario createComentario(@PathParam("idCampeonato") String idCampeonato, Comentario comentario) {
+	public Comentario createComentario(@PathParam("idCampeonato") String idCampeonato, 
+			@PathParam("idPartido") int idPartido,
+			Comentario comentario) {
 		if (comentario.getTexto().length() > 100) {
 			throw new BadRequestException(
 					"texto length must be less or equal than 100 characters");
+		}
+		if (comentario.getTexto().length() == 0) {
+			throw new BadRequestException(
+					"texto no puede estar vacio");
 		}
 		Connection conn = null;
 		try {
@@ -144,7 +150,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 					+ "', '" 
 					+ comentario.getTexto()
 					+ "', '" 
-					+ comentario.getIdPartido()
+					+ idPartido
 					+ "', '" 
 					+ comentario.getIdUsuario() + "')";
 					
@@ -160,9 +166,9 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				if (rs.next()) {
 					// links
 					comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
-							"self",idCampeonato, comentario.getIdPartido(), comentario.getIdComentario()));
+							"self",idCampeonato, Integer.toString(idPartido), comentario.getIdComentario()));
 					comentario.addLink(ComentariosLinkBuilder.buildURICalendarioId(uriInfo,
-							"Calendario",idCampeonato, comentario.getIdPartido()));
+							"Calendario",idCampeonato, Integer.toString(idPartido)));
 					comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
 							"Campeonato",idCampeonato));
 				}
@@ -184,7 +190,9 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@Consumes(MediaType.FUTBOL_API_COMENTARIO)
 	@Produces(MediaType.FUTBOL_API_COMENTARIO)
 	public Comentario updateComentario(@PathParam("idCampeonato") String idCampeonato,
-			@PathParam("idcomentario") int idComentario, Comentario comentario) {
+			@PathParam("idcomentario") int idComentario, 
+			@PathParam("idPartido") int idPartido,
+			Comentario comentario) {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -196,8 +204,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			String sql = "update Comentarios set Comentarios.tiempo='" + comentario.getTiempo()
 					+ "',Comentarios.media='" + comentario.getMedia() 
 					+ "',Comentarios.texto='" + comentario.getTexto() 
-					+ "',Comentarios.media='" + comentario.getMedia()
-					+ "',Comentarios.idPartido='" + comentario.getIdPartido() 
+					+ "',Comentarios.idPartido='" + idPartido 
 					+ "',Comentarios.idUsuario='" + comentario.getIdUsuario() 
 					+ "' where Comentarios.idComentarios=" + idComentario;
 			int rs2 = stmt.executeUpdate(sql);
@@ -209,9 +216,9 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				comentario.setIdComentario(idComentario);
 				// links
 				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
-						"self",idCampeonato, comentario.getIdPartido(), comentario.getIdComentario()));
+						"self",idCampeonato, Integer.toString(idPartido), comentario.getIdComentario()));
 				comentario.addLink(ComentariosLinkBuilder.buildURICalendarioId(uriInfo,
-						"Calendario",idCampeonato, comentario.getIdPartido()));
+						"Calendario",idCampeonato, Integer.toString(idPartido)));
 				comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
 						"Campeonato",idCampeonato));
 			}

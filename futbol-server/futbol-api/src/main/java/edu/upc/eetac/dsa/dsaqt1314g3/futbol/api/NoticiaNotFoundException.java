@@ -6,7 +6,7 @@ import javax.ws.rs.core.Response;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.FutbolError;
 
 public class NoticiaNotFoundException extends WebApplicationException {
-	private final static String MESSAGE = "Book not found";
+	private final static String MESSAGE = "Noticia not found";
 
 	public NoticiaNotFoundException() {
 		super(Response.status(Response.Status.NOT_FOUND)

@@ -118,10 +118,14 @@ public class NoticiasResource {
 	@POST
 	@Consumes(MediaType.FUTBOL_API_NOTICIA)
 	@Produces(MediaType.FUTBOL_API_NOTICIA)
-	public Noticia createNoticia(Noticia noticia) {
+	public Noticia createNoticia(@PathParam("idClub") int idClub, Noticia noticia) {
 		if (noticia.getTitulo().length() > 100) {
 			throw new BadRequestException(
 					"title length must be less or equal than 100 characters");
+		}
+		if (noticia.getTitulo().length() == 0) {
+			throw new BadRequestException(
+					"el titulo no puede estar vacio");
 		}
 		java.util.Date utilDate = new java.util.Date();
 		long lnMilisegundos = utilDate.getTime();
@@ -138,7 +142,7 @@ public class NoticiasResource {
 			String sql = "insert into Noticias (idNoticias, idClub, titulo, content, media, lastModified) values ('"
 					+ noticia.getIdNoticia() 	
 					+ "', '"
-					+ noticia.getIdClub()
+					+ idClub
 					+ "', '" 
 					+ noticia.getTitulo()
 					+ "', '" 
@@ -159,11 +163,12 @@ public class NoticiasResource {
 				rs = stmt.executeQuery(sql2);
 				if (rs.next()) {
 					noticia.setLastModified(rs.getTimestamp(1));
+					noticia.setIdClub(idClub);
 					// links
 					noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
-							"self", Integer.toString(noticia.getIdClub()), noticia.getIdNoticia()));
+							"self", Integer.toString(idClub), noticia.getIdNoticia()));
 					noticia.addLink(NoticiasLinkBuilder.buildURIClubId(uriInfo,
-							"club", Integer.toString(noticia.getIdClub())));
+							"club", Integer.toString(idClub)));
 				}
 				rs.close();
 				stmt.close();
@@ -182,7 +187,8 @@ public class NoticiasResource {
 	@Path("/{idnoticia}")
 	@Consumes(MediaType.FUTBOL_API_NOTICIA)
 	@Produces(MediaType.FUTBOL_API_NOTICIA)
-	public Noticia updateNoticia(@PathParam("idnoticia") int idNoticia, Noticia noticia) {
+	public Noticia updateNoticia(@PathParam("idClub") int idClub,
+			@PathParam("idnoticia") int idNoticia, Noticia noticia) {
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -191,10 +197,11 @@ public class NoticiasResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update Noticias set Noticias.idClub='" + noticia.getIdClub()
-					+ "',Noticias.titulo='" + noticia.getTitulo() + "',Noticias.content='"
-					+ noticia.getContent() + "',Noticias.media='"
-					+ noticia.getMedia() + "' where Noticias.idNoticias=" + idNoticia;
+			String sql = "update Noticias set Noticias.idClub='" + idClub
+					+ "',Noticias.titulo='" + noticia.getTitulo() 
+					+ "',Noticias.content='" + noticia.getContent() 
+					+ "',Noticias.media='" + noticia.getMedia() 
+					+ "' where Noticias.idNoticias=" + idNoticia;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new NoticiaNotFoundException();
@@ -205,9 +212,9 @@ public class NoticiasResource {
 				noticia.setIdNoticia(idNoticia);
 				// links
 				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
-						"self", Integer.toString(noticia.getIdClub()), noticia.getIdNoticia()));
+						"self", Integer.toString(idClub), noticia.getIdNoticia()));
 				noticia.addLink(NoticiasLinkBuilder.buildURIClubId(uriInfo,
-						"club", Integer.toString(noticia.getIdClub())));
+						"club", Integer.toString(idClub)));
 			}
 			rs.close();
 			stmt.close();
