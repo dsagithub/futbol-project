@@ -70,6 +70,8 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 						"Calendario",idCampeonato, idPartido));
 				comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
 						"Campeonato",idCampeonato));
+				comentario.addLink(ComentariosLinkBuilder.buildURIUsuarioId(uriInfo,
+						"Usuario",comentario.getIdUsuario()));
 			} else {
 				throw new ComentarioNotFoundException();
 			}
@@ -171,6 +173,8 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 							"Calendario",idCampeonato, Integer.toString(idPartido)));
 					comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
 							"Campeonato",idCampeonato));
+					comentario.addLink(ComentariosLinkBuilder.buildURIUsuarioId(uriInfo,
+							"Usuario",comentario.getIdUsuario()));
 				}
 				rs.close();
 				stmt.close();
@@ -221,6 +225,8 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 						"Calendario",idCampeonato, Integer.toString(idPartido)));
 				comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
 						"Campeonato",idCampeonato));
+				comentario.addLink(ComentariosLinkBuilder.buildURIUsuarioId(uriInfo,
+						"Usuario",comentario.getIdUsuario()));
 			}
 			stmt.close();
 			conn.close();
@@ -300,7 +306,9 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				comentario.addLink(ComentariosLinkBuilder.buildURICalendarioId(uriInfo,
 						"Calendario",idCampeonato, idPartido));
 				comentario.addLink(ComentariosLinkBuilder.buildURICampeonatoId(uriInfo,
-						"Campeonato",idCampeonato));			
+						"Campeonato",idCampeonato));	
+				comentario.addLink(ComentariosLinkBuilder.buildURIUsuarioId(uriInfo,
+						"Usuario",comentario.getIdUsuario()));
 				comentarios.addComentario(comentario);
 				icount++;
 			}

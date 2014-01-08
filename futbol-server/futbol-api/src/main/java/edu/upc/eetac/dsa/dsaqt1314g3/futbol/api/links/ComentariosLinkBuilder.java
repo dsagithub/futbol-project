@@ -8,6 +8,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.CalendarioResource;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.CampeonatosResource;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.ComentariosResource;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.MediaType;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.UserResource;
 
 public class ComentariosLinkBuilder {
 	
@@ -33,6 +34,18 @@ public class ComentariosLinkBuilder {
 		link.setUri(uri.toString());
 		link.setRel(rel);
 		link.setType(MediaType.FUTBOL_API_CALENDARIO);
+		return link;
+	}
+	
+	public final static Link buildURIUsuarioId(UriInfo uriInfo, String rel,
+			int idUser) {
+		URI uri = uriInfo.getBaseUriBuilder().path(UserResource.class)
+				.path(UserResource.class, "getUser")
+				.build(idUser);
+		Link link = new Link();
+		link.setUri(uri.toString());
+		link.setRel(rel);
+		link.setType(MediaType.FUTBOL_API_USER);
 		return link;
 	}
 	
