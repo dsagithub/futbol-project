@@ -77,19 +77,36 @@ public class EquipoResource {
 						+ offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				Equipo equipo = new Equipo();
-				equipo.setIdClub(clubid);
-				equipo.setIdEquipo(rs.getString("idEquipo"));
-				equipo.setNombre(rs.getString("nombre"));
-				equipo.setCampeonato(rs.getString("idCampeonatos"));
-				equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
-						"self", clubid, equipo.getIdEquipo()));
-				equipos.addEquipo(equipo);
-				equipo.addLink(EquiposLinkBuilder.buildURICalendarioId(uriInfo,
-						"Calendario", equipo.getCampeonato(), offset, length,
-						pattern));
+			if (rs.next()) {
+				Equipo equipo2 = new Equipo();
+				equipo2.setIdClub(clubid);
+				equipo2.setIdEquipo(rs.getString("idEquipo"));
+				equipo2.setNombre(rs.getString("nombre"));
+				equipo2.setCampeonato(rs.getString("idCampeonatos"));
+				equipo2.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
+						"self", clubid, equipo2.getIdEquipo()));
+
+				equipo2.addLink(EquiposLinkBuilder.buildURICalendarioId(
+						uriInfo, "Calendario", equipo2.getCampeonato(), offset,
+						length, pattern));
+				equipos.addEquipo(equipo2);
 				icount++;
+				while (rs.next()) {
+					Equipo equipo = new Equipo();
+					equipo.setIdClub(clubid);
+					equipo.setIdEquipo(rs.getString("idEquipo"));
+					equipo.setNombre(rs.getString("nombre"));
+					equipo.setCampeonato(rs.getString("idCampeonatos"));
+					equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
+							"self", clubid, equipo.getIdEquipo()));
+					equipo.addLink(EquiposLinkBuilder.buildURICalendarioId(
+							uriInfo, "Calendario", equipo.getCampeonato(),
+							offset, length, pattern));
+					equipos.addEquipo(equipo);
+					icount++;
+				}
+			} else {
+				throw new EquipoNotFoundException();
 			}
 			rs.close();
 			stmt.close();
@@ -130,7 +147,7 @@ public class EquipoResource {
 			sql = "select * from equipo where idClub=" + clubid
 					+ " and idEquipo='" + idequipo + "'";
 			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
+			if (rs.next()) {
 				equipo.setIdClub(clubid);
 				equipo.setIdEquipo(idequipo);
 				equipo.setNombre(rs.getString("nombre"));
@@ -141,6 +158,10 @@ public class EquipoResource {
 						"Club", clubid));
 				equipo.addLink(EquiposLinkBuilder.buildURIJugadores(uriInfo,
 						"Jugadores", "0", "15", idequipo, clubid));
+				equipo.addLink(EquiposLinkBuilder.buildURICalendarioId(uriInfo,
+						"Calendario", equipo.getCampeonato(), "0", "15", null));
+			} else {
+				throw new EquipoNotFoundException();
 			}
 			rs.close();
 			stmt.close();
@@ -172,6 +193,12 @@ public class EquipoResource {
 			if (equipo.getNombre().length() > 50) {
 				throw new BadRequestException(
 						"Name length must be less or equal than 50 characters");
+			}
+			if (equipo.getCampeonato().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (equipo.getNombre().length() == 0) {
+				throw new BadRequestException("faltan parametros");
 			}
 		}
 		try {
@@ -216,7 +243,20 @@ public class EquipoResource {
 		if (!security.isUserInRole("administrator")) {
 			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
 		}
-
+		if (equipo == null) {
+			throw new BadRequestException("Insert name of team");
+		} else {
+			if (equipo.getNombre().length() > 50) {
+				throw new BadRequestException(
+						"Name length must be less or equal than 50 characters");
+			}
+			if (equipo.getCampeonato().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (equipo.getNombre().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -226,7 +266,7 @@ public class EquipoResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = "update equipo set equipo.nombre='"
-					+ equipo.getNombre() + "', equipo.idCampeonato="
+					+ equipo.getNombre() + "', equipo.idCampeonatos="
 					+ equipo.getCampeonato() + " where (equipo.idClub="
 					+ idclub + " AND equipo.idEquipo='" + idequipo + "')";
 

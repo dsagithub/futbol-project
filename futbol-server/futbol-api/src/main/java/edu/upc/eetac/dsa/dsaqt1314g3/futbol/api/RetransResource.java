@@ -163,6 +163,20 @@ public class RetransResource {
 		if (!security.isUserInRole("administrator")) {
 			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
 		}
+		if (retra == null) {
+			throw new BadRequestException("error");
+		} else {
+			if (retra.getTexto().length() > 500) {
+				throw new BadRequestException(
+						"Text length must be less or equal than 500 characters");
+			}
+			if (retra.getTexto().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (retra.getTiempo().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -211,6 +225,20 @@ public class RetransResource {
 			@PathParam("idpartido") String idpartido, Retransmision retra) {
 		if (!security.isUserInRole("administrator")) {
 			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
+		if (retra == null) {
+			throw new BadRequestException("error");
+		} else {
+			if (retra.getTexto().length() > 500) {
+				throw new BadRequestException(
+						"Name length must be less or equal than 500 characters");
+			}
+			if (retra.getTexto().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (retra.getTiempo().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
 		}
 		Connection conn = null;
 		try {

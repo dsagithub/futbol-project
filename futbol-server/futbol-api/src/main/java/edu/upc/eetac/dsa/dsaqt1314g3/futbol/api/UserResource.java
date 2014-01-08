@@ -117,6 +117,22 @@ public class UserResource {
 	@Consumes(MediaType.FUTBOL_API_USER)
 	@Produces(MediaType.FUTBOL_API_USER)
 	public User createUser(User user) {
+		if (user == null) {
+			throw new BadRequestException("error");
+		} else {
+			if (user.getUsername().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (user.getName().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (user.getEmail().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (user.getPassword().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -216,6 +232,19 @@ public class UserResource {
 		if (security.getUserPrincipal().getName() != username) {
 			if (!security.isUserInRole("administrator")) {
 				throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+			}
+		}
+		if (user == null) {
+			throw new BadRequestException("error");
+		} else {
+			if (user.getName().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (user.getEmail().length() == 0) {
+				throw new BadRequestException("faltan parametros");
+			}
+			if (user.getPassword().length() == 0) {
+				throw new BadRequestException("faltan parametros");
 			}
 		}
 		Connection conn = null;
