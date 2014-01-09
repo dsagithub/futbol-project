@@ -91,7 +91,7 @@ public class CalendarioResource {
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
-				calendario.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, "0", "15", null, "Lista calendarios", calendario.getIdCampeonato()));
+				calendario.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, "0", "15", null, "Self", calendario.getIdCampeonato()));
 				Calendarios.addCalendario(calendario);
 				icount++;
 			}
@@ -184,13 +184,18 @@ public class CalendarioResource {
 		{
 			throw new ForbiddenException("Solo administrador puede realizar esta acción");
 		}
-		
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
+		if ((calendario.getIdEquipoA().length()==0) || (calendario.getIdEquipoB().length()==0) || (calendario.getFecha().length()==0) || (calendario.getJornada().length()==0) || (calendario.getHora().length()==0) )
+		{
+			throw new BadRequestException("Ninguno de los parámetros puede estar vacío");
+		}
+		
+	
 		try{
 			Statement stmt = conn.createStatement();
 			String sql = "insert into Calendario (idCampeonato, idEquipoA, idEquipoB, jornada, fecha, hora ) values('"
@@ -211,10 +216,10 @@ public class CalendarioResource {
 			if (rs.next()) {
 			int  idPartido = rs.getInt(1);
 		calendario.setIdPartido(Integer.toString(idPartido));
-		
+		calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "self",idCampeonato, calendario.getIdPartido()));
 
 
-			//If con links
+			
 			rs.close();
 			stmt.close();
 			conn.close();
@@ -236,10 +241,10 @@ public class CalendarioResource {
 	public void deleteSting(@PathParam("idPartido") String id) {
 		Connection conn = null;
 		
-//		if (!security.isUserInRole("administrator"))
-//		{
-//			throw new ForbiddenException("Solo administrador puede realizar esta acción");
-//		}
+		if (!security.isUserInRole("administrator"))
+		{
+			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+		}
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
@@ -270,7 +275,7 @@ public class CalendarioResource {
 	@Path("{idPartido}")
 	@Consumes(MediaType.FUTBOL_API_CALENDARIO)
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
-	public Calendario updateCalendario(@PathParam("idPartido") String id, Calendario calendario) {
+	public Calendario updateCalendario(@PathParam("idPartido") String id,@PathParam("idCampeonato") String idCampeonato, Calendario calendario) {
 	
 		if (!security.isUserInRole("administrator"))
 		{
@@ -282,6 +287,10 @@ public class CalendarioResource {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
 			throw new ServiceUnavailableException(e.getMessage());
+		}
+		if ((calendario.getIdEquipoA().length()==0) || (calendario.getIdEquipoB().length()==0) || (calendario.getFecha().length()==0) || (calendario.getJornada().length()==0) || (calendario.getHora().length()==0) )
+		{
+			throw new BadRequestException("Ninguno de los parámetros puede estar vacío");
 		}
 		try {
 			Statement stmt = conn.createStatement();
@@ -295,7 +304,8 @@ public class CalendarioResource {
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new CalendarioNotFoundException("No existe calendario para actualizar");
-			
+			calendario.setIdPartido(id);
+			calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "self",idCampeonato, calendario.getIdPartido()));
 		
 			stmt.close();
 			conn.close();

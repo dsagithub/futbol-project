@@ -183,7 +183,12 @@ public class ClubResource {
 		{
 			throw new ForbiddenException("Solo administrador puede realizar esta acción");
 		}
-		
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			throw new ServiceUnavailableException(e.getMessage());
+		}
 		
 		if (club.getNombre().length()>45){
 			throw new BadRequestException("El nombre del club ha de ser menor de 45 carácteres");
@@ -193,12 +198,7 @@ public class ClubResource {
 		{
 			throw new BadRequestException("El nombre del club no puede estar vacío");
 		}
-		Connection conn = null;
-		try {
-			conn = ds.getConnection();
-		} catch (SQLException e) {
-			throw new ServiceUnavailableException(e.getMessage());
-		}
+	
 		try{
 			Statement stmt = conn.createStatement();
 			String sql = "insert into Club (nombre) values ('"
@@ -210,7 +210,8 @@ public class ClubResource {
 		// Si no hay lasModified las 2 siguientes lineas sobran
 		int  clubid = rs.getInt(1);
 		club.setIdClub(Integer.toString(clubid));
-			//If con links
+		club.addLink(ClubLinkBuilder.buildURIClubId(uriInfo, "self", club.getIdClub()));
+			
 			rs.close();
 			stmt.close();
 			conn.close();
@@ -271,21 +272,33 @@ public class ClubResource {
 		{
 			throw new ForbiddenException("Solo administrador puede realizar esta acción");
 		}
-		
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
+		if (club.getNombre().length()>45){
+			throw new BadRequestException("El nombre del club ha de ser menor de 45 carácteres");
+		}
+		
+		if (club.getNombre().length()==0)
+		{
+			throw new BadRequestException("El nombre del club no puede estar vacío");
+		}
+		
+	
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = "update Club set Club.nombre='" + club.getNombre()
 					  + "' where Club.idClub=" + id;
 			int rs2 = stmt.executeUpdate(sql);
+		
 			if (rs2 == 0)
 				throw new ClubNotFoundException("No existe equipo para actualizar");
+			club.setIdClub(id);
 			
+			club.addLink(ClubLinkBuilder.buildURIClubId(uriInfo, "self", club.getIdClub()));
 		
 			stmt.close();
 			conn.close();

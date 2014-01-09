@@ -24,7 +24,7 @@ public class CalendarioLinkBuilder {
 		Link link = new Link();
 		link.setUri(uri.toString());
 		link.setRel(rel);
-		link.setTitle("Calendario " + idPartido);
+		link.setTitle("Partido con id " + idPartido);
 		link.setType(MediaType.FUTBOL_API_CALENDARIO);
 		return link;
 	}
@@ -91,7 +91,7 @@ public class CalendarioLinkBuilder {
 		Link link = new Link();
 		link.setUri(uri.toString());
 		link.setRel(rel);
-		link.setType(MediaType.FUTBOL_API_COMENTARIOS_COLLECTION);
+		link.setType(MediaType.FUTBOL_API_CAMPEONATOS_COLLECTION);
 		return link;
 	}
 }
