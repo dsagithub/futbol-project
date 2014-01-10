@@ -194,6 +194,18 @@ public class JugadoresResource {
 			throw new BadRequestException(
 					"Name length must be less or equal than 50 characters");
 		}
+		if (jugador.getNombre().length() == 0) {
+			throw new BadRequestException(
+					"El nombre del jugador es obligatorio");
+		}
+		if (jugador.getDni().length() == 0) {
+			throw new BadRequestException(
+					"El dni del jugador es obligatorio");
+		}
+		if (jugador.getApellidos().length() == 0) {
+			throw new BadRequestException(
+					"Los apellidos del jugador son obligatorios");
+		}
 		if (jugador.getDni() == null) {
 			throw new BadRequestException("Dni no puede ser null");
 		}
@@ -290,7 +302,7 @@ public class JugadoresResource {
 	@Path("/{dni}")
 	@Produces(MediaType.FUTBOL_API_JUGADORES)
 	@Consumes(MediaType.FUTBOL_API_JUGADORES)
-	public Jugadores actualizarCampeonato(@PathParam("dni") String dni,
+	public Jugadores actualizarCampeonato(@PathParam("dni") String dniaa,
 			@PathParam("idclub") String idclub,
 			@PathParam("idequipo") int idequipo, Jugadores jugador) {
 
@@ -298,8 +310,26 @@ public class JugadoresResource {
 			throw new ForbiddenException(
 					"Solo el administrador puede realizar una actualización a los campeonatos");
 		}
-		// Jugadores jugador = new Jugadores();
 		Connection conn = null;
+		
+		if (jugador.getNombre().length() > 50) {
+			throw new BadRequestException(
+					"Name length must be less or equal than 50 characters");
+		}
+		if (jugador.getNombre().length() == 0) {
+			throw new BadRequestException(
+					"El nombre del jugador es obligatorio");
+		}
+
+		if (jugador.getApellidos().length() == 0) {
+			throw new BadRequestException(
+					"Los apellidos del jugador son obligatorios");
+		}
+
+		if (jugador.getApellidos().length() > 45) {
+			throw new BadRequestException(
+					"Apellidos length must be less or equal than 45 characters");
+		}
 
 		try {
 			conn = ds.getConnection();
@@ -308,15 +338,15 @@ public class JugadoresResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			jugador.setDni(dni);
+			jugador.setDni(dniaa);
 			jugador.setIdequipo(idequipo);
 			String sql = "update Jugadores set Jugadores.nombre='"
 					+ jugador.getNombre() + "',Jugadores.apellidos='"
-					+ jugador.getApellidos() + "' where Jugadores.dni=" + dni;
+					+ jugador.getApellidos() + "' where Jugadores.dni='" + jugador.getDni() + "'";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
-				throw new CampeonatoNotFoundException();
+				throw new JugadorNotFoundException();
 			
 			jugador.addLink(JugadoresLinkBuilder.buildURIJugadorId(uriInfo,
 					"self", "" + jugador.getIdequipo(), jugador.getDni(), idclub));

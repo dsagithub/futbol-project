@@ -79,8 +79,6 @@ public class CampeonatosResource {
 			return campeonato;
 
 		}
-
-		
 		
 		@DELETE
 		@Path("/{idcampeonato}")
@@ -106,7 +104,7 @@ public class CampeonatosResource {
 
 				int rs2 = stmt.executeUpdate(sql);
 				if (rs2 == 0)
-					throw new BadRequestException("No se puede realizar tal acción");
+					throw new ClubNotFoundException("No existe ningún campeonato con esa id");
 
 			} catch (SQLException e) {
 				throw new InternalServerException(e.getMessage());
@@ -135,6 +133,15 @@ public class CampeonatosResource {
 			
 			if (campeonato.getNombre() == null) {
 				throw new BadRequestException("Nombre no puede ser null");
+			}
+			
+			if (campeonato.getNombre().length()>45){
+				throw new BadRequestException("El nombre del campeonato ha de ser menor de 45 carácteres");
+			}
+			
+			if (campeonato.getNombre().length()==0)
+			{
+				throw new BadRequestException("El nombre del campeonato no puede estar vacío");
 			}
 
 
@@ -188,6 +195,14 @@ public class CampeonatosResource {
 					throw new ForbiddenException("Solo el administrador puede realizar una actualización a los campeonatos");
 				}
 				
+			if (campeonato.getNombre().length()>45){
+				throw new BadRequestException("El nombre del campeonato ha de ser menor de 45 carácteres");
+			}
+			
+			if (campeonato.getNombre().length()==0)
+			{
+				throw new BadRequestException("El nombre del campeonato no puede estar vacío");
+			}
 			Connection conn = null;
 			if (campeonato.getNombre() == null) {
 				throw new BadRequestException("Nombre no puede ser null");

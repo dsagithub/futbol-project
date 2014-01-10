@@ -20,7 +20,7 @@ public class JugadoresLinkBuilder {
 		link.setUri(uri.toString());
 		link.setRel(rel);
 		link.setTitle("Jugador " + dni);
-		link.setType(MediaType.FUTBOL_API_EQUIPO);
+		link.setType(MediaType.FUTBOL_API_JUGADORES);
 		return link;
 	}
 

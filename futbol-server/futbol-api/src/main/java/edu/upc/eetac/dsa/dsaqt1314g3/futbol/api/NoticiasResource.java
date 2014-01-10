@@ -19,6 +19,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.DataSourceSPA;
@@ -33,6 +34,8 @@ public class NoticiasResource {
 	
 	@Context
 	private UriInfo uriInfo;
+	@Context
+	private SecurityContext security;
 	
 	@GET
 	@Path("/{idnoticia}")
@@ -87,6 +90,10 @@ public class NoticiasResource {
 	@DELETE
 	@Path("/{idnoticia}")
 	public void deleteNoticia(@PathParam("idnoticia") int idNoticia) {
+		
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -119,6 +126,9 @@ public class NoticiasResource {
 	@Consumes(MediaType.FUTBOL_API_NOTICIA)
 	@Produces(MediaType.FUTBOL_API_NOTICIA)
 	public Noticia createNoticia(@PathParam("idClub") int idClub, Noticia noticia) {
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		if (noticia.getTitulo().length() > 100) {
 			throw new BadRequestException(
 					"title length must be less or equal than 100 characters");
@@ -189,6 +199,9 @@ public class NoticiasResource {
 	@Produces(MediaType.FUTBOL_API_NOTICIA)
 	public Noticia updateNoticia(@PathParam("idClub") int idClub,
 			@PathParam("idnoticia") int idNoticia, Noticia noticia) {
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();

@@ -93,6 +93,10 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	@DELETE
 	@Path("/{idcomentario}")
 	public void deleteComentario(@PathParam("idcomentario") int idComentario) {
+		
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
@@ -127,6 +131,9 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	public Comentario createComentario(@PathParam("idCampeonato") String idCampeonato, 
 			@PathParam("idPartido") int idPartido,
 			Comentario comentario) {
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		if (comentario.getTexto().length() > 100) {
 			throw new BadRequestException(
 					"texto length must be less or equal than 100 characters");
@@ -197,6 +204,9 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			@PathParam("idcomentario") int idComentario, 
 			@PathParam("idPartido") int idPartido,
 			Comentario comentario) {
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
+		}
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
