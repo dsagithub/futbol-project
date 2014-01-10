@@ -17,7 +17,6 @@
     <!-- Main jumbotron for a primary marketing message or call to action
     -->
     <!-- /container -->
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
     >
     </script>
@@ -31,10 +30,10 @@
       <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
           <li class="active">
-            <a href="http://localhost:8080/futbol/index.html">Home</a>
+             <a href="http://localhost:8080/futbol/index.html">Home</a>
           </li>
           <li>
-            <a href="#">Link</a>
+            <a style='cursor: pointer;' onclick="muestra_oculta('equiposshow')">Noticias del club</a> 
           </li>
           <li>
             <a href="#">Link</a>
@@ -44,16 +43,23 @@
     </nav>
      <img src="https://s3.amazonaws.com/media.jetstrap.com/mzfDLwsRx2rAomMGpIWQ_theobserver.jpg"
     width="180">
-    <div class="well" >
+    <h3>
+      Equipos del club
+    </h3>
 
-    	 <h3>
-    Lista de clubs
-  </h3>
-   <a style='cursor: pointer;' onclick="muestra_oculta('clubsshow')">Mostrar / Ocultar</a>
-        <div id="clubsshow"> </div>
+    <div class="well">
+       <a style='cursor: pointer;' onclick="muestra_oculta('equiposshow')">Mostrar / Ocultar</a> 
+      <div id="equiposshow"> </div>
+    </div>
+    <h3>
+      Noticias del club
+    </h3>
+    <div class="well">
+      <a style='cursor: pointer;' onclick="muestra_oculta('noticiasshow')">Mostrar / Ocultar</a>
+   <div id="noticiasshow"> </div>
     </div>
   </body>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="VistaUsuario/vistausuarioprincipal.js"></script>
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="vistaclub.js"></script>
 
 </html>

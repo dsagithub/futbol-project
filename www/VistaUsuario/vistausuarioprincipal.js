@@ -46,9 +46,9 @@ function getClubsList() {
 					console.log("dentro funcion crear lista");
 					console.log(club);
 					
-				htmlString += '<div class="panel panel-primary"> <div class="panel-heading"><h3 class="panel-title">'+club.idClub;
-				htmlString += '</h3> </div> <div class="panel-body">'+club.nombre;
-				htmlString += '</div>'
+				htmlString += '<div class="panel panel-primary"style="width: 400px"> <div class="panel-heading"><h3 class="panel-title">Club con identificador: '+club.idClub;
+				htmlString += '</h3> </div> <div class="panel-body">Nombre del club: '+club.nombre;
+				htmlString += '</div><a href="http://localhost:8080/futbol/VistaUsuario/club.html" class="btn btn-success" id="verequipos">Visita la ficha de este club!</a><br/></div>'
 					
         
           
@@ -71,4 +71,14 @@ function getClubsList() {
 			//callbackError(jqXHR, options, error);
 		}
 	});
+}
+
+function muestra_oculta(id){
+if (document.getElementById){ //se obtiene el id
+var el = document.getElementById(id); //se define la variable "el" igual a nuestro div
+el.style.display = (el.style.display == 'none') ? 'block' : 'none'; //damos un atributo display:none que oculta el div
+}
+}
+window.onload = function(){/*hace que se cargue la función lo que predetermina que div estará oculto hasta llamar a la función nuevamente*/
+muestra_oculta(el);/* "contenido_a_mostrar" es el nombre de la etiqueta DIV que deseamos mostrar */
 }
