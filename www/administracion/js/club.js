@@ -3,9 +3,9 @@ var user;
 var pass;
 
 $(document).ready(function(e){
-getList();
 user='admin';
 pass='admin';
+getList();
 });
 
 $("#button_search").click(function(e){

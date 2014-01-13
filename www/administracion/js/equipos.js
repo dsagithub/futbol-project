@@ -1,11 +1,12 @@
 var API_BASE_URL = "http://localhost:8080/futbol-api/club/";
+var API_BASE_URL_EQUIPOS = "http://localhost:8080/futbol-api/campeonato/";
 var pass;
 var user;
 
 $(document).ready(function(e){
-getList();
 user="admin";
 pass="admin";
+getList();
 });
 
 $("#button_search").click(function(e){
@@ -129,8 +130,11 @@ function getListURL(url) {
 		});
 }
 
+var idClub;
+
 function getEquipos(id){
 	var url;
+	idClub = id;
 	url = API_BASE_URL + id + '/e?offset=0&length=5';
 	$.ajax({
 		url : url,
@@ -145,7 +149,7 @@ function getEquipos(id){
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
 			
-			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Id Campeonato</th><th>Id Equipo</th><th>Nombre</th></tr></thead><tbody>';
+			var htmlString = '<button type="button" class="btn btn-primary btn-xs pull-right" onClick="javascript:showAddEquipo('+id+');">+ Añadir Equipo</button><p><br><table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Id Campeonato</th><th>Id Equipo</th><th>Nombre</th></tr></thead><tbody>';
 			$.each(response.equipos, function(i,v){
 				var equipo = v;
 				var linkself="'"+equipo.links[0].uri+"'";
@@ -195,7 +199,7 @@ function getEquipoURL(url){
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
 			
-			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Id Campeonato</th><th>Id Equipo</th><th>Nombre</th></tr></thead><tbody>';
+			var htmlString = '<button type="button" class="btn btn-primary btn-xs pull-right" onClick="javascript:showAddEquipo('+idClub+');">+ Añadir Equipo</button><p><br><table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Id Campeonato</th><th>Id Equipo</th><th>Nombre</th></tr></thead><tbody>';
 			$.each(response.equipos, function(i,v){
 				var equipo = v;
 				var linkself="'"+equipo.links[0].uri+"'";
@@ -272,20 +276,44 @@ function showClub(id){
 			$('#clubshow').html(htmlString);
         }
 
-function showAddClub(){
 
-	var codehtml = '<form><label>Nombre</label><input id="addname" name="addname" class="form-control" required/></form>';
+var idCamp;
+function showAddEquipo(idclub){
 
-	BootstrapDialog.show({
-            title: 'Añadir nuevo club',
-            message: codehtml,
+
+	var url2 = API_BASE_URL_EQUIPOS + '/?offset=0&length=500';
+	console.log(url2);
+	var htmlString = '';
+	$.ajax({
+		url : url2,
+		type : 'GET',
+		crossDomain : true,
+		beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+
+		},
+		success : function(data, status, jqxhr) {
+			var response = $.parseJSON(jqxhr.responseText);
+			htmlString += '<form><label>Nombre</label><input id="addname" name="addname" class="form-control" required/><div class="form-group"><label>Campeonato: </label><select class="form-control">';
+			$.each(response.campeonatos, function(i,v){
+				var campeonato = v;
+				htmlString += '<option onClick="javascript:idCamp='+campeonato.idcampeonatos+';">'+campeonato.nombre+'</option>';
+				console.log(idCamp);
+			})
+			htmlString +=  '</select></div><label id="idcamp" name="idcamp" value="" >API</label></form>';
+			console.log(htmlString);
+			BootstrapDialog.show({
+            title: 'Añadir nuevo equipo',
+            message: htmlString,
             buttons: [ {
                 label: 'Crear',
                 cssClass: 'btn-primary',
                 action: function(dialogItself){
-                    addClub(),                    
-                    dialogItself.close(),
-                    getList();
+                    //addClub(),                    
+                    dialogItself.close();
+                    //getList();
                 }
             },  {
                 label: 'Cerrar',
@@ -294,6 +322,9 @@ function showAddClub(){
                 }
             }]
         });
+		},
+		error : function(jqXHR, options, error) {}
+		});		
 }
 
 function getEquipo(url){
@@ -311,16 +342,28 @@ function getEquipo(url){
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			console.log(response.links[0].uri);
-			var name = getNameCampeonato();
-			var htmlString = 'Nombre: <div id="nombre" name="nombre" value="'+response.nombre+'">' + response.nombre + '</div>';		
+				var url2 = API_BASE_URL_EQUIPOS + response.campeonato;
+	console.log(url2);
+	$.ajax({
+		url : url2,
+		type : 'GET',
+		crossDomain : true,
+		beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+
+		},
+		success : function(data, status, jqxhr) {
+			var response = $.parseJSON(jqxhr.responseText);
+			var name = response.nombre;
+		},
+		error : function(jqXHR, options, error) {}
+		});	
+			var htmlString = 'Nombre: <div id="nombre" name="nombre" value="'+response.nombre+'">' + response.nombre + '</div><button type="button" class="btn btn-primary pull-right" onClick="javascript:showEquipo('+response.idEquipo+')">Editar</button>';		
 			$('#equiposhow').html(htmlString);
 		},
 		error : function(jqXHR, options, error) {}
 		});
 
-}
-
-function getNameCampeonato(){
-	return name;
 }
