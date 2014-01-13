@@ -1,11 +1,11 @@
 var API_BASE_URL = "http://localhost:8080/futbol-api/club/";
-var user;
 var pass;
+var user;
 
 $(document).ready(function(e){
 getList();
-user='admin';
-pass='admin';
+user="admin";
+pass="admin";
 });
 
 $("#button_search").click(function(e){
@@ -47,7 +47,7 @@ function getList(search) {
 
 			$.each(response.clubs, function(i,v){
 				var club = v;
-				htmlString += '<tr onClick="javascript:getClub('+club.idClub+');"><td>'+club.idClub+'</td><td>'+club.nombre+'</td></tr>'
+				htmlString += '<tr onClick="javascript:getEquipos('+club.idClub+');"><td>'+club.idClub+'</td><td>'+club.nombre+'</td></tr>'
 			})
 			var next = "";
 			var prev = "";
@@ -97,7 +97,7 @@ function getListURL(url) {
 
 			$.each(response.clubs, function(i,v){
 				var club = v;
-				htmlString += '<tr onClick="javascript:getClub('+club.idClub+');"><td>'+club.idClub+'</td><td>'+club.nombre+'</td></tr>'
+				htmlString += '<tr onClick="javascript:getEquipos('+club.idClub+');"><td>'+club.idClub+'</td><td>'+club.nombre+'</td></tr>'
 			})
 			var next = "";
 			var prev = "";
@@ -129,9 +129,9 @@ function getListURL(url) {
 		});
 }
 
-function getClub(id){
+function getEquipos(id){
 	var url;
-	url = API_BASE_URL + id + '/';
+	url = API_BASE_URL + id + '/e?offset=0&length=5';
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -144,9 +144,89 @@ function getClub(id){
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			console.log(response.links[0].uri);
-			var htmlString = 'Nombre: <div id="nombre" name="nombre" value="'+response.nombre+'">' + response.nombre + '</div><button type="button" class="btn btn-primary pull-right" onClick="javascript:showClub('+id+')">Editar</button>';		
-			$('#clubshow').html(htmlString);
+			
+			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Id Campeonato</th><th>Id Equipo</th><th>Nombre</th></tr></thead><tbody>';
+			$.each(response.equipos, function(i,v){
+				var equipo = v;
+				var linkself="'"+equipo.links[0].uri+"'";
+				htmlString += '<tr onClick="javascript:getEquipo('+linkself+');"><td>'+equipo.campeonato+'</td><td>'+equipo.idEquipo+'</td><td>'+equipo.nombre+'</td></tr>'
+			})
+			var next = "";
+			var prev = "";
+			$.each(response.links, function(i,v){
+				var links = v;
+				console.log(links);				
+				if (links.rel=="next"){
+					next = "'"+links.uri+"'";
+					console.log(next);
+				}
+				else if (links.rel=="prev"){
+					prev = "'"+links.uri+"'";
+					console.log(prev);
+				}				
+			})
+			if (prev!=""){
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Previous</a></li>';
+			}else{
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Previous</a></li>';
+			}
+			if (next!=""){
+				htmlString += '<li class="pull-right" onClick="javascript:getEquipoURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+			}else{
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getEquipoURL("'+next+'")">Next</a></li></ul>';
+			}			
+			$('#clubshow').html(htmlString);	
+		},
+		error : function(jqXHR, options, error) {}
+		});
+
+}
+function getEquipoURL(url){
+	$.ajax({
+		url : url,
+		type : 'GET',
+		crossDomain : true,
+		beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+
+		},
+		success : function(data, status, jqxhr) {
+			var response = $.parseJSON(jqxhr.responseText);
+			
+			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Id Campeonato</th><th>Id Equipo</th><th>Nombre</th></tr></thead><tbody>';
+			$.each(response.equipos, function(i,v){
+				var equipo = v;
+				var linkself="'"+equipo.links[0].uri+"'";
+				htmlString += '<tr onClick="javascript:getEquipo('+linkself+');"><td>'+equipo.campeonato+'</td><td>'+equipo.idEquipo+'</td><td>'+equipo.nombre+'</td></tr>';
+			console.log(equipo.links[0].uri);
+			})
+			var next = "";
+			var prev = "";
+			$.each(response.links, function(i,v){
+				var links = v;
+				console.log(links);				
+				if (links.rel=="next"){
+					next = "'"+links.uri+"'";
+					console.log(next);
+				}
+				else if (links.rel=="prev"){
+					prev = "'"+links.uri+"'";
+					console.log(prev);
+				}				
+			})
+			if (prev!=""){
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Previous</a></li>';
+			}else{
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Previous</a></li>';
+			}
+			if (next!=""){
+				htmlString += '<li class="pull-right" onClick="javascript:getEquipoURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+			}else{
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getEquipoURL("'+next+'")">Next</a></li></ul>';
+			}			
+			$('#clubshow').html(htmlString);	
 		},
 		error : function(jqXHR, options, error) {}
 		});
@@ -216,12 +296,12 @@ function showAddClub(){
         });
 }
 
-function deleteClub(id){
-	var url;
-	url = API_BASE_URL + id + '/';
+function getEquipo(url){
+
+	console.log(url);
 	$.ajax({
 		url : url,
-		type : 'DELETE',
+		type : 'GET',
 		crossDomain : true,
 		beforeSend: function (request)
 		{
@@ -231,57 +311,16 @@ function deleteClub(id){
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			console.log(response.links[0].uri);
+			var name = getNameCampeonato();
+			var htmlString = 'Nombre: <div id="nombre" name="nombre" value="'+response.nombre+'">' + response.nombre + '</div>';		
+			$('#equiposhow').html(htmlString);
 		},
 		error : function(jqXHR, options, error) {}
 		});
+
 }
 
-function editarClub(id){
-	var url;
-	url = API_BASE_URL + id + '/';
-	var nombre = $('#newname').val();
-	var datos = '{"nombre":"'+nombre+'"}';
-	console.log(datos);
-	$.ajax({
-		url : url,
-		type : 'PUT',
-		crossDomain : true,
-		data: datos,
-		beforeSend: function (request)
-		{
-			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-			request.setRequestHeader("Content-Type", "application/vnd.futbol.api.club+json");
-			request.setRequestHeader("Accept", "application/vnd.futbol.api.club+json");
-
-		},
-		success : function(data, status, jqxhr) {
-			var response = $.parseJSON(jqxhr.responseText);
-		},
-		error : function(jqXHR, options, error) {}
-		});
-}
-
-function addClub(){
-	var url = API_BASE_URL;
-	var nombre = $('#addname').val();
-	var datos = '{"nombre":"'+nombre+'"}';
-	$.ajax({
-		url : url,
-		type : 'POST',
-		crossDomain : true,
-		data: datos,
-		beforeSend: function (request)
-		{
-			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-			request.setRequestHeader("Content-Type", "application/vnd.futbol.api.club+json");
-			request.setRequestHeader("Accept", "application/vnd.futbol.api.club+json");
-
-		},
-		success : function(data, status, jqxhr) {
-			var response = $.parseJSON(jqxhr.responseText);
-		},
-		error : function(jqXHR, options, error) {}
-		});
+function getNameCampeonato(){
+	return name;
 }

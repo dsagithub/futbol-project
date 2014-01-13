@@ -20,7 +20,7 @@
 <!-- Page Specific Plugins -->
 <script src="js/tablesorter/jquery.tablesorter.js"></script>
 <script src="js/tablesorter/tables.js"></script>
-<script src="js/club.js"></script>
+<script src="js/equipos.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
 <link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 <script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
@@ -48,8 +48,8 @@
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav">
 					<li><a href="index.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-					<li class="active"><a href="clubs.html"><i class="fa fa-bar-chart-o"></i> Clubs</a></li>
-					<li><a href="equipos.html"><i class="fa fa-table"></i> Equipos</a></li>
+					<li><a href="clubs.html"><i class="fa fa-bar-chart-o"></i> Clubs</a></li>
+					<li class="active"><a href="equipos.html"><i class="fa fa-table"></i> Equipos</a></li>
 					<li><a href="forms.html"><i class="fa fa-edit"></i> Noticias</a></li>
 					<li><a href="typography.html"><i class="fa fa-font"></i> Campeonatos</a></li>
 					<li><a href="bootstrap-elements.html"><i class="fa fa-desktop"></i> Partidos</a></li>
@@ -74,15 +74,14 @@
 
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>Clubs <small>Gestión de Clubs</small></h1>
+					<h1>Equipos <small>Gestión de Equipos</small></h1>
 					<ol class="breadcrumb">
 						<li><a href="index.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-						<li class="active"><i class="fa fa-table"></i> Clubs</li>
-						<button type="button" class="btn btn-primary btn-xs pull-right" onClick="javascript:showAddClub();">+ Añadir Club</button>
+						<li class="active"><i class="fa fa-table"></i> Equipos</li>
 					</ol>
 					<div class="alert alert-info alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						Listado de clubs registrados. Selecciona uno para editarlo o eliminarlo. También puedes utilizar el buscador para encontrar el club.
+						Selecciona un club para poder ver la lista de sus equipos, editarlos, crearlos o eliminarlos.
 					</div>
 				</div>
 			</div><!-- /.row -->
@@ -101,9 +100,18 @@
 			</div>
 			<div class="col-lg-6">
 				<div class="panel panel-default">
-					<div class="panel-heading">Información de Club</div>
+					<div class="panel-heading">Información de Equipos del Club</div>
 					<div class="panel-body" id="clubshow">
 						No hay un club seleccionado
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">Información del Equipo</div>
+					<div class="panel-body" id="equiposhow">
+						No hay un equipo seleccionado
 					</div>
 				</div>
 			</div>

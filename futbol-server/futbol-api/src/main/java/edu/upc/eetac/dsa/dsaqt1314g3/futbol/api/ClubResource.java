@@ -46,7 +46,7 @@ public class ClubResource {
 
 	@GET
 	@Produces(MediaType.FUTBOL_API_CLUB_COLLECTION)
-	public ClubCollection getclubs(@QueryParam("nombre") String nombre,
+	public ClubCollection getclubs(@QueryParam("pattern") String nombre,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
 		if ((offset == null) || (length == null))
@@ -111,13 +111,13 @@ public class ClubResource {
 		
 		if (ioffset != 0) {
 		String prevoffset = "" + (ioffset - ilength);
-		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, prevoffset, length, null, "prev"));
+		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, prevoffset, length, nombre, "prev"));
 		
 		}
-		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, offset, length, null, "self"));
+		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, offset, length, nombre, "self"));
 		String nextoffset = "" + (ioffset + ilength);
 		if (ilength <= icount) {
-		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, nextoffset, length, null, "next"));
+		clubs.addLink(ClubLinkBuilder.buildURIClubs(uriInfo, nextoffset, length, nombre, "next"));
 	}
 		
 		return clubs;
