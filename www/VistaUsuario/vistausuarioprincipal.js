@@ -38,6 +38,7 @@ function getClubsList() {
 			var htmlString = "";
 			
 
+
 			$.each(clubs, function(i,v){
 				var club = v;
 				var i=0;
@@ -45,10 +46,12 @@ function getClubsList() {
 				if (i==0){
 					console.log("dentro funcion crear lista");
 					console.log(club);
-					
+
+				
 				htmlString += '<div class="panel panel-primary"style="width: 400px"> <div class="panel-heading"><h3 class="panel-title">Club con identificador: '+club.idClub;
 				htmlString += '</h3> </div> <div class="panel-body">Nombre del club: '+club.nombre;
-				htmlString += '</div><a href="http://localhost:8080/futbol/VistaUsuario/club.html" class="btn btn-success" id="verequipos">Visita la ficha de este club!</a><br/></div>'
+				htmlString += '</div><a type="submit" onClick="createcookie('+club.idClub;
+				htmlString += ')"href="http://localhost:8080/futbol/VistaUsuario/club.html" class="btn btn-success" id="verequipos">Visita la ficha de este club!</a><br/></div>'
 					
         
           
@@ -71,6 +74,16 @@ function getClubsList() {
 			//callbackError(jqXHR, options, error);
 		}
 	});
+}
+
+
+function createcookie(idClub) {
+
+	console.log(idClub);
+	console.log("dentro funcion cookie");
+	$.cookie('identificadorClub', idClub);
+      
+                
 }
 
 function muestra_oculta(id){

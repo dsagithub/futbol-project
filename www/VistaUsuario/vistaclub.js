@@ -2,8 +2,10 @@ var API_BASE_URL = "http://localhost:8080/futbol-api";
 
 $(document).ready(function(e){
 	//e.preventDefault();
-	getEquiposList();
-	getNoticiasList()
+	var idclub = $.cookie('identificadorClub');
+	console.log(idclub);
+	getEquiposList(idclub);
+	getNoticiasList(idclub);
 });
 
 /*$("#button_search").click(function(e){
@@ -13,10 +15,10 @@ $(document).ready(function(e){
 
 
 
-function getEquiposList() {
-
-	console.log("dentro funcion")
-	var url = API_BASE_URL + '/club/1/e?offset=0&length=5';
+function getEquiposList(idclub) {
+	console.log("dentro funcion equipos")
+	console.log(idclub);
+	var url = API_BASE_URL + '/club/'+idclub+'/e?offset=0&length=5';
 	
 	$.ajax({
 		url : url,
@@ -71,10 +73,10 @@ if(i==5){
 	});
 }
 
-function getNoticiasList() {
+function getNoticiasList(idclub) {
 
 	console.log("dentro funcion noticias")
-	var url = API_BASE_URL + '/club/1/noticias?offset=0&length=5';
+	var url = API_BASE_URL + '/club/'+idclub+'/noticias?offset=0&length=5';
 	
 	$.ajax({
 		url : url,
