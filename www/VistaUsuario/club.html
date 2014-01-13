@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-  
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,7 +45,30 @@
     <h3>
       Equipos del club
     </h3>
-
+   <td>
+            <span class="label label-warning">Filtrar por</span>
+            <div class="form-group">
+              <select class="form-control" id="option_search">
+                <option value="name">
+                    Nombre equipo
+                  </option>
+                  <option value="content">
+                    Contenido noticia
+                  </option>
+                  <option value="">
+                  </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>
+                Palabras en la búsqueda:
+              </label>
+              <input type="text" class="form-control" id="text_search">
+            </div>
+            <button type="submit" class="btn pull-right btn-warning" id="button_search">
+              Buscar
+            </button>
+          </td>
     <div class="well">
        <a style='cursor: pointer;' onclick="muestra_oculta('equiposshow')">Mostrar / Ocultar</a> 
       <div id="equiposshow"> </div>
@@ -61,5 +83,6 @@
   </body>
    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="vistaclub.js"></script>
+<script src="jquery.cookie.js"></script>
 
 </html>

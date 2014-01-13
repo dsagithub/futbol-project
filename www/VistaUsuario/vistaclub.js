@@ -6,7 +6,10 @@ $(document).ready(function(e){
 	getNoticiasList()
 });
 
-
+/*$("#button_search").click(function(e){
+        e.preventDefault();
+        getStingsSearch();
+});*/
 
 
 
