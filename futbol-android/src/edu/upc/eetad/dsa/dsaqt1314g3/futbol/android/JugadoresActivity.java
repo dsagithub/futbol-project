@@ -17,59 +17,23 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Comentario;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.ComentariosCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Jugadores;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.JugadoresCollection;
 
-public class ComentariosActivity extends ListActivity {
-	private final static String TAG = ComentariosActivity.class.toString();
+public class JugadoresActivity extends ListActivity {
+	private final static String TAG = JugadoresActivity.class.toString();
 	private String serverAddress = null;
 	private String serverPort = null;
 	private FutbolAPI api;
-	private ArrayList<Comentario> comentarioList;
-	private ComentarioAdapter adapter;
+	private ArrayList<Jugadores> jugadorList;
+	private JugadorAdapter adapter;
 	
 
  
 	/** Called when the activity is first created. */
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.futbol_menu, menu);
-		return true;
-	}
-	 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.miWrite:
-			URL url = null;
-			Bundle extra = this.getIntent().getExtras();
-			String url2 = null;
-			url2 = extra.getString("url2");
-			try {
-				url = new URL(url2 + "/comentarios");
-			} catch (MalformedURLException e) {
-				Log.d(TAG, e.getMessage(), e);
-			}
-			Intent intent = new Intent(this, WriteComentario.class);
-			intent.putExtra("url", url);
-			startActivity(intent);
-			
-			return true;
-	 
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	 
-	}
-	
-	
-	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -93,8 +57,8 @@ public class ComentariosActivity extends ListActivity {
 	 
 		setContentView(R.layout.futbol_layout);
 		
-		comentarioList = new ArrayList<Comentario>();
-		adapter = new ComentarioAdapter(this, comentarioList);
+		jugadorList = new ArrayList<Jugadores>();
+		adapter = new JugadorAdapter(this, jugadorList);
 		
 		setListAdapter(adapter);
 	 
@@ -113,60 +77,60 @@ public class ComentariosActivity extends ListActivity {
 		api = new FutbolAPI();
 		URL url = null;
 		try {
-			url = new URL(url2 + "/comentarios?offset=0&length=20");
+			url = new URL(url2 + "/jugadores?&offset=0&length=20");
 		} catch (MalformedURLException e) {
 			Log.d(TAG, e.getMessage(), e);
 			finish();
 		}
-		(new FetchComentariosTask()).execute(url);
+		(new FetchJugadoresTask()).execute(url);
 	}
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Comentario comentario = comentarioList.get(position);
+		Jugadores jugador = jugadorList.get(position);
 		// HATEOAS version
 		
 		URL url = null;
 		try {
-			url = new URL(comentario.getLinks().get(0).getUri());
+			url = new URL(jugador.getLinks().get(0).getUri());
 		} catch (MalformedURLException e) {
 			return;
 		}
 
 		
 		Log.d(TAG, url.toString());
-		Intent intent = new Intent(this, ComentarioDetail.class);
+		Intent intent = new Intent(this, JugadorDetail.class);
 		intent.putExtra("url", url.toString());
 		startActivity(intent);
 		
 		
 	}
 	
-	private void addComentarios(ComentariosCollection comentarios){
-		comentarioList.addAll(comentarios.getComentarios());
+	private void addJugadores(JugadoresCollection jugadores){
+		jugadorList.addAll(jugadores.getJugadores());
 		adapter.notifyDataSetChanged();
 	}
 	
 	
-	private class FetchComentariosTask extends AsyncTask<URL, Void, ComentariosCollection> {
+	private class FetchJugadoresTask extends AsyncTask<URL, Void, JugadoresCollection> {
 		private ProgressDialog pd;
 	 
 		@Override
-		protected ComentariosCollection doInBackground(URL... params) {
-			ComentariosCollection comentarios = api.getComentarios(params[0]);
-			return comentarios;
+		protected JugadoresCollection doInBackground(URL... params) {
+			JugadoresCollection jugadores = api.getJugadores(params[0]);
+			return jugadores;
 		}
 	
 		@Override
-		protected void onPostExecute(ComentariosCollection result) {
-			addComentarios(result);
+		protected void onPostExecute(JugadoresCollection result) {
+			addJugadores(result);
 			if (pd != null) {
 				pd.dismiss();
 			}
 		}
 		@Override
 		protected void onPreExecute() {
-			pd = new ProgressDialog(ComentariosActivity.this);
+			pd = new ProgressDialog(JugadoresActivity.this);
 			pd.setTitle("Searching...");
 			pd.setCancelable(false);
 			pd.setIndeterminate(true);

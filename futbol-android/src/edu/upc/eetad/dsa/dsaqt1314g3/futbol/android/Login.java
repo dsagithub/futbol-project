@@ -1,5 +1,6 @@
 package edu.upc.eetad.dsa.dsaqt1314g3.futbol.android;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +33,7 @@ public class Login extends Activity {
 			startActivity(intent);
 			finish();
 		}
-		setContentView(R.layout.login_layout);
+		setContentView(R.layout.login_layout); 
 	}
  
 	public void signIn(View v) {

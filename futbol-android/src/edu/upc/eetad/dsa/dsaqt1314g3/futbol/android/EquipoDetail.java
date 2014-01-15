@@ -36,7 +36,7 @@ public class EquipoDetail extends Activity{
 		url2 = (String) getIntent().getExtras().get("url");
 		(new FetchEquipoTask()).execute(url);
 	}
-	/*
+	
 	public void clickjugadores(View v) {
  
 		startJugadoresActivity();
@@ -47,7 +47,7 @@ public class EquipoDetail extends Activity{
 		intent.putExtra("url2", url2);
 		startActivity(intent);
 		finish();
-	}*/
+	}
 	
 	private void loadEquipo(Equipo equipo) {
 		TextView tvDetailNombre = (TextView) findViewById(R.id.tvDetailNombre);

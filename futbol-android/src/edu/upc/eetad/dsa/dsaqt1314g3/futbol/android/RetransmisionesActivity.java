@@ -21,17 +21,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Comentario;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.ComentariosCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Retransmision;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.RetransmisionCollection;
 
-public class ComentariosActivity extends ListActivity {
-	private final static String TAG = ComentariosActivity.class.toString();
+public class RetransmisionesActivity extends ListActivity {
+	private final static String TAG = RetransmisionesActivity.class.toString();
 	private String serverAddress = null;
 	private String serverPort = null;
 	private FutbolAPI api;
-	private ArrayList<Comentario> comentarioList;
-	private ComentarioAdapter adapter;
+	private ArrayList<Retransmision> retransmisionList;
+	private RetransmisionAdapter adapter;
 	
 
  
@@ -52,11 +52,11 @@ public class ComentariosActivity extends ListActivity {
 			String url2 = null;
 			url2 = extra.getString("url2");
 			try {
-				url = new URL(url2 + "/comentarios");
+				url = new URL(url2 + "/retra");
 			} catch (MalformedURLException e) {
 				Log.d(TAG, e.getMessage(), e);
 			}
-			Intent intent = new Intent(this, WriteComentario.class);
+			Intent intent = new Intent(this, WriteRetransmision.class);
 			intent.putExtra("url", url);
 			startActivity(intent);
 			
@@ -67,8 +67,6 @@ public class ComentariosActivity extends ListActivity {
 		}
 	 
 	}
-	
-	
 	
 	
 	@Override
@@ -93,8 +91,8 @@ public class ComentariosActivity extends ListActivity {
 	 
 		setContentView(R.layout.futbol_layout);
 		
-		comentarioList = new ArrayList<Comentario>();
-		adapter = new ComentarioAdapter(this, comentarioList);
+		retransmisionList = new ArrayList<Retransmision>();
+		adapter = new RetransmisionAdapter(this, retransmisionList);
 		
 		setListAdapter(adapter);
 	 
@@ -113,60 +111,60 @@ public class ComentariosActivity extends ListActivity {
 		api = new FutbolAPI();
 		URL url = null;
 		try {
-			url = new URL(url2 + "/comentarios?offset=0&length=20");
+			url = new URL(url2 + "/retra?offset=0&length=20");
 		} catch (MalformedURLException e) {
 			Log.d(TAG, e.getMessage(), e);
 			finish();
 		}
-		(new FetchComentariosTask()).execute(url);
+		(new FetchRetransmisionesTask()).execute(url);
 	}
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Comentario comentario = comentarioList.get(position);
+		Retransmision retransmision = retransmisionList.get(position);
 		// HATEOAS version
 		
 		URL url = null;
 		try {
-			url = new URL(comentario.getLinks().get(0).getUri());
+			url = new URL(retransmision.getLinks().get(0).getUri());
 		} catch (MalformedURLException e) {
 			return;
 		}
 
 		
 		Log.d(TAG, url.toString());
-		Intent intent = new Intent(this, ComentarioDetail.class);
+		Intent intent = new Intent(this, RetransmisionDetail.class);
 		intent.putExtra("url", url.toString());
 		startActivity(intent);
 		
 		
 	}
 	
-	private void addComentarios(ComentariosCollection comentarios){
-		comentarioList.addAll(comentarios.getComentarios());
+	private void addRetransmisiones(RetransmisionCollection comentarios){
+		retransmisionList.addAll(comentarios.getRetrans());
 		adapter.notifyDataSetChanged();
 	}
 	
 	
-	private class FetchComentariosTask extends AsyncTask<URL, Void, ComentariosCollection> {
+	private class FetchRetransmisionesTask extends AsyncTask<URL, Void, RetransmisionCollection> {
 		private ProgressDialog pd;
 	 
 		@Override
-		protected ComentariosCollection doInBackground(URL... params) {
-			ComentariosCollection comentarios = api.getComentarios(params[0]);
-			return comentarios;
+		protected RetransmisionCollection doInBackground(URL... params) {
+			RetransmisionCollection retransmisiones = api.getRetransmisiones(params[0]);
+			return retransmisiones;
 		}
 	
 		@Override
-		protected void onPostExecute(ComentariosCollection result) {
-			addComentarios(result);
+		protected void onPostExecute(RetransmisionCollection result) {
+			addRetransmisiones(result);
 			if (pd != null) {
 				pd.dismiss();
 			}
 		}
 		@Override
 		protected void onPreExecute() {
-			pd = new ProgressDialog(ComentariosActivity.this);
+			pd = new ProgressDialog(RetransmisionesActivity.this);
 			pd.setTitle("Searching...");
 			pd.setCancelable(false);
 			pd.setIndeterminate(true);
@@ -179,4 +177,3 @@ public class ComentariosActivity extends ListActivity {
 	
 		
 	}
-

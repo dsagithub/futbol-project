@@ -30,6 +30,11 @@
         <activity android:name="CalendarioDetail" />
         <activity android:name="ComentariosActivity" />
         <activity android:name="ComentarioDetail" />
+        <activity android:name="JugadoresActivity" />
+        <activity android:name="JugadorDetail" />
+        <activity android:name="RetransmisionesActivity" />
+        <activity android:name="RetransmisionDetail" />
+        <activity android:name="WriteRetransmision" />
         <activity android:name="WriteNoticia" />
         <activity android:name="WriteComentario" />
     </application>

@@ -47,8 +47,11 @@
             android:layout_weight="1"
             android:gravity="right"
             android:textAppearance="?android:attr/textAppearanceSmall" />
+  
         
-        <Button
+    </LinearLayout>
+    
+    <Button
         android:id="@+id/bComentarios"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -56,14 +59,12 @@
         android:onClick="clickcomentarios" 
         android:text="Ver comentarios" />
     
-    <Button
+    	<Button
         android:id="@+id/bRetrans"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dip"
         android:onClick="clickretrans" 
         android:text="Ver retransmision" />
-        
-    </LinearLayout>
  
 </LinearLayout>

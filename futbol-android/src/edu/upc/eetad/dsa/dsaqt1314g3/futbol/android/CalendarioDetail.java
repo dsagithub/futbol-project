@@ -61,7 +61,7 @@ public class CalendarioDetail extends Activity{
 		finish();
 	}
 	
-	/*
+	
 	public void clickretrans(View v) {
 		 
 		startRetransActivity();
@@ -74,7 +74,7 @@ public class CalendarioDetail extends Activity{
 		finish();
 	}
 	
-	*/
+	
 	private class FetchCalendarioTask extends AsyncTask<URL, Void, Calendario> {
 		private ProgressDialog pd;
 	 

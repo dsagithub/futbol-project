@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -487,7 +488,7 @@ public class FutbolAPI {
 			urlConnection = (HttpURLConnection) url.openConnection();
  
 			urlConnection.setRequestProperty("Accept",
-					MediaType.FUTBOL_API_RETRA_COLLECTION);
+					MediaType.FUTBOL_API_RETRA);
 			urlConnection.setRequestMethod("GET");
 			urlConnection.setDoInput(true);
 			urlConnection.connect();
@@ -504,7 +505,7 @@ public class FutbolAPI {
 			JSONArray jsonLinks = jsonObject.getJSONArray("links");
 			parseLinks(jsonLinks, retransmisiones.getLinks());
  
-			JSONArray jsonRetransmisiones = jsonObject.getJSONArray("retransmisiones");
+			JSONArray jsonRetransmisiones = jsonObject.getJSONArray("retrans");
 			for (int i = 0; i < jsonRetransmisiones.length(); i++) {
 				JSONObject jsonRetransmision = jsonRetransmisiones.getJSONObject(i);
 				Retransmision retransmision = parseRetransmision(jsonRetransmision);
@@ -835,10 +836,10 @@ public class FutbolAPI {
 	ParseException {
 		Retransmision retransmision = new Retransmision();
 		retransmision.setId(source.getString("id"));
-		retransmision.setIdPartido(source.getString("idPartido"));
+		//retransmision.setIdPartido(source.getString("idPartido"));
 		retransmision.setTiempo(source.getString("tiempo"));
 		retransmision.setTexto(source.getString("texto"));
-		retransmision.setMedia(source.getString("media"));
+		//retransmision.setMedia(source.getString("media"));
  
 		JSONArray jsonStingLinks = source.getJSONArray("links");
 		parseLinks(jsonStingLinks, retransmision.getLinks());
@@ -930,10 +931,13 @@ public class FutbolAPI {
 		return jsonNoticia;
 	}
 	
-	public Comentario createComentario(URL url, String tiempo, String texto) {
+	public Comentario createComentario(URL url, String texto) {
 		Comentario comentario = new Comentario();
 		comentario.setTexto(texto);
-		comentario.setTiempo(tiempo);
+		Date fechaActual = new Date();
+		SimpleDateFormat formato = new SimpleDateFormat("H:mm");
+		String cadenaFecha = formato.format(fechaActual);
+		comentario.setTiempo(cadenaFecha);
 		comentario.setIdUsuario(1);
 		
 		HttpURLConnection urlConnection = null;
@@ -985,7 +989,67 @@ public class FutbolAPI {
 		JSONObject jsonComentario = new JSONObject();
 		jsonComentario.put("texto", comentario.getTexto());
 		jsonComentario.put("tiempo", comentario.getTiempo());
+		jsonComentario.put("idUsuario", comentario.getIdUsuario());
 	 
 		return jsonComentario;
 	}
+	
+	public Retransmision createRetransmision(URL url, String tiempo, String texto) {
+		Retransmision retra = new Retransmision();
+		retra.setTexto(texto);
+		retra.setTiempo(tiempo);
+		
+		HttpURLConnection urlConnection = null;
+		try {
+			JSONObject jsonRetransmision = createJsonRetransmision(retra);
+			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.setRequestProperty("Accept",
+					MediaType.FUTBOL_API_RETRA);
+			urlConnection.setRequestProperty("Content-Type",
+					MediaType.FUTBOL_API_RETRA);
+			urlConnection.setRequestMethod("POST");
+			urlConnection.setDoInput(true);
+			urlConnection.setDoOutput(true);
+			urlConnection.connect();
+		
+			PrintWriter writer = new PrintWriter(
+					urlConnection.getOutputStream());
+			writer.println(jsonRetransmision.toString());
+			writer.close();
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					urlConnection.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+		
+			jsonRetransmision = new JSONObject(sb.toString());
+			retra = parseRetransmision(jsonRetransmision);
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		} catch (ParseException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		} finally {
+			if (urlConnection != null)
+				urlConnection.disconnect();
+		}
+		
+		return retra;
+	}
+	 
+	private JSONObject createJsonRetransmision(Retransmision retra) throws JSONException {
+		JSONObject jsonRetransmision = new JSONObject();
+		jsonRetransmision.put("texto", retra.getTexto());
+		jsonRetransmision.put("tiempo", retra.getTiempo());
+	 
+		return jsonRetransmision;
+	}
+	
 }
