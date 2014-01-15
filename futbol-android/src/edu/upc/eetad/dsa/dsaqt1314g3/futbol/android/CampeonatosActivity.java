@@ -8,9 +8,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Club;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.ClubCollection;
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -22,14 +19,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Campeonatos;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.CampeonatosCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
 
-public class FutbolMainActivity extends ListActivity {
-	private final static String TAG = FutbolMainActivity.class.toString();
+public class CampeonatosActivity extends ListActivity {
+	private final static String TAG = CampeonatosActivity.class.toString();
 	private String serverAddress = null;
 	private String serverPort = null;
 	private FutbolAPI api;
-	private ArrayList<Club> clubList;
-	private ClubAdapter adapter;
+	private ArrayList<Campeonatos> campeonatoList;
+	private CampeonatoAdapter adapter;
+	
+
  
 	/** Called when the activity is first created. */
 	
@@ -37,7 +39,6 @@ public class FutbolMainActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate()");
-		
 		AssetManager assetManager = getAssets();
 		Properties config = new Properties();
 		try {
@@ -51,10 +52,11 @@ public class FutbolMainActivity extends ListActivity {
 			finish();
 		}
 	 
-		setContentView(R.layout.futbol_layout2);
-
-		clubList = new ArrayList<Club>();
-		adapter = new ClubAdapter(this, clubList);
+		setContentView(R.layout.futbol_layout3);
+		
+		campeonatoList = new ArrayList<Campeonatos>();
+		adapter = new CampeonatoAdapter(this, campeonatoList);
+		
 		setListAdapter(adapter);
 	 
 		SharedPreferences prefs = getSharedPreferences("futbol-profile", Context.MODE_PRIVATE);
@@ -73,79 +75,71 @@ public class FutbolMainActivity extends ListActivity {
 		URL url = null;
 		try {
 			url = new URL("http://" + serverAddress + ":" + serverPort
-					+ "/futbol-api/club?&offset=0&length=20");
+					+ "/futbol-api/campeonato?&offset=0&length=20");
 		} catch (MalformedURLException e) {
 			Log.d(TAG, e.getMessage(), e);
 			finish();
 		}
-		(new FetchClubsTask()).execute(url);
+		(new FetchCampeonatosTask()).execute(url);
 	}
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Club club = clubList.get(position);
+		Campeonatos campeonato = campeonatoList.get(position);
 		// HATEOAS version
-		/*
+		
 		URL url = null;
 		try {
-			url = new URL(club.getLinks().get(0).getUri());
+			url = new URL(campeonato.getLinks().get(0).getUri());
 		} catch (MalformedURLException e) {
 			return;
-		}*/
-		
-		// No HATEOAS
-		URL url = null;
-		 try {
-		 url = new URL("http://" + serverAddress + ":" + serverPort
-		 + "/futbol-api/club/" + id);
-		 } catch (MalformedURLException e) {
-		 return;
-		 }
+		}
+
 		
 		Log.d(TAG, url.toString());
-		Intent intent = new Intent(this, ClubDetail.class);
+		Intent intent = new Intent(this, CalendariosActivity.class);
 		intent.putExtra("url", url.toString());
 		startActivity(intent);
 		
 		
 	}
 	
-	private void addClubs(ClubCollection clubs){
-		clubList.addAll(clubs.getClubs());
+	private void addCampeonatos(CampeonatosCollection campeonatos){
+		campeonatoList.addAll(campeonatos.getCampeonatos());
 		adapter.notifyDataSetChanged();
 	}
 	
-	public void clickcampeonatos(View v) {
+	public void clickclubs(View v) {
 		 
-		startCampeonatosActivity();
+		startClubsActivity();
 	}
  
-	private void startCampeonatosActivity() {
-		Intent intent = new Intent(this, CampeonatosActivity.class);
+	private void startClubsActivity() {
+		Intent intent = new Intent(this, FutbolMainActivity.class);
 		startActivity(intent);
 		finish();
 	}
 	
 	
-	private class FetchClubsTask extends AsyncTask<URL, Void, ClubCollection> {
+	private class FetchCampeonatosTask extends AsyncTask<URL, Void, CampeonatosCollection> {
 		private ProgressDialog pd;
 	 
 		@Override
-		protected ClubCollection doInBackground(URL... params) {
-			ClubCollection clubs = api.getClubs(params[0]);
-			return clubs;
+		protected CampeonatosCollection doInBackground(URL... params) {
+			CampeonatosCollection campeonatos = api.getCampeonatos(params[0]);
+			return campeonatos;
 		}
 	
 		@Override
-		protected void onPostExecute(ClubCollection result) {
-			addClubs(result);
+		protected void onPostExecute(CampeonatosCollection result) {
+			addCampeonatos(result);
 			if (pd != null) {
 				pd.dismiss();
 			}
 		}
 		@Override
 		protected void onPreExecute() {
-			pd = new ProgressDialog(FutbolMainActivity.this);
+			pd = new ProgressDialog(CampeonatosActivity.this);
 			pd.setTitle("Searching...");
 			pd.setCancelable(false);
 			pd.setIndeterminate(true);

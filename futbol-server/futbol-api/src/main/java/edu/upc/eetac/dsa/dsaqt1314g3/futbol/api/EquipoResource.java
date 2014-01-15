@@ -70,10 +70,10 @@ public class EquipoResource {
 			Statement stmt = conn.createStatement();
 			String sql = null;
 			if (pattern != null) {
-				sql = "select * from equipo where (nombre like '%" + pattern
+				sql = "select * from Equipo where (nombre like '%" + pattern
 						+ "%' and idClub=" + clubid + ")";
 			} else {
-				sql = "select * from equipo where idClub=" + clubid + " LIMIT "
+				sql = "select * from Equipo where idClub=" + clubid + " LIMIT "
 						+ offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
@@ -144,7 +144,7 @@ public class EquipoResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = null;
-			sql = "select * from equipo where idClub=" + clubid
+			sql = "select * from Equipo where idClub=" + clubid
 					+ " and idEquipo='" + idequipo + "'";
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
@@ -203,7 +203,7 @@ public class EquipoResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "insert into equipo (idClub,idCampeonatos,nombre) values ('"
+			String sql = "insert into Equipo (idClub,idCampeonatos,nombre) values ('"
 					+ idclub
 					+ "', '"
 					+ equipo.getCampeonato()
@@ -265,7 +265,7 @@ public class EquipoResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update equipo set equipo.nombre='"
+			String sql = "update Equipo set equipo.nombre='"
 					+ equipo.getNombre() + "', equipo.idCampeonatos="
 					+ equipo.getCampeonato() + " where (equipo.idClub="
 					+ idclub + " AND equipo.idEquipo='" + idequipo + "')";
@@ -308,7 +308,7 @@ public class EquipoResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from equipo where (idEquipo=" + idequipo
+			sql = "delete from Equipo where (idEquipo=" + idequipo
 					+ " AND idClub='" + idclub + "')";
 
 			int rs2 = stmt.executeUpdate(sql);

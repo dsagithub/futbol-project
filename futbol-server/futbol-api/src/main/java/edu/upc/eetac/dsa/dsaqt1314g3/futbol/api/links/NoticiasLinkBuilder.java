@@ -46,6 +46,7 @@ public class NoticiasLinkBuilder {
 		Link self = new Link();
 		self.setUri(uri.toString());
 		self.setRel(rel);
+		self.setTitle("Noticias");
 		self.setType(MediaType.FUTBOL_API_NOTICIAS_COLLECTION);
 		return self;
 	}
