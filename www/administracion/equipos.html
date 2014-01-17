@@ -6,7 +6,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>Clubs - Futbol Admin</title>
+	<title>Equipos - Futbol Admin</title>
 
 	<!-- Bootstrap core CSS -->
 <link href="css/bootstrap.css" rel="stylesheet">
@@ -24,7 +24,8 @@
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
 <link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 <script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
-
+<link href="css/select2.css" rel="stylesheet"/>
+    <script src="js/select2.js"></script>
 </head>
 
 <body>
@@ -50,8 +51,8 @@
 					<li><a href="index.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 					<li><a href="clubs.html"><i class="fa fa-bar-chart-o"></i> Clubs</a></li>
 					<li class="active"><a href="equipos.html"><i class="fa fa-table"></i> Equipos</a></li>
-					<li><a href="forms.html"><i class="fa fa-edit"></i> Noticias</a></li>
-					<li><a href="typography.html"><i class="fa fa-font"></i> Campeonatos</a></li>
+					<li><a href="noticias.html"><i class="fa fa-edit"></i> Noticias</a></li>
+					<li><a href="campe.html"><i class="fa fa-font"></i> Campeonatos</a></li>
 					<li><a href="bootstrap-elements.html"><i class="fa fa-desktop"></i> Partidos</a></li>
 					<li><a href="bootstrap-grid.html"><i class="fa fa-wrench"></i> Retransmisiones</a></li>
 					<li><a href="blank-page.html"><i class="fa fa-file"></i> Comentarios</a></li>
@@ -100,18 +101,9 @@
 			</div>
 			<div class="col-lg-6">
 				<div class="panel panel-default">
-					<div class="panel-heading">Información de Equipos del Club</div>
+					<div class="panel-heading" id="nameclubshow">Información de Equipos del Club</div>
 					<div class="panel-body" id="clubshow">
 						No hay un club seleccionado
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-6">
-				<div class="panel panel-default">
-					<div class="panel-heading">Información del Equipo</div>
-					<div class="panel-body" id="equiposhow">
-						No hay un equipo seleccionado
 					</div>
 				</div>
 			</div>

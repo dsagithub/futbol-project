@@ -21,8 +21,11 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.CampeonatosLinkBuilder;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.EquiposLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Campeonatos;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.CampeonatosCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Equipo;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.EquipoCollection;
 
 
 @Path("/campeonato")
@@ -33,6 +36,106 @@ public class CampeonatosResource {
 		private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		@Context
 		private UriInfo uriInfo;
+		
+		@GET
+		@Path("/{idcampeonato}/equipos")
+		@Produces(MediaType.FUTBOL_API_EQUIPO_COLLECTION)
+		public EquipoCollection getEquipos(@PathParam("idcampeonato") String idcamp,
+				@QueryParam("pattern") String pattern,
+				@QueryParam("offset") String offset,
+				@QueryParam("length") String length) {
+
+			if ((offset == null) || (length == null))
+				throw new BadRequestException(
+						"offset and length are mandatory parameters");
+			int ioffset, ilength;
+			int icount = 0;
+			try {
+				ioffset = Integer.parseInt(offset);
+				if (ioffset < 0)
+					throw new NumberFormatException();
+			} catch (NumberFormatException e) {
+				throw new BadRequestException(
+						"offset must be an integer greater or equal than 0.");
+			}
+			try {
+				ilength = Integer.parseInt(length);
+				if (ilength < 1)
+					throw new NumberFormatException();
+			} catch (NumberFormatException e) {
+				throw new BadRequestException(
+						"length must be an integer greater or equal than 1.");
+			}
+			EquipoCollection equipos = new EquipoCollection();
+			Connection conn = null;
+			try {
+				conn = ds.getConnection();
+			} catch (SQLException e) {
+				throw new ServiceUnavailableException(e.getMessage());
+			}
+			try {
+				Statement stmt = conn.createStatement();
+				String sql = null;
+				if (pattern != null) {
+					sql = "select * from Equipo where (nombre like '%" + pattern
+							+ "%' and idCcampeonatos=" + idcamp + ")";
+				} else {
+						sql = "select * from Equipo where idCampeonatos=" + idcamp
+								+ " LIMIT " + offset + "," + length;
+					
+				}
+				ResultSet rs = stmt.executeQuery(sql);
+				if (rs.next()) {
+					Equipo equipo2 = new Equipo();
+					equipo2.setIdClub(rs.getString("idClub"));
+					equipo2.setIdEquipo(rs.getString("idEquipo"));
+					equipo2.setNombre(rs.getString("nombre"));
+					equipo2.setCampeonato(rs.getString("idCampeonatos"));
+					equipo2.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
+							"self", equipo2.getIdClub(), equipo2.getIdEquipo()));
+
+					equipo2.addLink(EquiposLinkBuilder.buildURICalendarioId(
+							uriInfo, "Calendario", equipo2.getCampeonato(), offset,
+							length, pattern));
+					equipos.addEquipo(equipo2);
+					icount++;
+					while (rs.next()) {
+						Equipo equipo = new Equipo();
+						equipo.setIdClub(rs.getString("idClub"));
+						equipo.setIdEquipo(rs.getString("idEquipo"));
+						equipo.setNombre(rs.getString("nombre"));
+						equipo.setCampeonato(rs.getString("idCampeonatos"));
+						equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
+								"self", equipo.getIdClub(), equipo.getIdEquipo()));
+						equipo.addLink(EquiposLinkBuilder.buildURICalendarioId(
+								uriInfo, "Calendario", equipo.getCampeonato(),
+								offset, length, pattern));
+						equipos.addEquipo(equipo);
+						icount++;
+					}
+				} else {
+					throw new EquipoNotFoundException();
+				}
+				rs.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				throw new InternalServerException(e.getMessage());
+			}
+			if (ioffset != 0) {
+				String prevoffset = "" + (ioffset - ilength);
+				equipos.addLink(EquiposLinkBuilder.buildURIEquipoCampeonato(uriInfo,
+						prevoffset, length, pattern, "prev", idcamp));
+			}
+			equipos.addLink(EquiposLinkBuilder.buildURIEquipoCampeonato(uriInfo, offset,
+					length, pattern, "self", idcamp));
+			String nextoffset = "" + (ioffset + ilength);
+			if (ilength <= icount) {
+				equipos.addLink(EquiposLinkBuilder.buildURIEquipoCampeonato(uriInfo,
+						nextoffset, length, pattern, "next", idcamp));
+			}
+			return equipos;
+		}
 		@GET
 		@Path("/{idcampeonato}")
 		@Produces(MediaType.FUTBOL_API_CAMPEONATOS)
