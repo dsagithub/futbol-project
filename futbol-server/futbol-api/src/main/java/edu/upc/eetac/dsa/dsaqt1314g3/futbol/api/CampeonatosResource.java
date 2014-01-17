@@ -304,17 +304,26 @@ public class CampeonatosResource {
 				
 				String prevoffset = "" + (ioffset - ilength);
 				int cuenta = ioffset - ilength;
-				
-				if (cuenta >=  0) {
-				ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, prevoffset, length, pattern, "prev"));
-				}
-				else {
-					
-					ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, "0", length, pattern, "prev"));
-					
-				}
+				if (ioffset == 0)
+				{
 				ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, offset, length, pattern, "self"));
+				}
+				else
+				{
 
+					if (cuenta >=  0) {
+					ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, prevoffset, length, pattern, "prev"));
+					}
+					else {
+						
+						ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, "0", length, pattern, "prev"));
+						
+					}
+					ccol.addLink(CampeonatosLinkBuilder.buildURICampeonatos(uriInfo, offset, length, pattern, "self"));
+					
+				}
+				
+				
 				rs.close();
 				stmt.close();
 				conn.close();
