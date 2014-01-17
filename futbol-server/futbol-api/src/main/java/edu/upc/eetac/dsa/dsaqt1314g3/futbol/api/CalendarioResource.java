@@ -41,7 +41,8 @@ public class CalendarioResource {
 	@Produces(MediaType.FUTBOL_API_CALENDARIO_COLLECTION)
 	public CalendarioCollection getcalendarios(@PathParam("idCampeonato") String idCampeonato,
 			@QueryParam("offset") String offset,
-			@QueryParam("length") String length) {
+			@QueryParam("length") String length,
+			@QueryParam("pattern") String pattern) {
 		if ((offset == null) || (length == null))
 			throw new BadRequestException("Indica un offset y un length ");
 		int ioffset, ilength, icount = 0;
@@ -74,11 +75,20 @@ public class CalendarioResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = null;
-
-			
+//			if (pattern != null) {
+//				sql = "select * from Calendario where PONAQUILOQUENECESITES like '%" + pattern
+//						+ "%' LIMIT " + offset + "," + length;
+//			} 
+			if (pattern != null) {
+				sql = "select * from Calendario where idEquipoA like '%" + pattern
+						+ "%' OR idEquipoB like '%"+pattern
+						+"%'LIMIT " + offset + "," + length;
+			} 
+			else
+			{
 				sql = "select * from Calendario where idCampeonato="+ idCampeonato 
 						+" LIMIT " + offset + "," + length;
-			
+			}
 				
 			
 			ResultSet rs = stmt.executeQuery(sql);
@@ -91,7 +101,7 @@ public class CalendarioResource {
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
-				calendario.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, "0", "15", null, "Self", calendario.getIdCampeonato()));
+				calendario.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, "0", "15", pattern, "Self", calendario.getIdCampeonato()));
 				Calendarios.addCalendario(calendario);
 				icount++;
 			}
