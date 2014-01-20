@@ -1,10 +1,25 @@
 var API_BASE_URL = "http://localhost:8080/futbol-api/club/";
 
-//var usuario = $.cookie('usuario');
+
 
 $(document).ready(function(e){
 getList();
+var usuario = $.cookie('usuario');
+var pass = $.cookie('password');
 
+
+
+var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>'+usuario;
+ htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
+					
+$('#usuario').html(htmlString);		 
+						
+							
+							
+							
+					
+				
+				
 });
 
 $("#button_search").click(function(e){
@@ -39,6 +54,8 @@ function getList(search) {
 		{
 			request.withCredentials = true;
 			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
+			//(username + ":" + password)); };
+		
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -278,6 +295,7 @@ function getNoticiasList(idclub) {
 
 	console.log("dentro funcion noticias")
 	console.log(idclub);
+
 
 	var url = API_BASE_URL +idclub+'/noticias?offset=0&length=20';
 	
