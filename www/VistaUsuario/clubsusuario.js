@@ -1,11 +1,10 @@
 var API_BASE_URL = "http://localhost:8080/futbol-api/club/";
-var pass;
-var user;
+
+//var usuario = $.cookie('usuario');
 
 $(document).ready(function(e){
 getList();
-user="admin";
-pass="admin";
+
 });
 
 $("#button_search").click(function(e){
@@ -270,6 +269,7 @@ console.log("dentro funcion cookie equipo");
 	console.log(linkequipo);
 	
 	$.cookie('Linkequipo', linkequipo);
+	window.location.href="http://localhost:8080/futbol/VistaUsuario/equipo.html"
       
                 
 }
@@ -278,6 +278,7 @@ function getNoticiasList(idclub) {
 
 	console.log("dentro funcion noticias")
 	console.log(idclub);
+
 	var url = API_BASE_URL +idclub+'/noticias?offset=0&length=20';
 	
 	$.ajax({

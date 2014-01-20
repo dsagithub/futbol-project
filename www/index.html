@@ -1,60 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-  
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>
-      Vista principal Usuario
-    </title>
-    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
-    rel="stylesheet">
-  </head>
-  
-  <body>
-    <!-- Main jumbotron for a primary marketing message or call to action
-    -->
-    <!-- /container -->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
-    >
-    </script>
-    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"
-    >
-    </script>
-    <nav class="navbar navbar-default" role="navigation">
+  <title>Clubs - Futbol Usuario</title>
+
+  <!-- Bootstrap core CSS -->
+<link href="administracion/css/bootstrap.css" rel="stylesheet">
+  <!-- Add custom CSS here -->
+  <link href="administracion/css/sb-admin.css" rel="stylesheet">
+  <link rel="stylesheet" href="administracion/font-awesome/css/font-awesome.min.css">
+  <!-- JavaScript -->
+<script src="administracion/js/jquery.min.js"></script>
+<script src="administracion/js/bootstrap.min.js"></script>
+
+<!-- Page Specific Plugins -->
+<script src="administracion/js/tablesorter/jquery.tablesorter.js"></script>
+<script src="administracion/js/tablesorter/tables.js"></script>
+ <script src="registro.js"></script> 
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
+<link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
+<script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
+
+</head>
+
+<body>
+
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
-        <a class="navbar-brand" href="#">The observer!</a>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">Bienvenido a The Observer!</a>
       </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav">
-          <li class="active">
-            <a href="http://localhost:8080/futbol/index.html">Home</a>
-          </li>
-          <li>
-            <a href="#">Link</a>
-          </li>
-          <li>
-            <a href="#">Link</a>
+        
+
+        <ul class="nav navbar-nav navbar-right navbar-user">
+          <li class="dropdown user-dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Identíficate <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#"><i class="fa fa-user"></i> Perfil</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li>
+            </ul>
           </li>
         </ul>
-      </div>
+      </div><!-- /.navbar-collapse -->
     </nav>
-     <img src="https://s3.amazonaws.com/media.jetstrap.com/mzfDLwsRx2rAomMGpIWQ_theobserver.jpg"
-    width="180">
-    <div class="well" >
 
-    	 <h3>
-    Lista de clubs
-  </h3>
-   <a style='cursor: pointer;' onclick="muestra_oculta('clubsshow')">Mostrar / Ocultar</a>
-        <div id="clubsshow"> </div>
-    </div>
-  </body>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="VistaUsuario/vistausuarioprincipal.js"></script>
-<script src="js/jquery.cookie.js"></script>
+    <div id="page-wrapper">
 
+      <div class="row">
+        <div class="col-lg-12">
+          <h1>Identificate o registrate <small></small></h1>
+          
+          <div class="alert alert-info alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Introduce tus datos o rellena el formulario de registro.
+          </div>
+        </div>
+      </div><!-- /.row -->
+     <div class="col-lg-6">
+
+      <form action="javascript:login()" class="form-signin">
+        <h2 class="form-signin-heading">Identificate</h2>
+        <input type="text" class="form-control" id="username"  name="username" placeholder="User" required autofocus>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+        <button   class="btn btn-lg btn-primary btn-block" id="btn_login">Login</button>
+      </form>
+     
+
+    </div> <!-- /cierra el de identificar -->
+        <div class="col-lg-6">
+
+      <form class="form-signin">
+        <h2 class="form-signin-heading">Nuevo registro</h2>
+          
+          <label for="Name">Username:</label>
+
+          
+          
+          <input type="text" class="form-control" name="usernamer" placeholder="username" required autofocus>
+              <label for="Name">Password:</label>
+                 <input type="password" class="form-control"  name="passwordr" placeholder="password" required>
+                     <label for="Name">Name</label>
+                     <input type="text" class="form-control"  name="name" placeholder="name" required>
+                         <label for="Name">Email</label>
+        <input type="text" class="form-control" placeholder="email"  name="email" required>
+     
+        
+        <button class="btn btn-lg btn-primary btn-block"  id="btn_registrar"type="submit">Registar< /button>
+      </form>
+
+    </div> <!-- /cierra el de registro -->
+
+  </div><!-- /#page-wrapper -->
+
+</div><!-- /#wrapper -->
+</body>
+<script src="js/jquery.cookie.js"></script> 
 </html>
