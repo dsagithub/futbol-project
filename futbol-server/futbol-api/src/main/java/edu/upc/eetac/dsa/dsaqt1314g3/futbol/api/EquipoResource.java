@@ -35,6 +35,7 @@ public class EquipoResource {
 	@Produces(MediaType.FUTBOL_API_EQUIPO_COLLECTION)
 	public EquipoCollection getEquipos(@PathParam("idClub") String clubid,
 			@QueryParam("pattern") String pattern,
+			@QueryParam("searchcampe") String seacampe,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length) {
 
@@ -73,8 +74,13 @@ public class EquipoResource {
 				sql = "select * from Equipo where (nombre like '%" + pattern
 						+ "%' and idClub=" + clubid + ")";
 			} else {
-				sql = "select * from Equipo where idClub=" + clubid + " LIMIT "
-						+ offset + "," + length;
+				if (seacampe != null) {
+					sql = "select * from Equipo where idCampeonatos=" + seacampe
+							+ " LIMIT " + offset + "," + length;
+				} else {
+					sql = "select * from Equipo where idClub=" + clubid
+							+ " LIMIT " + offset + "," + length;
+				}
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {

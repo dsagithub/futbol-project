@@ -5,12 +5,44 @@ import java.net.URI;
 import javax.ws.rs.core.UriInfo;
 
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.CalendarioResource;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.CampeonatosResource;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.EquipoResource;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.JugadoresResource;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.MediaType;
 
 public class EquiposLinkBuilder {
 
+	public final static Link buildURIEquipoCampeonato(UriInfo uriInfo,
+			String offset, String length, String pattern, String rel, String idcamp) {
+		
+		URI uri = null;
+		if (offset == null && length == null)
+			uri = uriInfo.getBaseUriBuilder().path(CampeonatosResource.class)
+				.path(CampeonatosResource.class, "getEquipos")
+				.build(idcamp);
+		else {
+			if (pattern == null)
+				uri = uriInfo.getBaseUriBuilder()
+						.path(CampeonatosResource.class)
+						.path(CampeonatosResource.class, "getEquipos")
+						.queryParam("offset", offset)
+						.queryParam("length", length).build(idcamp);
+			else
+				uri = uriInfo.getBaseUriBuilder()
+						.path(CampeonatosResource.class)
+						.path(CampeonatosResource.class, "getEquipos")
+						.queryParam("offset", offset)
+						.queryParam("length", length)
+						.queryParam("pattern", pattern).build(idcamp);
+		}
+		Link link = new Link();
+		link.setUri(uri.toString());
+		link.setRel(rel);
+		link.setTitle("Equipos en el campeonato " + idcamp);
+		link.setType(MediaType.FUTBOL_API_EQUIPO_COLLECTION);
+		return link;
+	}
+	
 	public final static Link buildURIEquipoId(UriInfo uriInfo, String rel,
 			String clubid, String equipoid) {
 		URI uri = uriInfo.getBaseUriBuilder().path(EquipoResource.class)

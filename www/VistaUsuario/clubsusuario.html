@@ -6,7 +6,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>Clubs - Futbol Admin</title>
+	<title>Clubs - Futbol Usuario</title>
 
 	<!-- Bootstrap core CSS -->
 <link href="../administracion/css/bootstrap.css" rel="stylesheet">
@@ -20,7 +20,7 @@
 <!-- Page Specific Plugins -->
 <script src="../administracion/js/tablesorter/jquery.tablesorter.js"></script>
 <script src="../administracion/js/tablesorter/tables.js"></script>
-<script src="../administracion/js/club.js"></script>
+<script src="clubsusuario.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
 <link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 <script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
@@ -41,35 +41,35 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="index.html">FUTBOL : The observer!</a>
+				<a class="navbar-brand" href="index.html">Bienvenido a The Observer!</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
-		
-			
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				
 
 				<ul class="nav navbar-nav navbar-right navbar-user">
 					<li class="dropdown user-dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="#"><i class="fa fa-user"></i> Perfil</a></li>
+							
 							<li class="divider"></li>
-							<li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li>
+							<li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li>
 						</ul>
 					</li>
 				</ul>
-		
+			</div><!-- /.navbar-collapse -->
 		</nav>
 
 		<div id="page-wrapper">
 
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>Clubs <small></small></h1>
+					<h1>Clubs <small>Equipos y noticias</small></h1>
 					
 					<div class="alert alert-info alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						Listado de clubs registrados. Selecciona uno para ver sus equipos y noticias
+						Selecciona un club para poder ver la lista de sus equipos y sus noticias.
 					</div>
 				</div>
 			</div><!-- /.row -->
@@ -88,8 +88,17 @@
 			</div>
 			<div class="col-lg-6">
 				<div class="panel panel-default">
-					<div class="panel-heading">Información de Club</div>
+					<div class="panel-heading">Información de Equipos del Club</div>
 					<div class="panel-body" id="clubshow">
+						No hay un club seleccionado
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-8">
+				<div class="panel panel-default">
+					<div class="panel-heading">Noticias del club</div>
+					<div class="panel-body" id="noticiasshow">
 						No hay un club seleccionado
 					</div>
 				</div>
@@ -100,4 +109,5 @@
 
 </div><!-- /#wrapper -->
 </body>
+<script src="../js/jquery.cookie.js"></script>
 </html>

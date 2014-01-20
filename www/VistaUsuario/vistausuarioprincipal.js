@@ -1,4 +1,8 @@
 var API_BASE_URL = "http://localhost:8080/futbol-api";
+var usuario = $.cookie('usuario');
+console.log(usuario);
+htmlString +='<li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>'+usuario;
+htmlString +='<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="#"><i class="fa fa-user"></i> Perfil</a></li><li class="divider"></li><li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li></ul></li>';
 
 $(document).ready(function(e){
 	//e.preventDefault();
@@ -11,6 +15,7 @@ $(document).ready(function(e){
 
 function getClubsList() {
 	console.log("dentro funcion")
+	
 	var url = API_BASE_URL + '/club?offset=0&length=5';
 	
 	$.ajax({
