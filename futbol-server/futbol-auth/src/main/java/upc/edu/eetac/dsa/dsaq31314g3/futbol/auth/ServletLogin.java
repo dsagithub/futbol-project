@@ -41,17 +41,37 @@ public class ServletLogin extends HttpServlet {
                 String exit = "";
                 try {
                         ResultSet rs = stmt.executeQuery(sql);
-                        while (rs.next()) {
+                       
+                        
+                        	while (rs.next()) {
                                 String login = rs.getString("password");
+                                String rol =rs.getString("role");
+                                System.out.println(rol);
+                                
+                             
 
-                                if (password.equals(login)) {
-                                        System.out.println("Login ok!");
-                                        exit = "success";
-                                } else {
+                                if  (password.equals(login) && rol.equals("administrator")) {
+                                        System.out.println("Login de admin ok!");
+                                        exit = "successadmin";
+                                } else if (password.equals(login) && rol.equals("registered"))
+                                {
+                                	System.out.println("Login de usuario ok!");
+                                    exit = "successusuario";
+                                	
+                                }
+                                
+                                else if (!password.equals(login))
+                                {
+                                	System.out.println("usuario existe pero pass mal!");
+                                    exit = "wrongpass";
+                                }
+                                
+                                else {
                                         System.out.println("Login fail");
                                         exit = "fail";
                                 }
                         }
+                        
                 } catch (SQLException e) {
                         e.printStackTrace();
                 }

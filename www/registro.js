@@ -8,36 +8,53 @@ var API_BASE_URL = "http://localhost:8080/futbol-api";
 function login(username,password)
 {
 var username = $('#username').val();
-	console.log(username);
+
 	var password = $('#password').val();
-	console.log(password);
-	url= "http://localhost:8080/futbol-auth/ServletLogin";
+
+	var url= "http://localhost:8080/futbol-auth/ServletLogin";
 	var datos= 'username='+username+'&password='+password+'';
+	$.cookie('usuario', username);
+	$.cookie('password', password);
+	//var usuario = $.cookie('usuario');
+	//var pass = $.cookie('password');
 	$.ajax({
 		url : url,
 		type : 'POST',
 		crossDomain : true,
 		data: datos,
+		dataType: 'html',
 		beforeSend: function (request)
 
 		{
 			request.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
 		},
-		success : function(data, status, jqxhr) {
-			//var response = $.parseJSON(jqxhr.responseText);
-			
-
+		success : function(ata, status, jqxhr) {
+	var response = jqxhr.responseText;
+	//console.log("dentro");
+	console.log(response);
 	console.log("login ajax ok");
-	$.cookie('usuario', username);
-	var usuario = $.cookie('usuario');
-	console.log(usuario);
+	if (response=="successadmin")
+	{
+		window.location.href="http://localhost:8080/futbol/administracion/clubs.html"
+	}
+	 else if (response=="successusuario"){
 
+	
+	
 	window.location.href="http://localhost:8080/futbol/VistaUsuario/clubsusuario.html"
 
+	}
+	else if (response=="wrongpass"){
+		
+		//window.location.href="http://localhost:8080/futbol/index.html"
+		var htmlString ='<div class="alert alert-info alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> La password de login que has introducido no es correcta.</div>';
+		
+            $('#error').html(htmlString);
+           
+          
+	}
 
 
-			
-			
 		},
 		error : function(jqXHR, options, error) {}
 
