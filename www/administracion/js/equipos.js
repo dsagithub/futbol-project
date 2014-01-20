@@ -408,8 +408,9 @@ function getEquipo(url){
 					cssClass: 'btn-primary',
 					action: function(dialogItself){
 						//editarClub(),
-						dialogItself.close();
-						//getList(),
+						editEquipo(idEquip),
+						dialogItself.close(),
+						getList();
 						//getClub(id);                    
 					}
 				}, {
@@ -437,6 +438,30 @@ function getEquipo(url){
 		error : function(jqXHR, options, error) {}
 	});
 
+}
+
+function editEquipo(id){
+var url = API_BASE_URL + idClub + "/e/" + id;
+	var datos = '{"nombre":"'+$("#editname").val()+'","campeonato":"'+$("#campeonatoedit").val()+'"}';
+	console.log(datos);
+	$.ajax({
+		url : url,
+		type : 'PUT',
+		crossDomain : true,
+		data: datos,
+		beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+			request.setRequestHeader("Content-Type", "application/vnd.futbol.api.equipo+json");
+			request.setRequestHeader("Accept", "application/vnd.futbol.api.equipo+json");
+
+		},
+		success : function(data, status, jqxhr) {
+			var response = $.parseJSON(jqxhr.responseText);
+		},
+		error : function(jqXHR, options, error) {}
+		});
 }
 
 function deleteEquipo(id){

@@ -243,9 +243,6 @@ public class UserResource {
 			if (user.getEmail().length() == 0) {
 				throw new BadRequestException("faltan parametros");
 			}
-			if (user.getPassword().length() == 0) {
-				throw new BadRequestException("faltan parametros");
-			}
 		}
 		Connection conn = null;
 		try {
@@ -260,10 +257,16 @@ public class UserResource {
 					+ "'";
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
-				sql = "update usuarios set usuarios.email='" + user.getEmail()
+				if (user.getPassword()== null){
+					sql = "update usuarios set usuarios.email='" + user.getEmail()
+							+ "', usuarios.nombre='" + user.getName()
+							+ "' where usuarios.username='" + username + "'";
+				}else{
+					sql = "update usuarios set usuarios.email='" + user.getEmail()
 						+ "', usuarios.nombre='" + user.getName()
 						+ "', usuarios.password=MD5('" + user.getPassword()
 						+ "') where usuarios.username='" + username + "'";
+				}
 				user.setUsername(rs.getString("username"));
 				user.setIdusuario(rs.getString("idUsuario"));
 				user.addLink(UsersLinkBuilder.buildURIUser(uriInfo, "self",
