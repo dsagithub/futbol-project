@@ -6,7 +6,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>mi perfil</title>
+	<title>Clubs - Futbol Admin</title>
 
 	<!-- Bootstrap core CSS -->
 <link href="../administracion/css/bootstrap.css" rel="stylesheet">
@@ -21,7 +21,7 @@
 <script src="../administracion/js/tablesorter/jquery.tablesorter.js"></script>
 <script src="../administracion/js/tablesorter/tables.js"></script>
 
-<script src="perfil.js"></script>
+<script src="vistaequipo.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
 <link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 <script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
@@ -29,7 +29,6 @@
 </head>
 
 <body>
-	<div id="wrapper">
 
 
 		<!-- Sidebar -->
@@ -60,8 +59,6 @@
         			</ul>
 					</li>
 				</ul>
-					</div><!-- /.navbar-collapse -->
-							</div><!-- /.navbar-collapse -->
 		
 		</nav>
 
@@ -69,94 +66,37 @@
 
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>Mi Perfil <small> Judit </small></h1>
-					<ol class="breadcrumb">
-					</ol>
+					<h1> Vista Equipo <small></small></h1>
+					
 					<div class="alert alert-info alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						Información de tu usuario. Tambien puedes modificar tu perfil.
+						Información del equipo Elegido sus jugadores y Partidos
 					</div>
 				</div>
 			</div><!-- /.row -->
 			<div class="row">
 
 
-				<div class="col-lg-3">
-					<div class="table-responsive" id="usershow">
+				<div class="col-lg-6">
+					<form action="javascript:getList($('#query').val())" ><div class="input-group">
+						<input type="text" class="form-control" placeholder="Busca el jugador aquí..." id="query" name="query" required/>
+						<div class="input-group-btn">
+							<button id="button_search" type="submit" class="btn btn-success"><span class="fa fa-search"></span></button>
+						</div>
+					</div></form><br>
+					<div class="table-responsive" id="listshow">
 				</div>
-				
-				    <img src="http://icons.iconarchive.com/icons/double-j-design/origami-colored-pencil/256/blue-user-icon.png">
-				
 			</div>
-				<div class="col-lg-7">
-				
+			<div class="col-lg-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">Partidos del equipo</div>
+					<div class="panel-body" id="partidosshow">
+					</div>
 				</div>
-				<div class="col-lg-7">
-      <div class="form-group">
-        <div class="well">
-          <h3>
-            Ver y Modificar tu usuario
-          </h3>
-          <p>
-          </p>
-        </div>
-        <b>Nombre<br></b>
-      </div>
-            <div class="form-group" id= "nameshow">
-            </div>
-      
-      <div class="form-group">
-        <label>
-           Email
-        </label>
-		<div class="form-group" id= "Emailshow">
-            </div>
-      </div>
-  
-      
-      <hr>
-      <div class="form-group">
-      </div>
-      <div class="form-group">
-        <label>
-          Nueva Contraseña
-        </label>
-        <input type="text" class="form-control" id="newpass" placeholder="New Password">
-        <div class="form-group">
-          <label>
-            Repetir contraseña
-          </label>
-          <input type="password" class="form-control" id="newpass2" placeholder="Repite el password">
-        </div>
-      </div>
-      <hr>
-      <hr>
-    
-    <div class="form-group">
-      <b>Para confirmar pon tu contraseña</b>
-      <input type="text" class="form-control" id="pass">
-    </div>
-    <button type="submit" class="btn btn-info" onclick="postuser()" id="validate">
-      Validar!
-    </button>
-       <button type="submit" class="btn btn-info" onclick="getUser()" id="validate">
-      Cancelar!
-    </button>
-            </div>
-            </div>
-    
-				
-				</div>
-				
-				
-				
-				</div>
-			
+			</div>
 		</div><!-- /.row -->
 
-	</div><!-- /#page-wrapper -->
 
 </div><!-- /#wrapper -->
-
 </body>
 </html>

@@ -6,7 +6,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>mi perfil</title>
+	<title>retransmision</title>
 
 	<!-- Bootstrap core CSS -->
 <link href="../administracion/css/bootstrap.css" rel="stylesheet">
@@ -17,11 +17,8 @@
 <script src="../administracion/js/jquery.min.js"></script>
 <script src="../administracion/js/bootstrap.min.js"></script>
 
-<!-- Page Specific Plugins -->
-<script src="../administracion/js/tablesorter/jquery.tablesorter.js"></script>
-<script src="../administracion/js/tablesorter/tables.js"></script>
 
-<script src="perfil.js"></script>
+<script src="Retransmisionespartit.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
 <link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 <script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
@@ -29,7 +26,6 @@
 </head>
 
 <body>
-	<div id="wrapper">
 
 
 		<!-- Sidebar -->
@@ -60,8 +56,6 @@
         			</ul>
 					</li>
 				</ul>
-					</div><!-- /.navbar-collapse -->
-							</div><!-- /.navbar-collapse -->
 		
 		</nav>
 
@@ -69,94 +63,69 @@
 
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>Mi Perfil <small> Judit </small></h1>
-					<ol class="breadcrumb">
-					</ol>
+					<h1> Retransmisión de Partido <small></small></h1>
+					
 					<div class="alert alert-info alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						Información de tu usuario. Tambien puedes modificar tu perfil.
+						Retransmisión del partido. Arriba, las retransmisiones del partido.
+						Abajo los comentarios de los usuarios y la opción ed enviar un nuevo comentario.
 					</div>
 				</div>
 			</div><!-- /.row -->
 			<div class="row">
 
 
-				<div class="col-lg-3">
-					<div class="table-responsive" id="usershow">
+				<div class="col-lg-12">
+
+					<div class="table-responsive" id="listshow">
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">Retransmisiones:</div>
+					<div class="panel-body" id="retrashow">
+						No hay retransmisiones para este partido
+					</div>
+				</div>
+			</div>
+			<div class="table-responsive" id="retrashow">
+				</div>
+			
+		<div class="row">
+
+			
+			<div class="col-lg-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">Comentarios:</div>
+					<div class="panel-body" id="commshow">
+						No hay commentarios para este partido, se tu el primero en dejar una!
+					</div>
+					
+				</div>				
+			</div>
+			
+				<div class="col-lg-6">
+				
+					<div class="form-group">
+                  <label class="control-label" for="text">Escribe tu comentario:</label>
+                  <input class="form-control input-lg" type="text" placeholder="Escribe tu comentario aqui." id="text">
+                </div>
+					
+       <button type="submit" class="btn btn-info" onclick="sendComment()" id="send">
+      Enviar!
+    </button>									
+      
 				</div>
 				
-				    <img src="http://icons.iconarchive.com/icons/double-j-design/origami-colored-pencil/256/blue-user-icon.png">
 				
 			</div>
-				<div class="col-lg-7">
-				
-				</div>
-				<div class="col-lg-7">
-      <div class="form-group">
-        <div class="well">
-          <h3>
-            Ver y Modificar tu usuario
-          </h3>
-          <p>
-          </p>
-        </div>
-        <b>Nombre<br></b>
-      </div>
-            <div class="form-group" id= "nameshow">
-            </div>
-      
-      <div class="form-group">
-        <label>
-           Email
-        </label>
-		<div class="form-group" id= "Emailshow">
-            </div>
-      </div>
-  
-      
-      <hr>
-      <div class="form-group">
-      </div>
-      <div class="form-group">
-        <label>
-          Nueva Contraseña
-        </label>
-        <input type="text" class="form-control" id="newpass" placeholder="New Password">
-        <div class="form-group">
-          <label>
-            Repetir contraseña
-          </label>
-          <input type="password" class="form-control" id="newpass2" placeholder="Repite el password">
-        </div>
-      </div>
-      <hr>
-      <hr>
-    
-    <div class="form-group">
-      <b>Para confirmar pon tu contraseña</b>
-      <input type="text" class="form-control" id="pass">
-    </div>
-    <button type="submit" class="btn btn-info" onclick="postuser()" id="validate">
-      Validar!
-    </button>
-       <button type="submit" class="btn btn-info" onclick="getUser()" id="validate">
-      Cancelar!
-    </button>
-            </div>
-            </div>
-    
-				
-				</div>
-				
-				
-				
-				</div>
+		
+		</div><!-- /.row -->
+
 			
 		</div><!-- /.row -->
 
 	</div><!-- /#page-wrapper -->
-
-</div><!-- /#wrapper -->
 
 </body>
 </html>

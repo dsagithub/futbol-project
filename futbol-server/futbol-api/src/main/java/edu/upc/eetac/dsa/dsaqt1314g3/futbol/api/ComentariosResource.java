@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.ComentariosLinkBuilder;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.Comentario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.ComentariosCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model.User;
 
 @Path("/campeonato/{idCampeonato}/calendario/{idPartido}/comentarios")
 public class ComentariosResource {
@@ -284,14 +285,17 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = null;
+			String sql2 = null;
 			if (idComentario != null && idPartido != null) {
 				sql = "select * from Comentarios where (idPartido like '%" + idPartido
 						+ "%' AND idComentarios like '%" + idComentario
 						+ "%') ORDER BY tiempo desc LIMIT " + offset + ","
 						+ length;
 			} else if (idComentario == null && idPartido != null) {
-				sql = "select * from Comentarios where idPartido like '%" + idPartido
-						+ "%' ORDER BY tiempo desc LIMIT " + offset + ","
+				//sql = "select * Usuarios.username, comentarios.* from Comentarios, Usuarios where idPartido like '%" + idPartido
+					//	+ "%' ORDER BY tiempo desc LIMIT " + offset + ","
+						//+ length + "and Comentarios.idUsuario=Usuario.idUsuario";
+				sql = "select Usuarios.username, comentarios.* from Comentarios, Usuarios where Comentarios.idUsuario=Usuarios.idUsuario and Comentarios.idPartido = " +idPartido + "  LIMIT " + offset + ","
 						+ length;
 			} else if (idPartido == null && idComentario != null) {
 				sql = "select * from Comentarios where idComentarios like '%" + idComentario
@@ -304,12 +308,15 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Comentario comentario = new Comentario();
+				User usuario = new User();
 				comentario.setIdComentario(rs.getInt("idComentarios"));
 				comentario.setTiempo(rs.getString("tiempo"));
 				comentario.setMedia(rs.getString("media"));
 				comentario.setTexto(rs.getString("texto"));
 				comentario.setIdPartido(rs.getString("idPartido"));
 				comentario.setIdUsuario(rs.getInt("idUsuario"));
+				usuario.setUsername(rs.getString("username"));
+
 				//links
 				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
 						"self",idCampeonato, idPartido, comentario.getIdComentario()));
