@@ -2,7 +2,6 @@
 .project
 .settings/
 target/
-sql/futboldb-data.sql
 # built application files
 *.apk
 *.ap_
