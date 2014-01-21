@@ -24,26 +24,34 @@ public class Login extends Activity {
 				Context.MODE_PRIVATE);
 		String username = prefs.getString("username", null);
 		String password = prefs.getString("password", null);
-		
+
 		// Uncomment the next two lines to test the application without login each time
 		 //username = "admin";
 		 //password = "admin";
+		/*
 		if ((username != null) && (password != null)) {
 			Intent intent = new Intent(this, FutbolMainActivity.class);
 			startActivity(intent);
 			finish();
-		}
+		}*/
+
 		setContentView(R.layout.login_layout); 
+		
+		
+		
 	}
+	
+	
+	
  
 	public void signIn(View v) {
+		
 		EditText etUsername = (EditText) findViewById(R.id.etUsername);
 		EditText etPassword = (EditText) findViewById(R.id.etPassword);
  
 		String username = etUsername.getText().toString();
 		String password = etPassword.getText().toString();
- 
- 
+		
 		// I'll suppose that u/p are correct:
 		SharedPreferences prefs = getSharedPreferences("futbol-profile",
 				Context.MODE_PRIVATE);
@@ -58,6 +66,8 @@ public class Login extends Activity {
 			Log.d(TAG, "preferences not set. THIS A SEVERE PROBLEM");
  
 		startFutbolActivity();
+		
+
 	}
  
 	private void startFutbolActivity() {
@@ -67,3 +77,6 @@ public class Login extends Activity {
 	}
  
 }
+
+
+

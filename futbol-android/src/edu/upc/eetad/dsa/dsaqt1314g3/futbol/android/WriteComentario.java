@@ -14,6 +14,7 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
 
 public class WriteComentario extends Activity {
 	private final static String TAG = WriteComentario.class.toString();
+	private String iduser = null;
  
 	private class PostComentarioTask extends AsyncTask<String, Void, Comentario> {
 		private URL url;
@@ -27,7 +28,7 @@ public class WriteComentario extends Activity {
 		@Override
 		protected Comentario doInBackground(String... params) {
 			FutbolAPI api = new FutbolAPI();
-			Comentario comentario = api.createComentario(url, params[0]);
+			Comentario comentario = api.createComentario(url, params[0], iduser);
 			return comentario;
 		}
  
@@ -56,7 +57,8 @@ public class WriteComentario extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.write_comentario_layout);
- 
+		Bundle extra = this.getIntent().getExtras();
+		iduser = extra.getString("iduser");
 		url = (URL) getIntent().getExtras().get("url");
 	}
  

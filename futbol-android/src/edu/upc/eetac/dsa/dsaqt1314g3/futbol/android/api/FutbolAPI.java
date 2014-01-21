@@ -750,6 +750,97 @@ public class FutbolAPI {
 		return campeonato;
 	}
 	
+	
+	public UserCollection getUsers(URL url) {
+		UserCollection users = new UserCollection();
+ 
+		HttpURLConnection urlConnection = null;
+		try {
+			urlConnection = (HttpURLConnection) url.openConnection();
+ 
+			urlConnection.setRequestProperty("Accept",
+					MediaType.FUTBOl_API_USER_COLLECTION);
+			urlConnection.setRequestMethod("GET");
+			urlConnection.setDoInput(true);
+			urlConnection.connect();
+ 
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					urlConnection.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+ 
+			JSONObject jsonObject = new JSONObject(sb.toString());
+			JSONArray jsonLinks = jsonObject.getJSONArray("links");
+			parseLinks(jsonLinks, users.getLinks());
+ 
+			JSONArray jsonUsers = jsonObject.getJSONArray("users");
+			for (int i = 0; i < jsonUsers.length(); i++) {
+				JSONObject jsonUser = jsonUsers.getJSONObject(i);
+				User user = parseUser(jsonUser);
+ 
+				users.addUser(user);
+			}
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		} catch (ParseException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		} finally {
+			if (urlConnection != null)
+				urlConnection.disconnect();
+		}
+ 
+		return users;
+	}
+ 
+	public User getUser(URL url) {
+		User user = new User();
+	 
+		HttpURLConnection urlConnection = null;
+		try {
+			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.setRequestProperty("Accept",
+					MediaType.FUTBOL_API_USER);
+			urlConnection.setRequestMethod("GET");
+			urlConnection.setDoInput(true);
+			urlConnection.connect();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					urlConnection.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+			JSONObject jsonObject = new JSONObject(sb.toString());
+			JSONArray jsonLinks = jsonObject.getJSONArray("links");
+			parseLinks(jsonLinks, user.getLinks());
+			
+			JSONObject jsonUser = new JSONObject(sb.toString());
+			user = parseUser(jsonUser);
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		} catch (JSONException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		} catch (ParseException e) {
+			Log.e(TAG, e.getMessage(), e);
+			return null;
+		}finally {
+			if (urlConnection != null)
+				urlConnection.disconnect();
+		}
+	 
+		return user;
+	}
+	
 	private void parseLinks(JSONArray source, List<Link> links)
 			throws JSONException {
 		for (int i = 0; i < source.length(); i++) {
@@ -872,6 +963,20 @@ public class FutbolAPI {
 		return campeonato;
 	}
 	
+	private User parseUser(JSONObject source) throws JSONException,
+	ParseException {
+		User user = new User();
+		user.setIdusuario(source.getString("idusuario"));
+		user.setUsername(source.getString("username"));
+		//user.setPassword(source.getString("password"));
+		user.setName(source.getString("name"));
+		user.setRole(source.getString("role"));
+ 
+		JSONArray jsonStingLinks = source.getJSONArray("links");
+		parseLinks(jsonStingLinks, user.getLinks());
+		return user;
+	}
+	
 	
 	public Noticia createNoticia(URL url, String titulo, String content) {
 		Noticia noticia = new Noticia();
@@ -931,14 +1036,14 @@ public class FutbolAPI {
 		return jsonNoticia;
 	}
 	
-	public Comentario createComentario(URL url, String texto) {
+	public Comentario createComentario(URL url, String texto, String iduser) {
 		Comentario comentario = new Comentario();
 		comentario.setTexto(texto);
 		Date fechaActual = new Date();
 		SimpleDateFormat formato = new SimpleDateFormat("H:mm");
 		String cadenaFecha = formato.format(fechaActual);
 		comentario.setTiempo(cadenaFecha);
-		comentario.setIdUsuario(1);
+		comentario.setIdUsuario(Integer.parseInt(iduser));
 		
 		HttpURLConnection urlConnection = null;
 		try {
@@ -983,6 +1088,64 @@ public class FutbolAPI {
 		}
 		
 		return comentario;
+	}
+	
+	public void deleteNoticia(URL url) {
+		
+		HttpURLConnection urlConnection = null;
+		try {
+			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.setRequestProperty("Accept",
+					MediaType.FUTBOL_API_NOTICIA);
+			urlConnection.setRequestMethod("DELETE");
+			urlConnection.setDoInput(true);
+			urlConnection.setDoOutput(true);
+			urlConnection.connect();
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					urlConnection.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+		
+		}  catch (IOException e) {
+			Log.e(TAG, e.getMessage(), e);
+		}  finally {
+			if (urlConnection != null)
+				urlConnection.disconnect();
+		}
+		
+	}
+	
+	public void deleteComentario(URL url) {
+		
+		HttpURLConnection urlConnection = null;
+		try {
+			urlConnection = (HttpURLConnection) url.openConnection();
+			urlConnection.setRequestProperty("Accept",
+					MediaType.FUTBOL_API_COMENTARIO);
+			urlConnection.setRequestMethod("DELETE");
+			urlConnection.setDoInput(true);
+			urlConnection.setDoOutput(true);
+			urlConnection.connect();
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					urlConnection.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line);
+			}
+		
+		}  catch (IOException e) {
+			Log.e(TAG, e.getMessage(), e);
+		}  finally {
+			if (urlConnection != null)
+				urlConnection.disconnect();
+		}
+		
 	}
 	 
 	private JSONObject createJsonComentario(Comentario comentario) throws JSONException {

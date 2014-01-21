@@ -24,6 +24,7 @@ import android.widget.ListView;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Retransmision;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.RetransmisionCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.User;
 
 public class RetransmisionesActivity extends ListActivity {
 	private final static String TAG = RetransmisionesActivity.class.toString();
@@ -39,8 +40,33 @@ public class RetransmisionesActivity extends ListActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.futbol_menu, menu);
-		return true;
+		SharedPreferences prefs = getSharedPreferences("futbol-profile", Context.MODE_PRIVATE);
+		final String username = prefs.getString("username", null);
+		final String password = prefs.getString("password", null);
+	 
+		Authenticator.setDefault(new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password
+						.toCharArray());
+			}
+		});
+		Log.d(TAG, "authenticated with " + username + ":" + password);
+
+		api = new FutbolAPI();
+		URL url = null;
+		try {
+			url = new URL("http://" + serverAddress + ":" + serverPort
+					+ "/futbol-api/users/" + username);
+		} catch (MalformedURLException e) {
+			Log.d(TAG, e.getMessage(), e);
+			finish();
+		}
+		User user = api.getUser(url);
+		if (user.getRole().compareTo("administrator") == 0){
+			getMenuInflater().inflate(R.menu.futbol_menu, menu);
+			return true;
+		}
+		else return false;
 	}
 	 
 	@Override

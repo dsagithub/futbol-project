@@ -39,7 +39,6 @@ public class ComentarioAdapter extends BaseAdapter{
 	private static class ViewHolder {
 		TextView tvTiempo;
 		TextView tvTexto;
-		TextView tvPartido;
 		
 	}
 
@@ -54,8 +53,7 @@ public class ComentarioAdapter extends BaseAdapter{
 					.findViewById(R.id.tvTiempo);
 			viewHolder.tvTexto = (TextView) convertView
 					.findViewById(R.id.tvTexto);
-			viewHolder.tvPartido = (TextView) convertView
-					.findViewById(R.id.tvPartido);
+			
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -64,11 +62,9 @@ public class ComentarioAdapter extends BaseAdapter{
 		//obtener datos
 		String tiempo = data.get(position).getTiempo();
 		String titulo = data.get(position).getTexto();
-		String partido = data.get(position).getIdPartido();
 		//poner datos
 		viewHolder.tvTiempo.setText(tiempo);
 		viewHolder.tvTexto.setText(titulo);
-		viewHolder.tvPartido.setText(partido);
 		return convertView;
 	}
 

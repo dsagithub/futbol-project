@@ -1,9 +1,8 @@
-package edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.model;
+package edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.Link;
 
 public class User {
 	private String idusuario;
@@ -12,7 +11,7 @@ public class User {
 	private String name;
 	private String email;
 	private List<Link> links = new ArrayList<Link>();
-	private String Role;
+	private String role;
 
 	public String getUsername() {
 		return username;
@@ -67,11 +66,11 @@ public class User {
 	}
 
 	public String getRole() {
-		return Role;
+		return role;
 	}
 
 	public void setRole(String role) {
-		Role = role;
+		this.role = role;
 	}
 
 }

@@ -132,7 +132,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 	public Comentario createComentario(@PathParam("idCampeonato") String idCampeonato, 
 			@PathParam("idPartido") int idPartido,
 			Comentario comentario) {
-		if (!security.isUserInRole("administrator")) {
+		if (!security.isUserInRole("administrator") && !security.isUserInRole("registered")) {
 			throw new ForbiddenException("DENEGADO: FALTA PERMISOS");
 		}
 		if (comentario.getTexto().length() > 100) {
@@ -295,7 +295,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				//sql = "select * Usuarios.username, comentarios.* from Comentarios, Usuarios where idPartido like '%" + idPartido
 					//	+ "%' ORDER BY tiempo desc LIMIT " + offset + ","
 						//+ length + "and Comentarios.idUsuario=Usuario.idUsuario";
-				sql = "select Usuarios.username, comentarios.* from Comentarios, Usuarios where Comentarios.idUsuario=Usuarios.idUsuario and Comentarios.idPartido = " +idPartido + "  LIMIT " + offset + ","
+				sql = "select Usuarios.username, Comentarios.* from Comentarios, Usuarios where Comentarios.idUsuario=Usuarios.idUsuario and Comentarios.idPartido = " +idPartido + "  LIMIT " + offset + ","
 						+ length;
 			} else if (idPartido == null && idComentario != null) {
 				sql = "select * from Comentarios where idComentarios like '%" + idComentario

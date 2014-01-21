@@ -198,7 +198,7 @@ public class UserResource {
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
-			String sql = "select * from usuarios where username='" + username
+			String sql = "select * from Usuarios where username='" + username
 					+ "'";
 			rs = stmt.executeQuery(sql);
 			if (rs.next()) {
@@ -206,6 +206,7 @@ public class UserResource {
 				user.setName(rs.getString("nombre"));
 				user.setUsername(rs.getString("username"));
 				user.setIdusuario(rs.getString("idUsuario"));
+				user.setRole(rs.getString("role"));
 				user.addLink(UsersLinkBuilder.buildURIUser(uriInfo, "self",
 						username));
 			} else {

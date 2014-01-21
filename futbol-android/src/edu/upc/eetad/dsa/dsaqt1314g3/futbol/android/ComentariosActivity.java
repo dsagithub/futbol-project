@@ -24,6 +24,7 @@ import android.widget.ListView;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Comentario;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.ComentariosCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.User;
 
 public class ComentariosActivity extends ListActivity {
 	private final static String TAG = ComentariosActivity.class.toString();
@@ -32,6 +33,8 @@ public class ComentariosActivity extends ListActivity {
 	private FutbolAPI api;
 	private ArrayList<Comentario> comentarioList;
 	private ComentarioAdapter adapter;
+	private String iduser = null;
+	private String uname;
 	
 
  
@@ -39,6 +42,28 @@ public class ComentariosActivity extends ListActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		SharedPreferences prefs = getSharedPreferences("futbol-profile", Context.MODE_PRIVATE);
+		final String username = prefs.getString("username", null);
+		final String password = prefs.getString("password", null);
+	 
+		Authenticator.setDefault(new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password
+						.toCharArray());
+			}
+		});
+		Log.d(TAG, "authenticated with " + username + ":" + password);
+		api = new FutbolAPI();
+		URL url = null;
+		try {
+			url = new URL("http://" + serverAddress + ":" + serverPort
+					+ "/futbol-api/users/" + username);
+		} catch (MalformedURLException e) {
+			Log.d(TAG, e.getMessage(), e);
+			finish();
+		}
+		User user = api.getUser(url);
+		iduser = user.getIdusuario();
 		getMenuInflater().inflate(R.menu.futbol_menu, menu);
 		return true;
 	}
@@ -58,6 +83,7 @@ public class ComentariosActivity extends ListActivity {
 			}
 			Intent intent = new Intent(this, WriteComentario.class);
 			intent.putExtra("url", url);
+			intent.putExtra("iduser", iduser);
 			startActivity(intent);
 			
 			return true;
@@ -109,9 +135,27 @@ public class ComentariosActivity extends ListActivity {
 			}
 		});
 		Log.d(TAG, "authenticated with " + username + ":" + password);
-
 		api = new FutbolAPI();
 		URL url = null;
+		try {
+			url = new URL("http://" + serverAddress + ":" + serverPort
+					+ "/futbol-api/users/" + username);
+		} catch (MalformedURLException e) {
+			Log.d(TAG, e.getMessage(), e);
+			finish();
+		}
+		User user = api.getUser(url);
+		iduser = user.getIdusuario();
+		if (user.getRole().compareTo("administrator") == 0){
+			uname = "administrator";
+		}
+		else {
+			uname = "registered";
+		}
+		
+		
+		api = new FutbolAPI();
+		url = null;
 		try {
 			url = new URL(url2 + "/comentarios?offset=0&length=20");
 		} catch (MalformedURLException e) {
@@ -137,6 +181,8 @@ public class ComentariosActivity extends ListActivity {
 		Log.d(TAG, url.toString());
 		Intent intent = new Intent(this, ComentarioDetail.class);
 		intent.putExtra("url", url.toString());
+		intent.putExtra("uname", uname);
+		intent.putExtra("iduser", iduser);
 		startActivity(intent);
 		
 		

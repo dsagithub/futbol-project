@@ -20,10 +20,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ListView;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Noticia;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.NoticiasCollection;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.User;
 
 public class NoticiasActivity extends ListActivity {
 	private final static String TAG = NoticiasActivity.class.toString();
@@ -32,6 +34,7 @@ public class NoticiasActivity extends ListActivity {
 	private FutbolAPI api;
 	private ArrayList<Noticia> noticiaList;
 	private NoticiaAdapter adapter;
+	private String uname;
 	
 
  
@@ -39,8 +42,33 @@ public class NoticiasActivity extends ListActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.futbol_menu, menu);
-		return true;
+		SharedPreferences prefs = getSharedPreferences("futbol-profile", Context.MODE_PRIVATE);
+		final String username = prefs.getString("username", null);
+		final String password = prefs.getString("password", null);
+	 
+		Authenticator.setDefault(new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password
+						.toCharArray());
+			}
+		});
+		Log.d(TAG, "authenticated with " + username + ":" + password);
+
+		api = new FutbolAPI();
+		URL url = null;
+		try {
+			url = new URL("http://" + serverAddress + ":" + serverPort
+					+ "/futbol-api/users/" + username);
+		} catch (MalformedURLException e) {
+			Log.d(TAG, e.getMessage(), e);
+			finish();
+		}
+		User user = api.getUser(url);
+		if (user.getRole().compareTo("administrator") == 0){
+			getMenuInflater().inflate(R.menu.futbol_menu, menu);
+			return true;
+		}
+		else return false;
 	}
 	 
 	@Override
@@ -87,6 +115,7 @@ public class NoticiasActivity extends ListActivity {
 			serverPort = config.getProperty("server.port");
 	 
 			Log.d(TAG, "Configured server " + serverAddress + ":" + serverPort);
+			
 		} catch (IOException e) {
 			Log.e(TAG, e.getMessage(), e);
 			finish();
@@ -110,9 +139,24 @@ public class NoticiasActivity extends ListActivity {
 			}
 		});
 		Log.d(TAG, "authenticated with " + username + ":" + password);
-
 		api = new FutbolAPI();
 		URL url = null;
+		try {
+			url = new URL("http://" + serverAddress + ":" + serverPort
+					+ "/futbol-api/users/" + username);
+		} catch (MalformedURLException e) {
+			Log.d(TAG, e.getMessage(), e);
+			finish();
+		}
+		User user = api.getUser(url);
+		if (user.getRole().compareTo("administrator") == 0){
+			uname = "administrator";
+		}
+		else {
+			uname = "registered";
+		}
+		api = new FutbolAPI();
+		url = null;
 		try {
 			url = new URL("http://" + serverAddress + ":" + serverPort
 					+ "/futbol-api/club/" + id + "/noticias?&offset=0&length=20");
@@ -139,6 +183,7 @@ public class NoticiasActivity extends ListActivity {
 		Log.d(TAG, url.toString());
 		Intent intent = new Intent(this, NoticiaDetail.class);
 		intent.putExtra("url", url.toString());
+		intent.putExtra("uname", uname);
 		startActivity(intent);
 		
 		
