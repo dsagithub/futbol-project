@@ -4,13 +4,17 @@ var API_BASE_URL = "http://localhost:8080/futbol-api/club/";
 
 $(document).ready(function(e){
 getList();
-var usuario = $.cookie('usuario');
-var pass = $.cookie('password');
+
+
+	var usuario = $.cookie('usuario');
+	var pass = $.cookie('password');
+	console.log(usuario);
+	console.log(pass);
 
 
 
-var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>'+usuario;
- htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
+var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+usuario;
+ htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li><a href="http://localhost:8080/futbol/VistaUsuario/perfilusuario.html">Ver perfil</a></li><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
 					
 $('#usuario').html(htmlString);		 
 						
@@ -39,7 +43,7 @@ $("#next").click(function(e){
 //Para listar los clubs
 function getList(search) {
 	var usuario = $.cookie('usuario');
-var pass = $.cookie('password');
+	var pass = $.cookie('password');
 	var url;
 	if (search!=null){
 		url = API_BASE_URL + '?offset=0&length=5&pattern='+search; 
@@ -55,7 +59,7 @@ var pass = $.cookie('password');
 	beforeSend: function (request)
 		{
 			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+":"+pass));
+			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+":"+pass)); //btoa('alicia:alicia'))
 			//(username + ":" + password)); };
 		
 		},
@@ -344,11 +348,11 @@ var pass = $.cookie('password');
 					console.log("dentro funcion crear lista noticias");
 					console.log(noticia);
 					
-				htmlString += '<div class="panel panel-default"style="width: 650px"> <div class="panel-heading"> <span class="label pull-right label-default">'+noticia.lastModified;
+				htmlString += '<center> <div class="panel panel-default"style="width: 650px"> <div class="panel-heading"> <span class="label pull-right label-default">'+noticia.lastModified;
 				htmlString +='</span><h5>'+noticia.titulo;
 				htmlString += '</h5> </div> <div class="panel-body"><h5>'+noticia.content;
 				htmlString += '</h5><br/>'+noticia.media;
-				htmlString +='</div><br/></div>'
+				htmlString +='</div><br/></div></center> '
 			i++;
     }
 if(i==5){

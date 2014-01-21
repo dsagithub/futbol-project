@@ -102,6 +102,10 @@ public class ServletRegister extends HttpServlet {
                 String name = request.getParameter("name");
                 String email = request.getParameter("email");
                 String rol = "registered";
+                System.out.println(username);
+                System.out.println(password);
+                System.out.println(name);
+                System.out.println(email);
 
                 Connection conn = null;
                 try {
@@ -116,8 +120,8 @@ public class ServletRegister extends HttpServlet {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                 }
-                String update = "insert into usuarios values('" + username + "','" + email + "','" + name  + "', MD5('"
-                        + password + "'), '" + rol + "');";
+                String update = "insert into usuarios values(null,'" + username + "','" + email + 
+                		"','" + name  + "', MD5('"+ password + "'), '" + rol + "');";
                 		
                 		  
                 try {
