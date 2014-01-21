@@ -38,6 +38,8 @@ $("#next").click(function(e){
 
 //Para listar los clubs
 function getList(search) {
+	var usuario = $.cookie('usuario');
+var pass = $.cookie('password');
 	var url;
 	if (search!=null){
 		url = API_BASE_URL + '?offset=0&length=5&pattern='+search; 
@@ -53,7 +55,7 @@ function getList(search) {
 	beforeSend: function (request)
 		{
 			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
+			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+":"+pass));
 			//(username + ":" + password)); };
 		
 		},
@@ -96,6 +98,8 @@ function getList(search) {
 }
 
 function getListURL(url) {
+	var usuario = $.cookie('usuario');
+var pass = $.cookie('password');
 
 	console.log(url);
 	$.ajax({
@@ -105,7 +109,7 @@ function getListURL(url) {
 		beforeSend: function (request)
 		{
 			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
+			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+":"+pass));
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -146,6 +150,8 @@ function getListURL(url) {
 }
 
 function getEquipos(id){
+	var usuario = $.cookie('usuario');
+var pass = $.cookie('password');
 	var url;
 	url = API_BASE_URL + id + '/e?offset=0&length=5';
 	$.ajax({
@@ -155,7 +161,7 @@ function getEquipos(id){
 			beforeSend: function (request)
 		{
 			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
+			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+":"+pass));
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -197,6 +203,8 @@ function getEquipos(id){
 
 }
 function getEquipoURL(url){
+	var usuario = $.cookie('usuario');
+var pass = $.cookie('password');
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -204,7 +212,7 @@ function getEquipoURL(url){
 			beforeSend: function (request)
 		{
 			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
+			request.setRequestHeader("Authorization", "Basic "+btoa(usuario+":"+pass));
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -259,6 +267,8 @@ function getEquipoURL(url){
 function getEquipo(url){
 
 	console.log("Has clickado en un equipo");
+	var usuario = $.cookie('usuario');
+var pass = $.cookie('password');
 
 	$.ajax({
 		url : url,
@@ -267,7 +277,7 @@ function getEquipo(url){
 			beforeSend: function (request)
 		{
 			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
+			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+":"+pass));
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -286,12 +296,14 @@ console.log("dentro funcion cookie equipo");
 	console.log(linkequipo);
 	
 	$.cookie('Linkequipo', linkequipo);
-	window.location.href="http://localhost:8080/futbol/VistaUsuario/equipo.html"
+	window.location.href="http://localhost:8080/futbol/VistaUsuario/vistaequipo.html"
       
                 
 }
 
 function getNoticiasList(idclub) {
+	var usuario = $.cookie('usuario');
+var pass = $.cookie('password');
 
 	console.log("dentro funcion noticias")
 	console.log(idclub);
@@ -309,7 +321,7 @@ function getNoticiasList(idclub) {
 		beforeSend: function (request)
 		{
 			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
+			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+":"+pass));
 		},
 		
 		success : function(data, status, jqxhr) {

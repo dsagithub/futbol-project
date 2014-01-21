@@ -62,3 +62,41 @@ var username = $('#username').val();
 
 }
 
+
+function registro(usernamer,passwordr,name,email){
+	console.log("dentro funcion registrar");
+
+	var usernamer = $('#usernamer').val();
+	var passwordr = $('#passwordr').val();
+	var name = $('#name').val();
+	var email = $('#email').val();
+	var url= "http://localhost:8080/futbol-auth/ServletRegister";
+	var datos= 'usernamer='+usernamer+'&passwordr='+passwordr+'&name='+name+'&email='+email+'';
+	$.ajax({
+		url : url,
+		type : 'POST',
+		crossDomain : true,
+		data: datos,
+		dataType: 'html',
+	/*		beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
+			//(username + ":" + password)); };
+		
+		},*/
+		success : function(ata, status, jqxhr) {
+	var response = jqxhr.responseText;
+	//console.log("dentro");
+	console.log(response);
+	console.log("registro ajax ok");
+
+
+
+		},
+		error : function(jqXHR, options, error) {}
+
+		});
+
+}
+
