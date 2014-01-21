@@ -3,9 +3,17 @@ var user;
 var pass;
 
 $(document).ready(function(e){
+var usuario = $.cookie('usuario');
+var pass =  $.cookie('password');
+var Linkequipo = $.cookie('Linkequipo')
 
-user='admin';
-pass='admin';
+
+var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>'+usuario;
+ htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
+					
+$('#usuario').html(htmlString);		
+
+
 getListJugadores();
 getPartidosList();
 });
@@ -25,7 +33,8 @@ $("#next").click(function(e){
 });
 
 function getListJugadores(search) {
-	
+	var usuario = $.cookie('usuario');
+	var pass =  $.cookie('password');
 	console.log("funcion getListJugadores")
 	var url;
 	if (search!=null){
@@ -43,7 +52,7 @@ function getListJugadores(search) {
 		beforeSend: function (request)
 		{
 			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+':'+pass));
 
 		},
 		success : function(data, status, jqxhr) {
@@ -86,6 +95,9 @@ function getListJugadores(search) {
 	
 	
 function getPartidosList(){
+	
+	var usuario = $.cookie('usuario');
+	var pass =  $.cookie('password');
 		console.log("funcion GetPArtidos")
 		var url;
 		/*if (search!=null){
@@ -106,7 +118,7 @@ function getPartidosList(){
 			beforeSend: function (request)
 			{
 				request.withCredentials = true;
-				request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+				request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+':'+pass));
 
 			},
 			success : function(data, status, jqxhr) {
