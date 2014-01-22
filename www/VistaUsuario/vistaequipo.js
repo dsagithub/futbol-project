@@ -4,8 +4,10 @@ var pass;
 
 $(document).ready(function(e){
 var usuario = $.cookie('usuario');
+console.log(usuario);
 var pass =  $.cookie('password');
 var Linkequipo = $.cookie('Linkequipo')
+console.log(Linkequipo);
 
 
 var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>'+usuario;
@@ -33,15 +35,16 @@ $("#next").click(function(e){
 });
 
 function getListJugadores(search) {
+	var Linkequipo = $.cookie('Linkequipo')
 	var usuario = $.cookie('usuario');
 	var pass =  $.cookie('password');
 	console.log("funcion getListJugadores")
 	var url;
 	if (search!=null){
-		url = API_BASE_URL + 'club/1/e/1/jugadores?offset=0&length=5&pattern='+search; 
+		url = Linkequipo + '/jugadores?offset=0&length=5&pattern='+search; 
 		console.log("search")
 	}else{
-		url = API_BASE_URL + 'club/1/e/1/jugadores?offset=0&length=5'; 
+		url = Linkequipo + '/jugadores?offset=0&length=5'; 
 		console.log(url);
 		console.log("no search")
 	}
@@ -95,7 +98,8 @@ function getListJugadores(search) {
 	
 	
 function getPartidosList(){
-	
+	var Linkequipo = $.cookie('Linkequipo')
+
 	var usuario = $.cookie('usuario');
 	var pass =  $.cookie('password');
 		console.log("funcion GetPArtidos")
@@ -108,7 +112,7 @@ function getPartidosList(){
 			console.log(url);
 			console.log("no search")
 		}*/
-		url = API_BASE_URL + '/campeonato/1/calendario?offset=0&length=5'; 
+		url = API_BASE_URL + '/campeonato/2/calendario?offset=0&length=5'; 
 		console.log(url);
 		
 		$.ajax({
@@ -123,11 +127,13 @@ function getPartidosList(){
 			},
 			success : function(data, status, jqxhr) {
 				var response = $.parseJSON(jqxhr.responseText);
-				var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Fecha</th><th>Hora</th><th>Jornada</th><th>EquipoA</th><th>EquipoB</th></tr></thead><tbody>';
+				var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Fecha</th><th>Hora</th><th>Jornada</th><th>EquipoA</th><th>EquipoB</th><th>Campeonato</th></tr></thead><tbody>';
 
 				$.each(response.calendarios, function(i,v){
 					var calendario = v;
-					htmlString += '<td>'+calendario.fecha+'</td><td>'+calendario.hora+'</td><td>'+calendario.jornada+'</td><td>'+calendario.idEquipoA+'</td><td>'+calendario.idEquipoB+'</td></tr>'
+					var linkself="'"+calendario.links[0].uri+"'";
+					htmlString += '<tr onClick="javascript:getRetransmision('+linkself+');"><td>'+calendario.fecha+'</td><td>'+calendario.hora+'</td><td>'+calendario.jornada+'</td><td>'+calendario.idEquipoA+'</td><td>'+calendario.idEquipoB+'</td><td>'+calendario.idCampeonato+'</td></tr>'
+					console.log(htmlString);
 				})
 				var next = "";
 				var prev = "";
@@ -158,3 +164,41 @@ function getPartidosList(){
 			error : function(jqXHR, options, error) {}
 			});		
 }
+
+
+function getRetransmison(url){
+	console.log("Has clickado en un partido");
+	var usuario = $.cookie('usuario');
+var pass = $.cookie('password');
+
+	$.ajax({
+		url : url,
+		type : 'GET',
+		crossDomain : true,
+			beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+":"+pass));
+		},
+		success : function(data, status, jqxhr) {
+			var response = $.parseJSON(jqxhr.responseText);
+			console.log(response.links[0].uri);
+			var linkRetransmision = response.links[0].uri;
+			createcookie(linkRetransmision);
+			//var name = getNameCampeonato();
+			
+		},
+		error : function(jqXHR, options, error) {}
+		});
+
+}
+
+function createcookie(linkRetransmision) {
+	console.log("dentro funcion cookie retra");
+		console.log(linkRetra);
+		
+		$.cookie('LinkRetransmision', linkRetransmision);
+		window.location.href="http://localhost:8080/futbol/VistaUsuario/Retransmision.html"
+	      
+	                
+	}
