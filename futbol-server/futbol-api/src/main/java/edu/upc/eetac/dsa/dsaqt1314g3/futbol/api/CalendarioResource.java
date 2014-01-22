@@ -36,13 +36,14 @@ public class CalendarioResource {
 	private UriInfo uriInfo;
 	@Context
 	private SecurityContext security;
-	
+
 	@GET
 	@Produces(MediaType.FUTBOL_API_CALENDARIO_COLLECTION)
-	public CalendarioCollection getcalendarios(@PathParam("idCampeonato") String idCampeonato,
+	public CalendarioCollection getcalendarios(
+			@PathParam("idCampeonato") String idCampeonato,
 			@QueryParam("offset") String offset,
 			@QueryParam("length") String length,
-			@QueryParam("pattern") String pattern) {
+			@QueryParam("shjornada") String shjornada) {
 		if ((offset == null) || (length == null))
 			throw new BadRequestException("Indica un offset y un length ");
 		int ioffset, ilength, icount = 0;
@@ -75,22 +76,23 @@ public class CalendarioResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = null;
-//			if (pattern != null) {
-//				sql = "select * from Calendario where PONAQUILOQUENECESITES like '%" + pattern
-//						+ "%' LIMIT " + offset + "," + length;
-//			} 
-			if (pattern != null) {
-				sql = "select * from calendario where idequipoa like '%" + pattern
-						+ "%' OR idequipob like '%"+pattern
-						+"%'LIMIT " + offset + "," + length;
-			} 
-			else
-			{
-				sql = "select * from calendario where idcampeonato="+ idCampeonato 
-						+" LIMIT " + offset + "," + length;
+			// if (pattern != null) {
+			// sql =
+			// "select * from Calendario where PONAQUILOQUENECESITES like '%" +
+			// pattern
+			// + "%' LIMIT " + offset + "," + length;
+			// }
+			if (shjornada != null) {
+				sql = "select calendario.*,equipoa.nombre as equipoa,equipob.nombre as equipob from calendario inner join equipo equipoa on calendario.idequipoa=equipoa.idequipo inner join equipo equipob on calendario.idequipob=equipob.idequipo where jornada="
+						+ shjornada
+						+ " and idcampeonato="
+						+ idCampeonato
+						+ " LIMIT " + offset + "," + length;
+			} else {
+				sql = "select calendario.*,equipoa.nombre as equipoa,equipob.nombre as equipob from calendario inner join equipo equipoa on calendario.idequipoa=equipoa.idequipo inner join equipo equipob on calendario.idequipob=equipob.idequipo where idcampeonato="
+						+ idCampeonato + " LIMIT " + offset + "," + length;
 			}
-				
-			
+
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Calendario calendario = new Calendario();
@@ -98,10 +100,14 @@ public class CalendarioResource {
 				calendario.setIdPartido(rs.getString("idpartido"));
 				calendario.setIdEquipoA(rs.getString("idequipoa"));
 				calendario.setIdEquipoB(rs.getString("idequipob"));
+				calendario.setEquipoA(rs.getString("equipoa"));
+				calendario.setEquipoB(rs.getString("equipob"));
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
-				calendario.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, "0", "15", pattern, "Self", calendario.getIdCampeonato()));
+				calendario.addLink(CalendarioLinkBuilder.buildURICalendarios(
+						uriInfo, "0", "15", null, "Self",
+						calendario.getIdCampeonato()));
 				Calendarios.addCalendario(calendario);
 				icount++;
 			}
@@ -111,28 +117,31 @@ public class CalendarioResource {
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
 		}
-		
+
 		if (ioffset != 0) {
 			String prevoffset = "" + (ioffset - ilength);
-			Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, prevoffset, length, null, "prev",idCampeonato));
-			
-			}
-		Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, offset, length, null, "self", idCampeonato));
-
-			String nextoffset = "" + (ioffset + ilength);
-			if (ilength <= icount) {
-				Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo, nextoffset, length, null, "next", idCampeonato));
+			Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(
+					uriInfo, prevoffset, length, null, "prev", idCampeonato));
 
 		}
-		
+		Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(uriInfo,
+				offset, length, null, "self", idCampeonato));
+
+		String nextoffset = "" + (ioffset + ilength);
+		if (ilength <= icount) {
+			Calendarios.addLink(CalendarioLinkBuilder.buildURICalendarios(
+					uriInfo, nextoffset, length, null, "next", idCampeonato));
+
+		}
+
 		return Calendarios;
 	}
-	
+
 	@GET
 	@Path("{idPartido}")
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
-	public Calendario getCalendario(@PathParam("idPartido") String idPartido){
-		
+	public Calendario getCalendario(@PathParam("idPartido") String idPartido) {
+
 		Calendario calendario = new Calendario();
 		Connection conn = null;
 		try {
@@ -142,57 +151,60 @@ public class CalendarioResource {
 		}
 		Statement stmt = null;
 		ResultSet rs = null;
-		try
-		{
+		try {
 			stmt = conn.createStatement();
-			String sql = "select * from calendario where idpartido=" + idPartido;
+			String sql = "select calendario.*,equipoa.nombre as equipoa,equipob.nombre as equipob from calendario inner join equipo equipoa on calendario.idequipoa=equipoa.idequipo inner join equipo equipob on calendario.idequipob=equipob.idequipo where idpartido="
+					+ idPartido;
 			rs = stmt.executeQuery(sql);
-			if (rs.next())
-			{
+			if (rs.next()) {
 				calendario.setIdCampeonato(rs.getString("idcampeonato"));
 				calendario.setIdPartido(rs.getString("idpartido"));
 				calendario.setIdEquipoA(rs.getString("idequipoa"));
 				calendario.setIdEquipoB(rs.getString("idequipob"));
+				calendario.setEquipoA(rs.getString("equipoa"));
+				calendario.setEquipoB(rs.getString("equipob"));
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
-				calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "self",calendario.getIdCampeonato(), calendario.getIdPartido()));
-				calendario.addLink(CalendarioLinkBuilder.buildURIRetransmision(uriInfo, "Retransmisiones", "0", "15",calendario.getIdCampeonato(), idPartido));
-				calendario.addLink(CalendarioLinkBuilder.buildURIComentarios(uriInfo, "comentarios", "0", "15", calendario.getIdCampeonato(), idPartido));
-				calendario.addLink(CalendarioLinkBuilder.buildURICampeonatos(uriInfo, "campeonatos", calendario.getIdCampeonato()));
-			
+				calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(
+						uriInfo, "self", calendario.getIdCampeonato(),
+						calendario.getIdPartido()));
+				calendario.addLink(CalendarioLinkBuilder.buildURIRetransmision(
+						uriInfo, "Retransmisiones", "0", "15",
+						calendario.getIdCampeonato(), idPartido));
+				calendario.addLink(CalendarioLinkBuilder.buildURIComentarios(
+						uriInfo, "comentarios", "0", "15",
+						calendario.getIdCampeonato(), idPartido));
+				calendario.addLink(CalendarioLinkBuilder.buildURICampeonatos(
+						uriInfo, "campeonatos", calendario.getIdCampeonato()));
+
+			} else {
+				throw new CalendarioNotFoundException(
+						"No existe calendario para esa id de partido");
 			}
-			else
-			{
-				throw new CalendarioNotFoundException("No existe calendario para esa id de partido");
-			}
-		}
-		catch (SQLException e) 
-		{
+		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
-		}
-		 finally 
-		 {
-			try 
-			{
-					stmt.close();
-					conn.close();
-				} catch (SQLException e) {
-					throw new InternalServerException(e.getMessage());
-				}
+		} finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				throw new InternalServerException(e.getMessage());
 			}
-		
-		return calendario;
-		
 		}
+
+		return calendario;
+
+	}
+
 	@POST
 	@Consumes(MediaType.FUTBOL_API_CALENDARIO)
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
-	public Calendario createCalendario(Calendario calendario, @PathParam("idCampeonato") String idCampeonato)
-	{
-		if (!security.isUserInRole("administrator"))
-		{
-			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+	public Calendario createCalendario(Calendario calendario,
+			@PathParam("idCampeonato") String idCampeonato) {
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException(
+					"Solo administrador puede realizar esta acción");
 		}
 		Connection conn = null;
 		try {
@@ -200,60 +212,58 @@ public class CalendarioResource {
 		} catch (SQLException e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
-		if ((calendario.getIdEquipoA().length()==0) || (calendario.getIdEquipoB().length()==0) || (calendario.getFecha().length()==0) || (calendario.getJornada().length()==0) || (calendario.getHora().length()==0) )
-		{
-			throw new BadRequestException("Ninguno de los parámetros puede estar vacío");
+		if ((calendario.getIdEquipoA().length() == 0)
+				|| (calendario.getIdEquipoB().length() == 0)
+				|| (calendario.getFecha().length() == 0)
+				|| (calendario.getJornada().length() == 0)
+				|| (calendario.getHora().length() == 0)) {
+			throw new BadRequestException(
+					"Ninguno de los parámetros puede estar vacío");
 		}
-		
-	
-		try{
+
+		try {
 			Statement stmt = conn.createStatement();
 			String sql = "insert into calendario (idcampeonato, idequipoa, idequipob, jornada, fecha, hora ) values('"
-			+idCampeonato
-			+ "', '"
-			+ calendario.getIdEquipoA()
-			+ "', '"
-			+ calendario.getIdEquipoB()
-			+ "', '"
-			+calendario.getJornada()
-			+ "', '"
-			+calendario.getFecha()
-			+ "', '"
-			+calendario.getHora()
-			+"')";
+					+ idCampeonato
+					+ "', '"
+					+ calendario.getIdEquipoA()
+					+ "', '"
+					+ calendario.getIdEquipoB()
+					+ "', '"
+					+ calendario.getJornada()
+					+ "', '"
+					+ calendario.getFecha()
+					+ "', '" + calendario.getHora() + "')";
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			ResultSet rs = stmt.getGeneratedKeys();
 			if (rs.next()) {
-			int  idPartido = rs.getInt(1);
-		calendario.setIdPartido(Integer.toString(idPartido));
-		calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "self",idCampeonato, calendario.getIdPartido()));
+				int idPartido = rs.getInt(1);
+				calendario.setIdPartido(Integer.toString(idPartido));
+				calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(
+						uriInfo, "self", idCampeonato,
+						calendario.getIdPartido()));
 
-
-			
-			rs.close();
-			stmt.close();
-			conn.close();
-			}
-			else {
+				rs.close();
+				stmt.close();
+				conn.close();
+			} else {
 				throw new CalendarioNotFoundException("no encontrado");
 			}
-			
-			
-			}
-		 catch (SQLException e) {
-				throw new InternalServerException(e.getMessage());
-			}
-		return calendario;
+
+		} catch (SQLException e) {
+			throw new InternalServerException(e.getMessage());
 		}
+		return calendario;
+	}
 
 	@DELETE
 	@Path("{idPartido}")
 	public void deleteSting(@PathParam("idPartido") String id) {
 		Connection conn = null;
-		
-		if (!security.isUserInRole("administrator"))
-		{
-			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException(
+					"Solo administrador puede realizar esta acción");
 		}
 		try {
 			conn = ds.getConnection();
@@ -267,7 +277,8 @@ public class CalendarioResource {
 			sql = "delete from calendario where idpartido=" + id;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
-				throw new CalendarioNotFoundException("No hay partido en el calendario con esta id");
+				throw new CalendarioNotFoundException(
+						"No hay partido en el calendario con esta id");
 
 		} catch (SQLException e) {
 			throw new InternalServerException(e.getMessage());
@@ -280,43 +291,52 @@ public class CalendarioResource {
 			}
 		}
 	}
-	
+
 	@PUT
 	@Path("{idPartido}")
 	@Consumes(MediaType.FUTBOL_API_CALENDARIO)
 	@Produces(MediaType.FUTBOL_API_CALENDARIO)
-	public Calendario updateCalendario(@PathParam("idPartido") String id,@PathParam("idCampeonato") String idCampeonato, Calendario calendario) {
-	
-		if (!security.isUserInRole("administrator"))
-		{
-			throw new ForbiddenException("Solo administrador puede realizar esta acción");
+	public Calendario updateCalendario(@PathParam("idPartido") String id,
+			@PathParam("idCampeonato") String idCampeonato,
+			Calendario calendario) {
+
+		if (!security.isUserInRole("administrator")) {
+			throw new ForbiddenException(
+					"Solo administrador puede realizar esta acción");
 		}
-		
+
 		Connection conn = null;
 		try {
 			conn = ds.getConnection();
 		} catch (SQLException e) {
 			throw new ServiceUnavailableException(e.getMessage());
 		}
-		if ((calendario.getIdEquipoA().length()==0) || (calendario.getIdEquipoB().length()==0) || (calendario.getFecha().length()==0) || (calendario.getJornada().length()==0) || (calendario.getHora().length()==0) )
-		{
-			throw new BadRequestException("Ninguno de los parámetros puede estar vacío");
+		if ((calendario.getIdEquipoA().length() == 0)
+				|| (calendario.getIdEquipoB().length() == 0)
+				|| (calendario.getFecha().length() == 0)
+				|| (calendario.getJornada().length() == 0)
+				|| (calendario.getHora().length() == 0)) {
+			throw new BadRequestException(
+					"Ninguno de los parámetros puede estar vacío");
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update calendario set calendario.idequipoa='" + calendario.getIdEquipoA()
-					+ "',calendario.idequipob='" + calendario.getIdEquipoB()
-					+ "',calendario.jornada='" + calendario.getJornada()
-					+ "',calendario.fecha='" + calendario.getFecha()
-					+ "',calendario.hora='" + calendario.getHora()
-					
-					  + "' where calendario.idpartido=" + id;
+			String sql = "update calendario set calendario.idequipoa='"
+					+ calendario.getIdEquipoA() + "',calendario.idequipob='"
+					+ calendario.getIdEquipoB() + "',calendario.jornada='"
+					+ calendario.getJornada() + "',calendario.fecha='"
+					+ calendario.getFecha() + "',calendario.hora='"
+					+ calendario.getHora()
+
+					+ "' where calendario.idpartido=" + id;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
-				throw new CalendarioNotFoundException("No existe calendario para actualizar");
+				throw new CalendarioNotFoundException(
+						"No existe calendario para actualizar");
 			calendario.setIdPartido(id);
-			calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "self",idCampeonato, calendario.getIdPartido()));
-		
+			calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(
+					uriInfo, "self", idCampeonato, calendario.getIdPartido()));
+
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
@@ -324,5 +344,5 @@ public class CalendarioResource {
 		}
 		return calendario;
 	}
-	
+
 }
