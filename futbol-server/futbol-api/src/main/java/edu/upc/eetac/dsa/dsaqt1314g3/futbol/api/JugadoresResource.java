@@ -53,14 +53,14 @@ public class JugadoresResource {
 
 		try {
 			stmt = conn.createStatement();
-			String query = "SELECT * FROM Jugadores WHERE dni='" + dni
+			String query = "SELECT * FROM jugadores WHERE dni='" + dni
 					+ "' and idequipo =" + idequipo;
 			ResultSet rs = stmt.executeQuery(query);
 			if (rs.next()) {
 				jugador.setDni(rs.getString("dni"));
 				jugador.setNombre(rs.getString("nombre"));
 				jugador.setApellidos(rs.getString("apellidos"));
-				jugador.setIdequipo(rs.getInt("IdEquipo"));
+				jugador.setIdequipo(rs.getInt("idequipo"));
 				// LINKS ahora
 				jugador.addLink(JugadoresLinkBuilder.buildURIJugadorId(uriInfo,
 						"self", idequipo, dni, idclub));
@@ -127,10 +127,10 @@ public class JugadoresResource {
 			String sql = null;
 
 			if (idequipo != null) {
-				sql = "select * from Jugadores where idequipo like " + idequipo
+				sql = "select * from jugadores where idequipo like " + idequipo
 						+ " LIMIT " + offset + "," + length;
 			} else {
-				sql = "select * from Jugadores LIMIT " + offset + "," + length;
+				sql = "select * from jugadores LIMIT " + offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -230,7 +230,7 @@ public class JugadoresResource {
 
 			jugador.setIdequipo(idequipo);
 
-			String sql = "insert into Jugadores (dni, nombre , apellidos, idequipo) values ('"
+			String sql = "insert into jugadores (dni, nombre , apellidos, idequipo) values ('"
 					+ jugador.getDni()
 					+ "', '"
 					+ jugador.getNombre()
@@ -279,7 +279,7 @@ public class JugadoresResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Jugadores where dni='" + dni + "'";
+			sql = "delete from jugadores where dni='" + dni + "'";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
@@ -340,9 +340,9 @@ public class JugadoresResource {
 			Statement stmt = conn.createStatement();
 			jugador.setDni(dniaa);
 			jugador.setIdequipo(idequipo);
-			String sql = "update Jugadores set Jugadores.nombre='"
-					+ jugador.getNombre() + "',Jugadores.apellidos='"
-					+ jugador.getApellidos() + "' where Jugadores.dni='" + jugador.getDni() + "'";
+			String sql = "update jugadores set jugadores.nombre='"
+					+ jugador.getNombre() + "',jugadores.apellidos='"
+					+ jugador.getApellidos() + "' where jugadores.dni='" + jugador.getDni() + "'";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)

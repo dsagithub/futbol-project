@@ -83,18 +83,18 @@ public class ClubResource {
 			String sql = null;
 
 			if (nombre != null) {
-				sql = "select * from Club where nombre like '%" + nombre
+				sql = "select * from club where nombre like '%" + nombre
 						+ "%' LIMIT " + offset + "," + length;
 			} 
 			else  {
-				sql = "select * from Club LIMIT " 
+				sql = "select * from club LIMIT " 
 			+ offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 
 				Club club = new Club();
-				club.setIdClub(rs.getString("idClub"));
+				club.setIdClub(rs.getString("idclub"));
 				club.setNombre(rs.getString("nombre"));
 				club.addLink(ClubLinkBuilder.buildURIEquipos2(uriInfo, "0", "15", null, "Lista equipos", club.getIdClub()));
 				clubs.addClub(club);
@@ -140,7 +140,7 @@ public class ClubResource {
 		try
 		{
 			stmt = conn.createStatement();
-			String sql = "select * from Club where idClub=" + idClub;
+			String sql = "select * from club where idclub=" + idClub;
 			rs = stmt.executeQuery(sql);
 			if (rs.next())
 			{
@@ -201,7 +201,7 @@ public class ClubResource {
 	
 		try{
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Club (nombre) values ('"
+			String sql = "insert into club (nombre) values ('"
 			+ club.getNombre()
 			+"')";
 			stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
@@ -246,7 +246,7 @@ public class ClubResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Club where idClub=" + id;
+			sql = "delete from club where idclub=" + id;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new ClubNotFoundException("No existe ningún club con esa id");
@@ -290,8 +290,8 @@ public class ClubResource {
 	
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update Club set Club.nombre='" + club.getNombre()
-					  + "' where Club.idClub=" + id;
+			String sql = "update club set club.nombre='" + club.getNombre()
+					  + "' where club.idclub=" + id;
 			int rs2 = stmt.executeUpdate(sql);
 		
 			if (rs2 == 0)

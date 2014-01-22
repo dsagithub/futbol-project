@@ -77,20 +77,20 @@ public class CampeonatosResource {
 				Statement stmt = conn.createStatement();
 				String sql = null;
 				if (pattern != null) {
-					sql = "select * from Equipo where (nombre like '%" + pattern
-							+ "%' and idCcampeonatos=" + idcamp + ")";
+					sql = "select * from equipo where (nombre like '%" + pattern
+							+ "%' and idcampeonatos=" + idcamp + ")";
 				} else {
-						sql = "select * from Equipo where idCampeonatos=" + idcamp
+						sql = "select * from equipo where idcampeonatos=" + idcamp
 								+ " LIMIT " + offset + "," + length;
 					
 				}
 				ResultSet rs = stmt.executeQuery(sql);
 				if (rs.next()) {
 					Equipo equipo2 = new Equipo();
-					equipo2.setIdClub(rs.getString("idClub"));
-					equipo2.setIdEquipo(rs.getString("idEquipo"));
+					equipo2.setIdClub(rs.getString("idclub"));
+					equipo2.setIdEquipo(rs.getString("idequipo"));
 					equipo2.setNombre(rs.getString("nombre"));
-					equipo2.setCampeonato(rs.getString("idCampeonatos"));
+					equipo2.setCampeonato(rs.getString("idcampeonatos"));
 					equipo2.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
 							"self", equipo2.getIdClub(), equipo2.getIdEquipo()));
 
@@ -101,10 +101,10 @@ public class CampeonatosResource {
 					icount++;
 					while (rs.next()) {
 						Equipo equipo = new Equipo();
-						equipo.setIdClub(rs.getString("idClub"));
-						equipo.setIdEquipo(rs.getString("idEquipo"));
+						equipo.setIdClub(rs.getString("idclub"));
+						equipo.setIdEquipo(rs.getString("idequipo"));
 						equipo.setNombre(rs.getString("nombre"));
-						equipo.setCampeonato(rs.getString("idCampeonatos"));
+						equipo.setCampeonato(rs.getString("idcampeonatos"));
 						equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
 								"self", equipo.getIdClub(), equipo.getIdEquipo()));
 						equipo.addLink(EquiposLinkBuilder.buildURICalendarioId(
@@ -153,14 +153,14 @@ public class CampeonatosResource {
 			ResultSet rs = null;
 			try {
 				stmt = conn.createStatement();
-				String sql = "select * from Campeonatos where idCampeonatos='"
+				String sql = "select * from campeonatos where idcampeonatos='"
 						+ idcampeonato + "'";
 				rs = stmt.executeQuery(sql);
 				String offset = "0";
 				String length = "15";
 				String pattern = null;
 				if (rs.next()) {
-					campeonato.setIdcampeonatos(rs.getInt("idCampeonatos"));
+					campeonato.setIdcampeonatos(rs.getInt("idcampeonatos"));
 					campeonato.setNombre(rs.getString("nombre"));
 					campeonato.addLink(CampeonatosLinkBuilder.buildURICampeonatoId(uriInfo, "self", campeonato.getIdcampeonatos()));
 					campeonato.addLink(CampeonatosLinkBuilder.buildURICalendarioId(uriInfo,
@@ -202,7 +202,7 @@ public class CampeonatosResource {
 			String sql;
 			try {
 				stmt = conn.createStatement();
-				sql = "delete from Campeonatos where idCampeonatos='"
+				sql = "delete from campeonatos where idcampeonatos='"
 						+ idcampeonato + "'";
 
 				int rs2 = stmt.executeUpdate(sql);
@@ -259,7 +259,7 @@ public class CampeonatosResource {
 			}
 			try {
 				Statement stmt = conn.createStatement();
-				String sql = "insert into Campeonatos (idCampeonatos,nombre) values ('"
+				String sql = "insert into campeonatos (idcampeonatos,nombre) values ('"
 						+ campeonato.getIdcampeonatos() + "', '" + campeonato.getNombre() + "')";
 				stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 				ResultSet rs = stmt.getGeneratedKeys();
@@ -319,8 +319,8 @@ public class CampeonatosResource {
 				Statement stmt = conn.createStatement();
 				campeonato.setIdcampeonatos(idcampeonato);
 				
-				String sql = "update Campeonatos set Campeonatos.nombre='" + campeonato.getNombre()						
-						  + "' where Campeonatos.idCampeonatos=" + idcampeonato;
+				String sql = "update campeonatos set campeonatos.nombre='" + campeonato.getNombre()						
+						  + "' where campeonatos.idcampeonatos=" + idcampeonato;
 
 				int rs2 = stmt.executeUpdate(sql);
 				if (rs2 == 0)
@@ -378,14 +378,14 @@ public class CampeonatosResource {
 				String sql = null;
 
 				
-				sql = "select * from Campeonatos LIMIT " 
+				sql = "select * from campeonatos LIMIT " 
 				+ offset + "," + length;
 				
 				ResultSet rs = stmt.executeQuery(sql);
 				while (rs.next()) {
 
 					Campeonatos campeonato = new Campeonatos();
-					campeonato.setIdcampeonatos(rs.getInt("idCampeonatos"));
+					campeonato.setIdcampeonatos(rs.getInt("idcampeonatos"));
 					campeonato.setNombre(rs.getString("nombre"));
 					campeonato.addLink(CampeonatosLinkBuilder.buildURICalendarioId(uriInfo,
 							"Calendario", campeonato.getIdcampeonatos() , offset, length,

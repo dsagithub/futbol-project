@@ -80,13 +80,13 @@ public class CalendarioResource {
 //						+ "%' LIMIT " + offset + "," + length;
 //			} 
 			if (pattern != null) {
-				sql = "select * from Calendario where idEquipoA like '%" + pattern
-						+ "%' OR idEquipoB like '%"+pattern
+				sql = "select * from calendario where idequipoa like '%" + pattern
+						+ "%' OR idequipob like '%"+pattern
 						+"%'LIMIT " + offset + "," + length;
 			} 
 			else
 			{
-				sql = "select * from Calendario where idCampeonato="+ idCampeonato 
+				sql = "select * from calendario where idcampeonato="+ idCampeonato 
 						+" LIMIT " + offset + "," + length;
 			}
 				
@@ -94,10 +94,10 @@ public class CalendarioResource {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Calendario calendario = new Calendario();
-				calendario.setIdCampeonato(rs.getString("idCampeonato"));
-				calendario.setIdPartido(rs.getString("idPartido"));
-				calendario.setIdEquipoA(rs.getString("idEquipoA"));
-				calendario.setIdEquipoB(rs.getString("idEquipoB"));
+				calendario.setIdCampeonato(rs.getString("idcampeonato"));
+				calendario.setIdPartido(rs.getString("idpartido"));
+				calendario.setIdEquipoA(rs.getString("idequipoa"));
+				calendario.setIdEquipoB(rs.getString("idequipob"));
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
@@ -145,14 +145,14 @@ public class CalendarioResource {
 		try
 		{
 			stmt = conn.createStatement();
-			String sql = "select * from Calendario where idPartido=" + idPartido;
+			String sql = "select * from calendario where idpartido=" + idPartido;
 			rs = stmt.executeQuery(sql);
 			if (rs.next())
 			{
-				calendario.setIdCampeonato(rs.getString("idCampeonato"));
-				calendario.setIdPartido(rs.getString("idPartido"));
-				calendario.setIdEquipoA(rs.getString("idEquipoA"));
-				calendario.setIdEquipoB(rs.getString("idEquipoB"));
+				calendario.setIdCampeonato(rs.getString("idcampeonato"));
+				calendario.setIdPartido(rs.getString("idpartido"));
+				calendario.setIdEquipoA(rs.getString("idequipoa"));
+				calendario.setIdEquipoB(rs.getString("idequipob"));
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
@@ -208,7 +208,7 @@ public class CalendarioResource {
 	
 		try{
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Calendario (idCampeonato, idEquipoA, idEquipoB, jornada, fecha, hora ) values('"
+			String sql = "insert into calendario (idcampeonato, idequipoa, idequipob, jornada, fecha, hora ) values('"
 			+idCampeonato
 			+ "', '"
 			+ calendario.getIdEquipoA()
@@ -264,7 +264,7 @@ public class CalendarioResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Calendario where idPartido=" + id;
+			sql = "delete from calendario where idpartido=" + id;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new CalendarioNotFoundException("No hay partido en el calendario con esta id");
@@ -304,13 +304,13 @@ public class CalendarioResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update Calendario set Calendario.idEquipoA='" + calendario.getIdEquipoA()
-					+ "',Calendario.idEquipoB='" + calendario.getIdEquipoB()
-					+ "',Calendario.jornada='" + calendario.getJornada()
-					+ "',Calendario.fecha='" + calendario.getFecha()
-					+ "',Calendario.hora='" + calendario.getHora()
+			String sql = "update calendario set calendario.idequipoa='" + calendario.getIdEquipoA()
+					+ "',calendario.idequipob='" + calendario.getIdEquipoB()
+					+ "',calendario.jornada='" + calendario.getJornada()
+					+ "',calendario.fecha='" + calendario.getFecha()
+					+ "',calendario.hora='" + calendario.getHora()
 					
-					  + "' where Calendario.idPartido=" + id;
+					  + "' where calendario.idpartido=" + id;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new CalendarioNotFoundException("No existe calendario para actualizar");

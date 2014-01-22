@@ -55,15 +55,15 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		
 		try {
 			stmt = conn.createStatement();
-			String sql = "select * from Comentarios where idComentarios=" + idComentario;
+			String sql = "select * from comentarios where idcomentarios=" + idComentario;
 			rs = stmt.executeQuery(sql);
 			if (rs.next()) {
-				comentario.setIdComentario(rs.getInt("idComentarios"));
+				comentario.setIdComentario(rs.getInt("idcomentarios"));
 				comentario.setTiempo(rs.getString("tiempo"));
 				comentario.setMedia(rs.getString("media"));
 				comentario.setTexto(rs.getString("texto"));
-				comentario.setIdPartido(rs.getString("idPartido"));
-				comentario.setIdUsuario(rs.getInt("idUsuario"));
+				comentario.setIdPartido(rs.getString("idpartido"));
+				comentario.setIdUsuario(rs.getInt("idusuario"));
 				//links
 				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,
 						"self",idCampeonato, idPartido, comentario.getIdComentario()));
@@ -108,7 +108,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Comentarios where idComentarios=" + idComentario;
+			sql = "delete from comentarios where idcomentarios=" + idComentario;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new ComentarioNotFoundException();
@@ -151,7 +151,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Comentarios (idComentarios, tiempo, media, texto, idPartido, idUsuario) values ('"
+			String sql = "insert into comentarios (idcomentarios, tiempo, media, texto, idpartido, idusuario) values ('"
 					+ comentario.getIdComentario() 	
 					+ "', '"
 					+ comentario.getTiempo()
@@ -170,7 +170,7 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 				int comentarioid = rs.getInt(1);
 				comentario.setIdComentario(comentarioid);
 				
-				String sql2 = "select Comentarios.tiempo from Comentarios where Comentarios.idComentarios = "
+				String sql2 = "select comentarios.tiempo from comentarios where comentarios.idcomentarios = "
 						+ comentarioid;
 				rs = stmt.executeQuery(sql2);
 				if (rs.next()) {
@@ -216,16 +216,16 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update Comentarios set Comentarios.tiempo='" + comentario.getTiempo()
-					+ "',Comentarios.media='" + comentario.getMedia() 
-					+ "',Comentarios.texto='" + comentario.getTexto() 
-					+ "',Comentarios.idPartido='" + idPartido 
-					+ "',Comentarios.idUsuario='" + comentario.getIdUsuario() 
-					+ "' where Comentarios.idComentarios=" + idComentario;
+			String sql = "update comentarios set comentarios.tiempo='" + comentario.getTiempo()
+					+ "',comentarios.media='" + comentario.getMedia() 
+					+ "',comentarios.texto='" + comentario.getTexto() 
+					+ "',comentarios.idpartido='" + idPartido 
+					+ "',comentarios.idusuario='" + comentario.getIdUsuario() 
+					+ "' where comentarios.idcomentarios=" + idComentario;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new ComentarioNotFoundException();
-			sql = "select Comentarios.tiempo from Comentarios where Comentarios.idComentarios = " + idComentario;
+			sql = "select comentarios.tiempo from comentarios where comentarios.idcomentarios = " + idComentario;
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				comentario.setIdComentario(idComentario);
@@ -287,34 +287,34 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			String sql = null;
 			String sql2 = null;
 			if (idComentario != null && idPartido != null) {
-				sql = "select * from Comentarios where (idPartido like '%" + idPartido
-						+ "%' AND idComentarios like '%" + idComentario
+				sql = "select * from comentarios where (idpartido like '%" + idPartido
+						+ "%' AND idcomentarios like '%" + idComentario
 						+ "%') ORDER BY tiempo desc LIMIT " + offset + ","
 						+ length;
 			} else if (idComentario == null && idPartido != null) {
 				//sql = "select * Usuarios.username, comentarios.* from Comentarios, Usuarios where idPartido like '%" + idPartido
 					//	+ "%' ORDER BY tiempo desc LIMIT " + offset + ","
 						//+ length + "and Comentarios.idUsuario=Usuario.idUsuario";
-				sql = "select Usuarios.username, Comentarios.* from Comentarios, Usuarios where Comentarios.idUsuario=Usuarios.idUsuario and Comentarios.idPartido = " +idPartido + "  LIMIT " + offset + ","
+				sql = "select usuarios.username, comentarios.* from comentarios, usuarios where comentarios.idusuario=usuarios.idusuario and comentarios.idpartido = " +idPartido + "  LIMIT " + offset + ","
 						+ length;
 			} else if (idPartido == null && idComentario != null) {
-				sql = "select * from Comentarios where idComentarios like '%" + idComentario
+				sql = "select * from comentarios where idcomentarios like '%" + idComentario
 						+ "%' ORDER BY tiempo desc LIMIT " + offset + ","
 						+ length;
 			} else {
-				sql = "select * from Comentarios ORDER BY tiempo LIMIT "
+				sql = "select * from comentarios ORDER BY tiempo LIMIT "
 						+ offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Comentario comentario = new Comentario();
 				User usuario = new User();
-				comentario.setIdComentario(rs.getInt("idComentarios"));
+				comentario.setIdComentario(rs.getInt("idcomentarios"));
 				comentario.setTiempo(rs.getString("tiempo"));
 				comentario.setMedia(rs.getString("media"));
 				comentario.setTexto(rs.getString("texto"));
-				comentario.setIdPartido(rs.getString("idPartido"));
-				comentario.setIdUsuario(rs.getInt("idUsuario"));
+				comentario.setIdPartido(rs.getString("idpartido"));
+				comentario.setIdUsuario(rs.getInt("idusuario"));
 				usuario.setUsername(rs.getString("username"));
 
 				//links

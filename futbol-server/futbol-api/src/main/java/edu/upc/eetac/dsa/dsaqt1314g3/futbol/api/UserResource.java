@@ -83,7 +83,7 @@ public class UserResource {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				User usuario = new User();
-				usuario.setIdusuario(rs.getString("idUsuario"));
+				usuario.setIdusuario(rs.getString("idusuario"));
 				usuario.setUsername(rs.getString("username"));
 				usuario.setEmail(rs.getString("email"));
 				usuario.setName(rs.getString("nombre"));
@@ -198,14 +198,14 @@ public class UserResource {
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
-			String sql = "select * from Usuarios where username='" + username
+			String sql = "select * from usuarios where username='" + username
 					+ "'";
 			rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				user.setEmail(rs.getString("email"));
 				user.setName(rs.getString("nombre"));
 				user.setUsername(rs.getString("username"));
-				user.setIdusuario(rs.getString("idUsuario"));
+				user.setIdusuario(rs.getString("idusuario"));
 				user.setRole(rs.getString("role"));
 				user.addLink(UsersLinkBuilder.buildURIUser(uriInfo, "self",
 						username));
@@ -269,7 +269,7 @@ public class UserResource {
 						+ "') where usuarios.username='" + username + "'";
 				}
 				user.setUsername(rs.getString("username"));
-				user.setIdusuario(rs.getString("idUsuario"));
+				user.setIdusuario(rs.getString("idusuario"));
 				user.addLink(UsersLinkBuilder.buildURIUser(uriInfo, "self",
 						user.getUsername()));
 				stmt.executeUpdate(sql);

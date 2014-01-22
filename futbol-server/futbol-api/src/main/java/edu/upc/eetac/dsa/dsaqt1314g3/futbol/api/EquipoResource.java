@@ -71,14 +71,14 @@ public class EquipoResource {
 			Statement stmt = conn.createStatement();
 			String sql = null;
 			if (pattern != null) {
-				sql = "select * from Equipo where (nombre like '%" + pattern
-						+ "%' and idClub=" + clubid + ")";
+				sql = "select * from equipo where (nombre like '%" + pattern
+						+ "%' and idclub=" + clubid + ")";
 			} else {
 				if (seacampe != null) {
-					sql = "select * from Equipo where idCampeonatos=" + seacampe
+					sql = "select * from equipo where idcampeonatos=" + seacampe
 							+ " LIMIT " + offset + "," + length;
 				} else {
-					sql = "select * from Equipo where idClub=" + clubid
+					sql = "select * from equipo where idclub=" + clubid
 							+ " LIMIT " + offset + "," + length;
 				}
 			}
@@ -86,9 +86,9 @@ public class EquipoResource {
 			if (rs.next()) {
 				Equipo equipo2 = new Equipo();
 				equipo2.setIdClub(clubid);
-				equipo2.setIdEquipo(rs.getString("idEquipo"));
+				equipo2.setIdEquipo(rs.getString("idequipo"));
 				equipo2.setNombre(rs.getString("nombre"));
-				equipo2.setCampeonato(rs.getString("idCampeonatos"));
+				equipo2.setCampeonato(rs.getString("idcampeonatos"));
 				equipo2.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
 						"self", clubid, equipo2.getIdEquipo()));
 
@@ -100,9 +100,9 @@ public class EquipoResource {
 				while (rs.next()) {
 					Equipo equipo = new Equipo();
 					equipo.setIdClub(clubid);
-					equipo.setIdEquipo(rs.getString("idEquipo"));
+					equipo.setIdEquipo(rs.getString("idequipo"));
 					equipo.setNombre(rs.getString("nombre"));
-					equipo.setCampeonato(rs.getString("idCampeonatos"));
+					equipo.setCampeonato(rs.getString("idcampeonatos"));
 					equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
 							"self", clubid, equipo.getIdEquipo()));
 					equipo.addLink(EquiposLinkBuilder.buildURICalendarioId(
@@ -150,14 +150,14 @@ public class EquipoResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = null;
-			sql = "select * from Equipo where idClub=" + clubid
-					+ " and idEquipo='" + idequipo + "'";
+			sql = "select * from equipo where idclub=" + clubid
+					+ " and idequipo='" + idequipo + "'";
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				equipo.setIdClub(clubid);
 				equipo.setIdEquipo(idequipo);
 				equipo.setNombre(rs.getString("nombre"));
-				equipo.setCampeonato(rs.getString("idCampeonatos"));
+				equipo.setCampeonato(rs.getString("idcampeonatos"));
 				equipo.addLink(EquiposLinkBuilder.buildURIEquipoId(uriInfo,
 						"self", clubid, equipo.getIdEquipo()));
 				equipo.addLink(EquiposLinkBuilder.buildURIClubId(uriInfo,
@@ -209,7 +209,7 @@ public class EquipoResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Equipo (idClub,idCampeonatos,nombre) values ('"
+			String sql = "insert into equipo (idclub,idcampeonatos,nombre) values ('"
 					+ idclub
 					+ "', '"
 					+ equipo.getCampeonato()
@@ -271,10 +271,10 @@ public class EquipoResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update Equipo set equipo.nombre='"
-					+ equipo.getNombre() + "', equipo.idCampeonatos="
-					+ equipo.getCampeonato() + " where (equipo.idClub="
-					+ idclub + " AND equipo.idEquipo='" + idequipo + "')";
+			String sql = "update equipo set equipo.nombre='"
+					+ equipo.getNombre() + "', equipo.idcampeonatos="
+					+ equipo.getCampeonato() + " where (equipo.idclub="
+					+ idclub + " AND equipo.idequipo='" + idequipo + "')";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
@@ -314,8 +314,8 @@ public class EquipoResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Equipo where (idEquipo=" + idequipo
-					+ " AND idClub='" + idclub + "')";
+			sql = "delete from equipo where (idequipo=" + idequipo
+					+ " AND idclub='" + idclub + "')";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)

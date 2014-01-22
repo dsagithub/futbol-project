@@ -55,15 +55,15 @@ public class NoticiasResource {
 		
 		try {
 			stmt = conn.createStatement();
-			String sql = "select * from Noticias where idNoticias=" + idNoticia;
+			String sql = "select * from noticias where idnoticias=" + idNoticia;
 			rs = stmt.executeQuery(sql);
 			if (rs.next()) {
-				noticia.setIdNoticia(rs.getInt("idNoticias"));
-				noticia.setIdClub(rs.getInt("idClub"));
+				noticia.setIdNoticia(rs.getInt("idnoticias"));
+				noticia.setIdClub(rs.getInt("idclub"));
 				noticia.setTitulo(rs.getString("titulo"));
 				noticia.setContent(rs.getString("content"));
 				noticia.setMedia(rs.getString("media"));
-				noticia.setLastModified(rs.getTimestamp("lastModified"));
+				noticia.setLastModified(rs.getTimestamp("lastmodified"));
 				//links
 				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
 						"self", idClub, noticia.getIdNoticia()));
@@ -104,7 +104,7 @@ public class NoticiasResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Noticias where idNoticias=" + idNoticia;
+			sql = "delete from noticias where idnoticias=" + idNoticia;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new NoticiaNotFoundException();
@@ -149,7 +149,7 @@ public class NoticiasResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Noticias (idNoticias, idClub, titulo, content, media, lastModified) values ('"
+			String sql = "insert into noticias (idnoticias, idclub, titulo, content, media, lastmodified) values ('"
 					+ noticia.getIdNoticia() 	
 					+ "', '"
 					+ idClub
@@ -168,7 +168,7 @@ public class NoticiasResource {
 				int noticiaid = rs.getInt(1);
 				noticia.setIdNoticia(noticiaid);
 				
-				String sql2 = "select Noticias.lastModified from Noticias where Noticias.idNoticias = "
+				String sql2 = "select noticias.lastmodified from noticias where noticias.idnoticias = "
 						+ noticiaid;
 				rs = stmt.executeQuery(sql2);
 				if (rs.next()) {
@@ -210,18 +210,18 @@ public class NoticiasResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update Noticias set Noticias.idClub='" + idClub
-					+ "',Noticias.titulo='" + noticia.getTitulo() 
-					+ "',Noticias.content='" + noticia.getContent() 
-					+ "',Noticias.media='" + noticia.getMedia() 
-					+ "' where Noticias.idNoticias=" + idNoticia;
+			String sql = "update noticias set noticias.idclub='" + idClub
+					+ "',noticias.titulo='" + noticia.getTitulo() 
+					+ "',noticias.content='" + noticia.getContent() 
+					+ "',noticias.media='" + noticia.getMedia() 
+					+ "' where noticias.idnoticias=" + idNoticia;
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
 				throw new NoticiaNotFoundException();
-			sql = "select Noticias.lastModified from Noticias where Noticias.idNoticias = " + idNoticia;
+			sql = "select noticias.lastmodified from noticias where noticias.idnoticias = " + idNoticia;
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
-				noticia.setLastModified(rs.getTimestamp("lastModified"));
+				noticia.setLastModified(rs.getTimestamp("lastmodified"));
 				noticia.setIdNoticia(idNoticia);
 				// links
 				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
@@ -276,31 +276,31 @@ public class NoticiasResource {
 			Statement stmt = conn.createStatement();
 			String sql = null;
 			if (idClub != null && titulo != null) {
-				sql = "select * from Noticias where (titulo like '%" + titulo
-						+ "%' AND idClub like '%" + idClub
-						+ "%') ORDER BY lastModified desc LIMIT " + offset + ","
+				sql = "select * from noticias where (titulo like '%" + titulo
+						+ "%' AND idclub like '%" + idClub
+						+ "%') ORDER BY lastmodified desc LIMIT " + offset + ","
 						+ length;
 			} else if (idClub == null && titulo != null) {
-				sql = "select * from Noticias where titulo like '%" + titulo
-						+ "%' ORDER BY lastModified desc LIMIT " + offset + ","
+				sql = "select * from noticias where titulo like '%" + titulo
+						+ "%' ORDER BY lastmodified desc LIMIT " + offset + ","
 						+ length;
 			} else if (titulo == null && idClub != null) {
-				sql = "select * from Noticias where idClub like '%" + idClub
-						+ "%' ORDER BY lastModified desc LIMIT " + offset + ","
+				sql = "select * from noticias where idclub like '%" + idClub
+						+ "%' ORDER BY lastmodified desc LIMIT " + offset + ","
 						+ length;
 			} else {
-				sql = "select * from Noticias ORDER BY lastModified LIMIT "
+				sql = "select * from noticias ORDER BY lastmodified LIMIT "
 						+ offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Noticia noticia = new Noticia();
-				noticia.setIdNoticia(rs.getInt("idNoticias"));
-				noticia.setIdClub(rs.getInt("idClub"));
+				noticia.setIdNoticia(rs.getInt("idnoticias"));
+				noticia.setIdClub(rs.getInt("idclub"));
 				noticia.setTitulo(rs.getString("titulo"));
 				noticia.setContent(rs.getString("content"));
 				noticia.setMedia(rs.getString("media"));
-				noticia.setLastModified(rs.getTimestamp("lastModified"));
+				noticia.setLastModified(rs.getTimestamp("lastmodified"));
 				//links
 				noticia.addLink(NoticiasLinkBuilder.buildURINoticiaId(uriInfo,
 						"self", idClub, noticia.getIdNoticia()));

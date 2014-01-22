@@ -73,12 +73,12 @@ public class RetransResource {
 			Statement stmt = conn.createStatement();
 			String sql = null;
 			if (pattern != null) {
-				sql = "select * from Retransmision where (nombre like '%"
-						+ pattern + "%' and idPartido=" + idpart + ")"
+				sql = "select * from retransmision where (nombre like '%"
+						+ pattern + "%' and idpartido=" + idpart + ")"
 						+ " LIMIT " + offset + "," + length;
 				;
 			} else {
-				sql = "select * from Retransmision where idPartido=" + idpart
+				sql = "select * from retransmision where idpartido=" + idpart
 						+ " LIMIT " + offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
@@ -129,11 +129,11 @@ public class RetransResource {
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = null;
-			sql = "select * from Retransmision where id=" + idretra;
+			sql = "select * from retransmision where id=" + idretra;
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				retra.setId(idretra);
-				retra.setIdPartido(rs.getString("idPartido"));
+				retra.setIdPartido(rs.getString("idpartido"));
 				retra.setTiempo(rs.getString("tiempo"));
 				retra.setTexto(rs.getString("texto"));
 				retra.setMedia(rs.getString("media"));
@@ -185,7 +185,7 @@ public class RetransResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "insert into Retransmision (idPartido,tiempo,texto,media) values ('"
+			String sql = "insert into retransmision (idpartido,tiempo,texto,media) values ('"
 					+ idpartido
 					+ "', '"
 					+ retra.getTiempo()
@@ -248,11 +248,11 @@ public class RetransResource {
 		}
 		try {
 			Statement stmt = conn.createStatement();
-			String sql = "update Retransmision set retransmision.tiempo='"
+			String sql = "update retransmision set retransmision.tiempo='"
 					+ retra.getTiempo() + "', retransmision.texto='"
 					+ retra.getTexto() + "',retransmision.media='"
 					+ retra.getMedia() + "' where (retransmision.id=" + id
-					+ " AND retransmision.idPartido='" + idpartido + "')";
+					+ " AND retransmision.idpartido='" + idpartido + "')";
 
 			int rs2 = stmt.executeUpdate(sql);
 			if (rs2 == 0)
@@ -291,7 +291,7 @@ public class RetransResource {
 		String sql;
 		try {
 			stmt = conn.createStatement();
-			sql = "delete from Retransmision where (idPartido=" + idpartido
+			sql = "delete from retransmision where (idpartido=" + idpartido
 					+ " AND id='" + id + "')";
 
 			int rs2 = stmt.executeUpdate(sql);
