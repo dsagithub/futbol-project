@@ -97,20 +97,14 @@ function registro(usernamer,passwordr,name,email){
 		crossDomain : true,
 		data: datos,
 		dataType: 'html',
-		beforeSend: function (request)
-		{
-			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa('admin:admin'));
-			//(username + ":" + password)); };
-		
-		},
-		success : function(ata, status, jqxhr) {
-	var response = jqxhr.responseText;
-	//console.log("dentro");
-	console.log(response);
-	console.log("registro ajax ok");
-
-
+		success : function(data, status, jqxhr) {
+	var response = $.parseJSON(jqxhr.responseText);
+	if (response.status = 404){
+		var htmlString ='<div class="alert alert-info alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> El usuario ya existe</div>';
+        $('#error').html(htmlString);
+	}else{
+		//LOQUEQUIERAS
+	}
 
 		},
 		error : function(jqXHR, options, error) {}

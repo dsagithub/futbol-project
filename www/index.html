@@ -27,7 +27,7 @@
 
 </head>
 
-<body style="background:#80BFFF">
+<body>
 
   <div id="wrapper" >
 
@@ -74,16 +74,12 @@
 
         </div>
       </div><!-- /.row -->
-     <div class="col-lg-4">
- 
-
-
-
-      <form action="javascript:login()" class="form-signin" >
+     <div class="col-lg-4">     
          <fieldset>
         <legend align= "center">Formulario de login</legend>
         <h3 class="form-signin-heading">Identificate</h3>
-        <label for="Name">Nombre de usuario:</label>
+         <form action="javascript:login()" class="form-signin" >
+          <label for="Name">Nombre de usuario:</label>
         <input style="width: 400px" type="text" class="form-control" id="username"  name="username" placeholder="User" required autofocus>
         <label for="Name">Password:</label>
         <input style="width: 400px" type="password" class="form-control" id="password" name="password" placeholder="Password" required>
@@ -92,9 +88,10 @@
         </label>
         <center>
         <button   class="btn btn-lg btn-primary btn-block" style="width: 200px" id="btn_login" autofocus>Login</button>
+      </form>
       </center>
       </fieldset>
-      </form>
+      
      
 
     </div> <!-- /cierra el de identificar -->

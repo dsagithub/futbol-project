@@ -88,113 +88,121 @@ import org.apache.http.message.BasicNameValuePair;
 @SuppressWarnings("deprecation")
 public class ServletRegister extends HttpServlet {
 
-        DataSource ds = null;
+	DataSource ds = null;
 
-        protected void doGet(HttpServletRequest request,
-                        HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
-        }
+	}
 
-        protected void doPost(HttpServletRequest request,
-                        HttpServletResponse response) throws ServletException, IOException {
-                String username = request.getParameter("usernamer");
-                String password = request.getParameter("passwordr");
-                String name = request.getParameter("name");
-                String email = request.getParameter("email");
-                String rol = "registered";
-                System.out.println(username);
-                System.out.println(password);
-                System.out.println(name);
-                System.out.println(email);
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String username = request.getParameter("usernamer");
+		String password = request.getParameter("passwordr");
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String rol = "registered";
+		System.out.println(username);
+		System.out.println(password);
+		System.out.println(name);
+		System.out.println(email);
 
-                Connection conn = null;
-                try {
-                        conn = ds.getConnection();
-                } catch (SQLException e) {
-                        e.printStackTrace();
-                }
-                Statement stmt = null;
-                try {
-                        stmt = conn.createStatement();
-                } catch (SQLException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                }
-                String update = "insert into usuarios values(null,'" + username + "','" + email + 
-                		"','" + name  + "', MD5('"+ password + "'), '" + rol + "');";
-                		
-                		  
-                try {
-                        stmt.executeUpdate(update);
-                } catch (SQLException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                }
-              
-                try {
-                        stmt.close();
-                        conn.close();
-                } catch (SQLException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                }
+		// Connection conn = null;
+		// try {
+		// conn = ds.getConnection();
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// }
+		// Statement stmt = null;
+		// try {
+		// stmt = conn.createStatement();
+		// } catch (SQLException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// String update = "insert into usuarios values(null,'" + username +
+		// "','" + email +
+		// "','" + name + "', MD5('"+ password + "'), '" + rol + "');";
+		//
+		//
+		// try {
+		// stmt.executeUpdate(update);
+		// } catch (SQLException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		//
+		// try {
+		// stmt.close();
+		// conn.close();
+		// } catch (SQLException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
-                HttpHost targetHost = new HttpHost("localhost", 8080, "http");
-                CredentialsProvider credsProvider = new BasicCredentialsProvider();
-                credsProvider.setCredentials(new AuthScope(targetHost.getHostName(),
-                                targetHost.getPort()), new UsernamePasswordCredentials("admin",
-                                "admin"));
+		HttpHost targetHost = new HttpHost("localhost", 8080, "http");
+		CredentialsProvider credsProvider = new BasicCredentialsProvider();
+		credsProvider.setCredentials(new AuthScope(targetHost.getHostName(),
+				targetHost.getPort()), new UsernamePasswordCredentials("admin",
+				"admin"));
 
-                // Create AuthCache instance
-                AuthCache authCache = new BasicAuthCache();
-                // Generate BASIC scheme object and add it to the local auth cache
-                BasicScheme basicAuth = new BasicScheme();
-                authCache.put(targetHost, basicAuth);
+		// Create AuthCache instance
+		AuthCache authCache = new BasicAuthCache();
+		// Generate BASIC scheme object and add it to the local auth cache
+		BasicScheme basicAuth = new BasicScheme();
+		authCache.put(targetHost, basicAuth);
 
-                // Add AuthCache to the execution context
-                HttpClientContext context = HttpClientContext.create();
-                context.setCredentialsProvider(credsProvider);
+		// Add AuthCache to the execution context
+		HttpClientContext context = HttpClientContext.create();
+		context.setCredentialsProvider(credsProvider);
 
-                HttpPost httpPost = new HttpPost(
-                                "http://localhost:8080/futbol-api/users");
-                httpPost.addHeader("Content-Type",
-                                "application/vnd.futbol.api.user+json");
-                httpPost.addHeader("Accept", "application/vnd.futbol.api.user+json");
+		HttpPost httpPost = new HttpPost(
+				"http://localhost:8080/futbol-api/users");
+		httpPost.addHeader("Content-Type",
+				"application/vnd.futbol.api.user+json");
+		httpPost.addHeader("Accept", "application/vnd.futbol.api.user+json");
 
-                String user2 = "{\"usernamer\": \"" + username + "\", \"passwordr\": \""
-                                + password + "\", \"name\": \"" + name + "\", \"email\": \""
-                                + email + "\" }";
-                httpPost.setEntity(new StringEntity(user2));
-                CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
+		String user2 = "{\"email\": \"" + email + "\",\"name\": \"" + name
+				+ "\",\"username\": \"" + username + "\",\"password\": \""
+				+ password + "\"}";
+		System.out.println(user2);
+		httpPost.setEntity(new StringEntity(user2));
+		CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
 
-                CloseableHttpResponse httpResponse = closeableHttpClient.execute(
-                                targetHost, httpPost, context);
-                HttpEntity entity = httpResponse.getEntity();
+		CloseableHttpResponse httpResponse = closeableHttpClient.execute(
+				targetHost, httpPost, context);
+		HttpEntity entity = httpResponse.getEntity();
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                                entity.getContent()));
-                String line = null;
-                while ((line = reader.readLine()) != null)
-                        System.out.println(line);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				entity.getContent()));
+		System.out.println("AQUI SI");
+		String line = reader.readLine();
+		String respuesta = null;
+		while (line != null){
+			respuesta = line;
+			System.out.println(respuesta);
+			line = reader.readLine();
+		}		
 
-                httpResponse.close();
+		// String url = "/Registrok.html";
+		// ServletContext sc = getServletContext();
+		// RequestDispatcher rd = sc.getRequestDispatcher(url);
+		// rd.forward(request, response);
 
-//                String url = "/Registrok.html";
-//                ServletContext sc = getServletContext();
-//                RequestDispatcher rd = sc.getRequestDispatcher(url);
-//                rd.forward(request, response);
-                
-                response.setContentType("text/html");
-                PrintWriter out = response.getWriter();
-                out.write("success");
-        }
+		response.setContentType("application/vnd.futbol.api.user+json");
+		PrintWriter out = response.getWriter();
+		System.out.println(respuesta);
+		out.print(respuesta);
+		out.flush();
+		httpResponse.close();
+	}
 
-        @Override
-        public void init() throws ServletException {
-                // TODO Auto-generated method stub
-                super.init();
-                ds = DataSourceSPA.getInstance().getDataSource();
+	@Override
+	public void init() throws ServletException {
+		// TODO Auto-generated method stub
+		super.init();
+		ds = DataSourceSPA.getInstance().getDataSource();
 
-        }
+	}
 
 }
