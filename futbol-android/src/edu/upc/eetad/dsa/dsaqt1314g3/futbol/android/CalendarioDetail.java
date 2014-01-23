@@ -43,8 +43,8 @@ public class CalendarioDetail extends Activity{
 		TextView tvDetailHora = (TextView) findViewById(R.id.tvDetailHora);
 	 
 		tvDetailJornada.setText("Jornada: " + calendario.getJornada());
-		tvDetailEquipoA.setText(calendario.getIdEquipoA());
-		tvDetailEquipoB.setText(calendario.getIdEquipoB());
+		tvDetailEquipoA.setText(calendario.getEquipoA());
+		tvDetailEquipoB.setText(calendario.getEquipoB());
 		tvDetailFecha.setText(calendario.getFecha());
 		tvDetailHora.setText(calendario.getHora());
 	}

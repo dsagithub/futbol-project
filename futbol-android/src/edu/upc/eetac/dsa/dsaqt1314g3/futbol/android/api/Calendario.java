@@ -9,7 +9,9 @@ public class Calendario {
 	private String idCampeonato;
 	private String idPartido;
 	private String idEquipoA;
+	private String equipoA;
 	private String idEquipoB;
+	private String equipoB;
 	private String jornada;
 	private String fecha;
 	private String hora;
@@ -64,6 +66,18 @@ public class Calendario {
 	}
 	public void addLink(Link link) {
 		links.add(link);
+	}
+	public String getEquipoA() {
+		return equipoA;
+	}
+	public void setEquipoA(String equipoA) {
+		this.equipoA = equipoA;
+	}
+	public String getEquipoB() {
+		return equipoB;
+	}
+	public void setEquipoB(String equipoB) {
+		this.equipoB = equipoB;
 	}
 
 }

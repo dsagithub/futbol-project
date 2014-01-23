@@ -914,6 +914,8 @@ public class FutbolAPI {
 		calendario.setIdPartido(source.getString("idPartido"));
 		calendario.setIdEquipoA(source.getString("idEquipoA"));
 		calendario.setIdEquipoB(source.getString("idEquipoB"));
+		calendario.setEquipoA(source.getString("equipoA"));
+		calendario.setEquipoB(source.getString("equipoB"));
 		calendario.setJornada(source.getString("jornada"));
 		calendario.setFecha(source.getString("fecha"));
 		calendario.setHora(source.getString("hora"));

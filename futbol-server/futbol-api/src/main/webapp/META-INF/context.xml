@@ -6,6 +6,6 @@
 		url="jdbc:mysql://localhost:3306/futboldb?autoReconnect=true" />
 	<Realm className="org.apache.catalina.realm.DataSourceRealm"
 		dataSourceName="jdbc/futboldb" localDataSource="true" digest="MD5"
-		userTable="Usuarios" userNameCol="username" userCredCol="password"
-		userRoleTable="Usuarios" roleNameCol="role" />
+		userTable="usuarios" userNameCol="username" userCredCol="password"
+		userRoleTable="usuarios" roleNameCol="role" />
 </Context>
