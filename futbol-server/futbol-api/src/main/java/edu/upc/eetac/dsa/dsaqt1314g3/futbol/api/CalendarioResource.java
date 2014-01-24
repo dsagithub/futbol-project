@@ -105,11 +105,10 @@ public class CalendarioResource {
 				calendario.setJornada(rs.getString("jornada"));
 				calendario.setFecha(rs.getString("fecha"));
 				calendario.setHora(rs.getString("hora"));
-				calendario.addLink(CalendarioLinkBuilder.buildURICalendarios(
-						uriInfo, "0", "15", null, "Self",
-						calendario.getIdCampeonato()));
-				Calendarios.addCalendario(calendario);
+				calendario.addLink(CalendarioLinkBuilder.buildURICalendarioId(uriInfo, "Partido", idCampeonato, calendario.getIdPartido()));
 				icount++;
+				Calendarios.addCalendario(calendario);
+				
 			}
 			rs.close();
 			stmt.close();
