@@ -49,7 +49,7 @@ var username = $('#username').val();
 	else if (response=="wrongpass"){
 		
 		//window.location.href="http://localhost:8080/futbol/index.html"
-		var htmlString ='<div class="alert alert-info alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> La password de login que has introducido no es correcta.</div>';
+		var htmlString ='<div class="alert  alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> La password de login que has introducido no es correcta.</div>';
 		
             $('#error').html(htmlString);
            
@@ -58,7 +58,7 @@ var username = $('#username').val();
 		else if (response==""){
 		
 		//window.location.href="http://localhost:8080/futbol/index.html"
-		var htmlString ='<div class="alert alert-info alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> No existe el usuario que has introducido.</div>';
+		var htmlString ='<div class="alert  alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> No existe el usuario que has introducido.</div>';
 		
             $('#error').html(htmlString);
            
@@ -84,7 +84,7 @@ function registro(usernamer,passwordr,name,email){
 	var passwordr2 =$('#passwordr2').val();
 	if (passwordr!=passwordr2)
 	{
-		var htmlString ='<div class="alert alert-info alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Las passwords no coinciden.</div>';
+		var htmlString ='<div class="alert  alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Las passwords no coinciden.</div>';
 		
             $('#error').html(htmlString);
 
@@ -99,12 +99,27 @@ function registro(usernamer,passwordr,name,email){
 		dataType: 'html',
 		success : function(data, status, jqxhr) {
 	var response = $.parseJSON(jqxhr.responseText);
+	
+	
 	if (response.status = 404){
-		var htmlString ='<div class="alert alert-info alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> El usuario ya existe</div>';
+		var htmlString ='<div class="alert  alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Registro realizado correctamente. Redirigiendo...</div>';
         $('#error').html(htmlString);
+
+        $.cookie('usuario', usernamer);
+	   $.cookie('password', passwordr);
+
+	var usuario = $.cookie('usuario');
+	var pass = $.cookie('password');
+	console.log(usuario);
+	console.log(pass);
+      setTimeout ("redireccionar()", 2000); //tiempo expresado en milisegundos
+
 	}else{
-		//LOQUEQUIERAS
-	}
+		console.log("dentro else");
+		        var htmlString ='<div class="alert  alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> El usuario ya existe</div>';
+        $('#error').html(htmlString);
+}
+      
 
 		},
 		error : function(jqXHR, options, error) {}
@@ -112,4 +127,15 @@ function registro(usernamer,passwordr,name,email){
 		});
 
 }
+   function redireccionar(){
+   	console.log("dentro redireccionar");
+   	console.log(usuario);
 
+
+	var usuario = $.cookie('usuario');
+	var pass = $.cookie('password');
+              window.location.href="http://localhost:8080/futbol/VistaUsuario/clubsusuario.html"
+            }
+            
+        
+	
