@@ -8,8 +8,7 @@ getList();
 
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');
-	console.log(usuario);
-	console.log(pass);
+
 
 
 
@@ -18,25 +17,21 @@ var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class=
 					
 $('#usuario').html(htmlString);		 
 						
-							
-							
-							
-					
-				
+			
 				
 });
 
 $("#button_search").click(function(e){
 	e.preventDefault();
 	var msg = $('#query').val();
-	console.log(msg);
+	
 	getList(msg);
 });
 
 $("#next").click(function(e){
 	e.preventDefault();
 	var msg = $('#next').val();
-	console.log(msg);
+
 	getList(msg);
 });
 
@@ -47,10 +42,10 @@ function getList(search) {
 	var url;
 	if (search!=null){
 		url = API_BASE_URL + '?offset=0&length=5&pattern='+search; 
-		console.log("search")
+		
 	}else{
 		url = API_BASE_URL + '?offset=0&length=5'; 
-		console.log("no search")
+		
 	}
 	$.ajax({
 		url : url,
@@ -75,14 +70,14 @@ function getList(search) {
 			var prev = "";
 			$.each(response.links, function(i,v){
 				var links = v;
-				console.log(links);				
+							
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
+				
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
+				
 				}				
 			})
 			if (prev!=""){
@@ -105,7 +100,7 @@ function getListURL(url) {
 	var usuario = $.cookie('usuario');
 var pass = $.cookie('password');
 
-	console.log(url);
+	
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -127,14 +122,14 @@ var pass = $.cookie('password');
 			var prev = "";
 			$.each(response.links, function(i,v){
 				var links = v;
-				console.log(links);				
+						
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
+				
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
+					
 				}				
 			})
 			if (prev!=""){
@@ -180,14 +175,14 @@ var pass = $.cookie('password');
 			var prev = "";
 			$.each(response.links, function(i,v){
 				var links = v;
-				console.log(links);				
+							
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
+					
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
+					
 				}				
 			})
 			if (prev!=""){
@@ -226,20 +221,21 @@ var pass = $.cookie('password');
 				var equipo = v;
 				var linkself="'"+equipo.links[0].uri+"'";
 				htmlString += '<tr onClick="javascript:getEquipo('+linkself+');"><td>'+equipo.campeonato+'</td><td>'+equipo.idEquipo+'</td><td>'+equipo.nombre+'</td></tr>';
-			console.log(equipo.links[0].uri);
+			
 			})
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
 				var links = v;
-				console.log(links);				
+				
+
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
+				
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
+					
 				}				
 			})
 			if (prev!=""){
@@ -270,7 +266,7 @@ var pass = $.cookie('password');
 
 function getEquipo(url){
 
-	console.log("Has clickado en un equipo");
+	
 	var usuario = $.cookie('usuario');
 var pass = $.cookie('password');
 
@@ -285,7 +281,7 @@ var pass = $.cookie('password');
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			console.log(response.links[0].uri);
+			
 			var linkequipo = response.links[0].uri;
 			createcookie(linkequipo);
 			//var name = getNameCampeonato();
@@ -296,8 +292,7 @@ var pass = $.cookie('password');
 
 }
 function createcookie(linkequipo) {
-console.log("dentro funcion cookie equipo");
-	console.log(linkequipo);
+
 	
 	$.cookie('Linkequipo', linkequipo);
 	window.location.href="http://localhost:8080/futbol/VistaUsuario/vistaequipo.html"
@@ -309,8 +304,7 @@ function getNoticiasList(idclub) {
 	var usuario = $.cookie('usuario');
 var pass = $.cookie('password');
 
-	console.log("dentro funcion noticias")
-	console.log(idclub);
+
 
 
 	var url = API_BASE_URL +idclub+'/noticias?offset=0&length=20';
@@ -333,7 +327,7 @@ var pass = $.cookie('password');
 			var links = response.links;
 			$.each(links, function(i,v){
 				var link = v;
-				console.log(v.uri);			
+					
 			});
 			
 			var noticias = response.noticias;
@@ -345,13 +339,12 @@ var pass = $.cookie('password');
 				var i=0;
 				
 				if (i==0){
-					console.log("dentro funcion crear lista noticias");
-					console.log(noticia);
 					
-				htmlString += '<center> <div class="panel panel-default"style="width: 650px"> <div class="panel-heading"> <span class="label pull-right label-default">'+noticia.lastModified;
-				htmlString +='</span><h5>'+noticia.titulo;
-				htmlString += '</h5> </div> <div class="panel-body"><h5>'+noticia.content;
-				htmlString += '</h5><br/>'+noticia.media;
+					
+				htmlString += '<center> <div class="panel panel-success"style="width: 650px"> <div class="panel-heading"> <span class="label pull-right label-default">'+noticia.lastModified;
+				htmlString +='</span><h5><B>'+noticia.titulo;
+				htmlString += '</B></h5> </div> <div class="panel-body"><h5>'+noticia.content;
+				htmlString += '</h5><br/>'//+noticia.media;
 				htmlString +='</div><br/></div></center> '
 			i++;
     }

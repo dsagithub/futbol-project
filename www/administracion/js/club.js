@@ -3,6 +3,9 @@ var user;
 var pass;
 
 $(document).ready(function(e){
+
+	//var usuario = $.cookie('usuario');
+	//var pass = $.cookie('password');
 user='admin';
 pass='admin';
 getList();

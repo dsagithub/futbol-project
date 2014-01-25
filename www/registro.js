@@ -1,8 +1,17 @@
 var API_BASE_URL = "http://localhost:8080/futbol-api";
 
 
-
-
+$(document).ready(function(e){
+	 var htmlString ='<div style="width: 600px"class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Introduce tu login o registrate.</div>';
+		
+            $('#error').html(htmlString);
+						
+						
+});
+function mensaje()
+{
+	BootstrapDialog.alert('Logeate o utiliza el formulario de registro');
+}
 
 
 function login(username,password)
@@ -18,7 +27,8 @@ var username = $('#username').val();
 
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');
-	console.log(pass);
+	
+
 	$.ajax({
 		url : url,
 		type : 'POST',
@@ -32,9 +42,7 @@ var username = $('#username').val();
 		},
 		success : function(ata, status, jqxhr) {
 	var response = jqxhr.responseText;
-	//console.log("dentro");
-	console.log(response);
-	console.log("login ajax ok");
+	
 	if (response=="successadmin")
 	{
 		window.location.href="http://localhost:8080/futbol/administracion/clubs.html"
@@ -75,7 +83,8 @@ var username = $('#username').val();
 
 
 function registro(usernamer,passwordr,name,email){
-	console.log("dentro funcion registrar");
+
+
 
 	var usernamer = $('#usernamer').val();
 	var passwordr = $('#passwordr').val();
@@ -110,12 +119,11 @@ function registro(usernamer,passwordr,name,email){
 
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');
-	console.log(usuario);
-	console.log(pass);
+
       setTimeout ("redireccionar()", 2000); //tiempo expresado en milisegundos
 
 	}else{
-		console.log("dentro else");
+	
 		        var htmlString ='<div class="alert  alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> El usuario ya existe</div>';
         $('#error').html(htmlString);
 }
@@ -128,9 +136,7 @@ function registro(usernamer,passwordr,name,email){
 
 }
    function redireccionar(){
-   	console.log("dentro redireccionar");
-   	console.log(usuario);
-
+ 
 
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');

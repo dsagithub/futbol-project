@@ -27,9 +27,9 @@
 
 </head>
 
-<body>
+<body background="http://walpaper.es/images/wallpapers/campo-de-futbol-784442.jpeg" style="background-attachment: fixed">
 
-  <div id="wrapper" >
+
 
     <!-- Sidebar -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -41,7 +41,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">The Observer!</a>
+        <a class="navbar-brand" href="index.html">Futbol!</a>
       </div>
 
       <!-- Collect the nav links, forms, and other content for toggling -->
@@ -50,11 +50,8 @@
 
         <ul class="nav navbar-nav navbar-right navbar-user">
           <li class="dropdown user-dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Identificate <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              
-              <li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li>
-            </ul>
+            <a href="#" class="dropdown-toggle" onclick="mensaje()"data-toggle="dropdown"><i class="fa fa-user"></i> Identificate <b class="caret"></b></a>
+           
           </li>
         </ul>
       </div><!-- /.navbar-collapse -->
@@ -64,24 +61,21 @@
 
       <div class="row">
         <div class="col-lg-12">
-          <h1>Bienvenido a The observer! <small></small></h1>
+          <h1> <font color="black"><B>Bienvenido a Futbol! </B> <small></small></h1>
           
-          <div class="alert alert-info alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            Introduce tus datos o rellena el formulario de registro.
-          </div>
+        
           <div id="error"> </div>
 
         </div>
       </div><!-- /.row -->
      <div class="col-lg-4">     
          <fieldset>
-        <legend align= "center">Formulario de login</legend>
-        <h3 class="form-signin-heading">Identificate</h3>
+        <legend align= "center"><font color="black"> <B>Formulario de login </B></legend>
+        <h3 class="form-signin-heading"><B>Identificate </B></h3>
          <form action="javascript:login()" class="form-signin" >
           <label for="Name">Nombre de usuario:</label>
-        <input style="width: 400px" type="text" class="form-control" id="username"  name="username" placeholder="User" required autofocus>
-        <label for="Name">Password:</label>
+        <input style="width: 400px" type="text" class="form-control" id="username"  name="username" placeholder="Usuario" required autofocus>
+        <label for="Name">Contraseña:</label>
         <input style="width: 400px" type="password" class="form-control" id="password" name="password" placeholder="Password" required>
         <label class="checkbox">
           <input type="checkbox" value="remember-me"> Remember me
@@ -100,22 +94,22 @@
  
       <form action="javascript:registro()" class="form-signin">
         <fieldset>
-<legend align= "center">Formulario de registro</legend>
-        <h3 class="form-signin-heading">Nuevo registro</h3>
+<legend align= "center"><font color="black"><B>Formulario de registro </B></legend>
+        <h3 class="form-signin-heading"><B>Nuevo registro </B></h3>
           
           <label for="Name">Nombre de usuario:</label>
 
           
           
-          <input style="width: 400px" type="text" class="form-control" name="usernamer" id="usernamer"placeholder="username" required autofocus>
-              <label for="Name">Password:</label>
-                 <input style="width: 400px" type="password" class="form-control"  name="passwordr" id="passwordr" placeholder="password" required>
-                  <label for="Name">Repeat Password:</label>
-                 <input style="width: 400px" type="password" class="form-control"  name="passwordr2" id="passwordr2" placeholder="password" required>
+          <input style="width: 400px" type="text" class="form-control" name="usernamer" id="usernamer"placeholder="Nombre de usuario" required autofocus>
+              <label for="Name">Contraseña:</label>
+                 <input style="width: 400px" type="password" class="form-control"  name="passwordr" id="passwordr" placeholder="contraseña" required>
+                  <label for="Name">Repite contraseña:</label>
+                 <input style="width: 400px" type="password" class="form-control"  name="passwordr2" id="passwordr2" placeholder="Escribe la contraseña de nuevo" required>
                      <label for="Name">Nombre</label>
-                     <input style="width: 400px" type="text" class="form-control"  name="name" id="name" placeholder="name" required>
+                     <input style="width: 400px" type="text" class="form-control"  name="name" id="name" placeholder="Nombre" required>
                          <label for="Name">Email</label>
-        <input style="width: 400px" type="email" class="form-control"   name="email"  id="email" placeholder="email" required>
+        <input style="width: 400px" type="email" class="form-control"   name="email"  id="email" placeholder="email en formato ___@___.com" required>
     
          <br/>
      
@@ -132,7 +126,7 @@
 
   </div><!-- /#page-wrapper -->
 
-</div><!-- /#wrapper -->
+
 </body>
 <script src="js/jquery.cookie.js"></script> 
 </html>

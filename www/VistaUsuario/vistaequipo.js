@@ -3,16 +3,16 @@ var user;
 var pass;
 
 $(document).ready(function(e){
+	
 var usuario = $.cookie('usuario');
-console.log(usuario);
+
 var pass =  $.cookie('password');
 var Linkequipo = $.cookie('Linkequipo')
-console.log(Linkequipo);
 
 
-var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>'+usuario;
- htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
-					
+
+var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+usuario;
+ htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li><a href="http://localhost:8080/futbol/VistaUsuario/perfilusuario.html">Ver perfil</a></li><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
 $('#usuario').html(htmlString);		
 
 
