@@ -127,9 +127,19 @@ public class JugadoresResource {
 			String sql = null;
 
 			if (idequipo != null) {
+				  if (pattern != null) {
+						sql = "select * from jugadores where (nombre like '%"
+								+ pattern + "%' and idequipo=" + idequipo + ")"
+								+ " LIMIT " + offset + "," + length;
+						
+					}
+				  else {
 				sql = "select * from jugadores where idequipo like " + idequipo
 						+ " LIMIT " + offset + "," + length;
-			} else {
+				  }
+			} 
+		 
+			else {
 				sql = "select * from jugadores LIMIT " + offset + "," + length;
 			}
 			ResultSet rs = stmt.executeQuery(sql);
