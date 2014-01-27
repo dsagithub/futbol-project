@@ -51,8 +51,8 @@ var username = $('#username').val();
 	}
 	 else if (response=="successusuario"){
 
-	$.cookie('usuario', username,{path: '/VistaUsuario' });
-	$.cookie('password', password,{path: '/VistaUsuario' });
+	$.cookie('usuario', username,{path: 'VistaUsuario' });
+	$.cookie('password', password,{path: 'VistaUsuario' });
 
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');
