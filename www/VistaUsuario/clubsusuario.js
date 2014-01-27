@@ -14,7 +14,7 @@ getList();
 
 
 var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+usuario;
- htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li><a href="../index.html"><i class="fa fa-power-off" onclick="javascript:deletecookie()"  ></i> Salir</a></li></ul></li></ul>';
+ htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li onClick="javascript:deletecookie()"><a><i class="fa fa-power-off" ></i> Salir</a></li></ul></li></ul>';
 					
 $('#usuario').html(htmlString);		 
 						
@@ -39,7 +39,10 @@ $("#next").click(function(e){
 function deletecookie(){
 	console.log("dentro delete cookie");
 	$.removeCookie('usuario');
-
+	$.removeCookie('password');
+	var usuario = null;
+	var password = null;
+ window.location.href="../index.html"
 
 }
 //Para listar los clubs
@@ -290,7 +293,7 @@ var pass = $.cookie('password');
 			var response = $.parseJSON(jqxhr.responseText);
 			
 			var linkequipo = response.links[0].uri;
-			
+
 			createcookie(linkequipo);
 			//var name = getNameCampeonato();
 			
