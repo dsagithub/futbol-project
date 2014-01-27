@@ -308,14 +308,13 @@ private DataSource ds = DataSourceSPA.getInstance().getDataSource();
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Comentario comentario = new Comentario();
-				User usuario = new User();
 				comentario.setIdComentario(rs.getInt("idcomentarios"));
 				comentario.setTiempo(rs.getString("tiempo"));
 				comentario.setMedia(rs.getString("media"));
 				comentario.setTexto(rs.getString("texto"));
 				comentario.setIdPartido(rs.getString("idpartido"));
 				comentario.setIdUsuario(rs.getInt("idusuario"));
-				usuario.setUsername(rs.getString("username"));
+				comentario.setUsername(rs.getString("username"));
 
 				//links
 				comentario.addLink(ComentariosLinkBuilder.buildURIComentarioId(uriInfo,

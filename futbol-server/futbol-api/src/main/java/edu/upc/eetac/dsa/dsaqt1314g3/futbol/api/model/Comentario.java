@@ -12,9 +12,16 @@ public class Comentario {
 	private String texto;
 	private String idPartido;
 	private int idUsuario;
+	private String Username;
 	private List<Link> links = new ArrayList<Link>();
 	
 	
+	public String getUsername() {
+		return Username;
+	}
+	public void setUsername(String username) {
+		Username = username;
+	}
 	public List<Link> getLinks() {
 		return links;
 	}
