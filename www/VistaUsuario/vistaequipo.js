@@ -10,9 +10,9 @@ var pass =  $.cookie('password');
 var Linkequipo = $.cookie('Linkequipo')
 
 
-
-var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+usuario;
- htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li><a href="http://localhost:8080/futbol/VistaUsuario/perfilusuario.html">Ver perfil</a></li><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
+var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+user;
+ htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li onClick="javascript:deletecookie()"><a><i class="fa fa-power-off" ></i> Salir</a></li></ul></li></ul>';
+					
 $('#usuario').html(htmlString);		
 
 
@@ -96,33 +96,61 @@ function getListJugadores(search) {
 		});
 }
 	
-	
-function getPartidosList(){
-	var Linkequipo = $.cookie('Linkequipo')
+function deletecookie(){
+	console.log("dentro delete cookie");
+	$.removeCookie('usuario');
+	$.removeCookie('password');
+	var usuario = null;
+	var password = null;
+ window.location.href="../index.html"
 
-	var usuario = $.cookie('usuario');
+}
+
+function getPartidosList(){
+	var linkequipo = $.cookie('Linkequipo')
+	var user = $.cookie('usuario');
 	var pass =  $.cookie('password');
 		console.log("funcion GetPArtidos")
-		var url;
-		/*if (search!=null){
-			url = API_BASE_URL + '?offset=0&length=5&pattern='+search; 
-			console.log("search")
-		}else{
-			url = API_BASE_URL + '/campeonato/2/calendario?offset=0&length=5'; 
-			console.log(url);
-			console.log("no search")
-		}*/
-		url = API_BASE_URL + '/campeonato/2/calendario?offset=0&length=5'; 
+		url = linkequipo;
+		console.log("aqui equipo url");
+		console.log(linkequipo);
 		console.log(url);
-		
-		$.ajax({
-			url : url,
+	$.ajax({
+		url : url,
+		type : 'GET',
+		crossDomain : true,
+			beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(user+":"+pass));
+		},
+
+		success : function(data, status, jqxhr) {
+			var response = $.parseJSON(jqxhr.responseText);
+			console.log("responsta");
+			console.log(response);
+			console.log("respone");
+			console.log(response.campeonato);
+			var campeonatoid = response.campeonato;
+			console.log(campeonatoid);
+			
+			console.log(campeonatoid);
+			var linkequipo = $.cookie('Linkequipo')
+			var user = $.cookie('usuario');
+			var pass =  $.cookie('password');
+			console.log("campeonato");
+			console.log(response.campeonato);
+			var url2 = API_BASE_URL + 'campeonato/'+ response.campeonato +'/calendario?offset=0&length=5';
+			console.log("url");
+			console.log(url2);
+			$.ajax({
+			url : url2,
 			type : 'GET',
 			crossDomain : true,
 			beforeSend: function (request)
 			{
 				request.withCredentials = true;
-				request.setRequestHeader("Authorization", "Basic "+ btoa(usuario+':'+pass));
+				request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 
 			},
 			success : function(data, status, jqxhr) {
@@ -162,11 +190,19 @@ function getPartidosList(){
 				$('#partidosshow').html(htmlString);
 			},
 			error : function(jqXHR, options, error) {}
-			});		
+			});	
+			
+			
+			
+		},
+		error : function(jqXHR, options, error) {}
+		});
+		
 }
 
 
-function getRetransmison(url){
+
+function getRetransmision(url){
 	console.log("Has clickado en un partido");
 	var usuario = $.cookie('usuario');
 var pass = $.cookie('password');
@@ -195,9 +231,10 @@ var pass = $.cookie('password');
 
 function createcookie(linkRetransmision) {
 	console.log("dentro funcion cookie retra");
-		console.log(linkRetra);
+		console.log(linkRetransmision);
 		
 		$.cookie('LinkRetransmision', linkRetransmision);
+		
 		window.location.href="http://localhost:8080/futbol/VistaUsuario/Retransmision.html"
 	      
 	                

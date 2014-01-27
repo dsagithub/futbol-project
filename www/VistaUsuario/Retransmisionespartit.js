@@ -4,15 +4,26 @@ var pass;
 var datos;
 
 $(document).ready(function(e){
-	user='admin';
-	pass='admin';
-	//var idclub = $.cookie('identificadorClub');
-	//var idequipo = $.cookie('identificadorEquipo');
+
+	var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+user;
+	 htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li onClick="javascript:deletecookie()"><a><i class="fa fa-power-off" ></i> Salir</a></li></ul></li></ul>';
+						
+	$('#usuario').html(htmlString);	
+	
+	var linkretra = $.cookie('LinkRetransmision');
+	console.log(linkretra);
+	var user = $.cookie('usuario');
+	var pass =  $.cookie('password');
 	getRetransmisiones();
 	getComments();
 });
 
 function sendComment(){
+	
+	var user = $.cookie('usuario');
+	var pass =  $.cookie('password');
+	var linkretra = $.cookie('LinkRetransmision');
+	console.log(linkretra);
 	console.log("BOTON");
 	
 	var text = $('#text').val();
@@ -23,7 +34,7 @@ if (text == ""){
 }
 else {
 	
-	var url = API_BASE_URL + '/campeonato/2/calendario/1/comentarios'; 
+	var url = linkretra + '/comentarios'; 
 
 	datos= '{"texto":"'+text+'","idUsuario":"1","tiempo":"12","media":""}';
 	
@@ -55,9 +66,12 @@ getComments();
 
 }
 function getRetransmisiones() {
-
-	console.log("dentro funcion retra1")
-	var url = API_BASE_URL + '/campeonato/1/calendario/1/retra?offset=0&length=5';
+	var user = $.cookie('usuario');
+	var pass =  $.cookie('password');
+	var linkretra = $.cookie('LinkRetransmision');
+	console.log("1inkretra seguidamente");
+	console.log(linkretra);
+	var url = linkretra + '/retra?offset=0&length=5';
 	//var url = API_BASE_URL + '/campeonato/'+ idclub +'/calendario/' + idequipo +'/retra?offset=0&length=5';
 
 	$.ajax({
@@ -69,7 +83,6 @@ function getRetransmisiones() {
 		crossDomain : true,
 		beforeSend: function (request)
 		{
-			console.log("holajeshjk");
 			request.withCredentials = true;
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 
@@ -125,9 +138,16 @@ if(i==5){
 }
 
 function getComments() {
+	var user = $.cookie('usuario');
+	var pass =  $.cookie('password');
+	var linkretra = $.cookie('LinkRetransmision');
 
-	console.log("funcion getRetras")
-	var url = API_BASE_URL + '/campeonato/2/calendario/1/comentarios?offset=0&length=5'; 
+	console.log("funcion getRetras");
+	console.log("Liiink");
+	console.log(linkretra);
+
+
+	var url = linkretra + '/comentarios?offset=0&length=5'; 
 	console.log(url)
 
 $.ajax({
@@ -158,10 +178,24 @@ $.ajax({
 			
 			if (i==0){
 				console.log("dentro funcion comentario");
+				console.log(linkretra);
 				console.log(comentario);
 				
-			//getuser(comentario.idUsuario);
-			htmlString += '<div class="panel panel-default"> <div class="panel-heading"><h3 class="panel-title"> Usuario: '+comentario.idUsuario;	
+				
+				/*htmlString += '<center> <div class="panel panel-success"style="width: 650px"> <div class="panel-heading"> <span class="label pull-right label-default">'+comentario.tiempo;
+				//htmlString += '<center> <div class="panel panel-success"style="width: 650px"> <div class="panel-heading"> <span class="label pull-right label-default">'+comentario.username;
+				htmlString +='</span><h5><B>'+comentario.username;
+				htmlString +='</span><h5><B>'+comentario.text;
+				if  (comentario.media == null){
+					htmlString += '</h5><br/>';
+				}
+				else {				
+				htmlString +='</span><h5><B>'+comentario.media;
+				htmlString += '</h5><br/>';
+				}
+				htmlString +='</div><br/></div></center>'; 	*/
+				
+			htmlString += '<div class="panel panel-default"> <div class="panel-heading"><h3 class="panel-title"> Usuario: '+comentario.username;	
 			htmlString += '</h3> </div> <div class="panel-body"> Comentario: '+comentario.texto;
 			if  (comentario.media == null){
 				htmlString += '</div>';
@@ -190,4 +224,14 @@ if(i==5){
 		//callbackError(jqXHR, options, error);
 	}
 });
+}
+
+function deletecookie(){
+	console.log("dentro delete cookie");
+	$.removeCookie('usuario');
+	$.removeCookie('password');
+	var usuario = null;
+	var password = null;
+ window.location.href="../index.html"
+
 }
