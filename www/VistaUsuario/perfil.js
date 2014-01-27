@@ -47,7 +47,7 @@ function postuser(user,pass){
 	if (response=="successusuario"){
 
         
-		var htmlString ='<div class="alert  alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Password incorrecto, no se ha actualizado tus datos.</div>';
+		var htmlString ='<div class="alert  alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Password correcto</div>';
 		
         $('#error').html(htmlString);
     	var user = $.cookie('usuario');
