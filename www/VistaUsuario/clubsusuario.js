@@ -7,7 +7,10 @@ $(document).ready(function(e){
 	var pass = $.cookie('password');
 getList();
 
-
+if (usuario==undefined)
+{
+	window.location.href="../index.html"
+}
 	
 
 
@@ -40,8 +43,11 @@ function deletecookie(){
 	console.log("dentro delete cookie");
 	$.removeCookie('usuario');
 	$.removeCookie('password');
+	$.cookie('usuario',"",-1);
+	$.cookie('password',"",-1);
 	var usuario = null;
 	var password = null;
+	location.reload(true);
  window.location.href="../index.html"
 
 }

@@ -5,6 +5,11 @@ $(document).ready(function(e){
 	 var htmlString ='<div style="width: 600px"class="alert alert-info alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Introduce tu login o registrate.</div>';
 		
             $('#error').html(htmlString);
+            var usuario = $.cookie('usuario');
+            console.log(usuario);
+            $.removeCookie('usuario');
+              console.log(usuario);
+          
 						
 						
 });
