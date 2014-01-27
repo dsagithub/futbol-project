@@ -78,13 +78,16 @@ public class EquipoResource {
 					sql = "select * from equipo where idcampeonatos=" + seacampe
 							+ " LIMIT " + offset + "," + length;
 				} else {
-					sql = "select * from equipo where idclub=" + clubid
-							+ " LIMIT " + offset + "," + length;
+					//sql = "select * from equipo where idclub=" + clubid
+						//	+ " LIMIT " + offset + "," + length;
+					sql = "select campeonatos.nombre, equipo.* from equipo, campeonatos where equipo.idcampeonatos=campeonatos.idcampeonatos and equipo.idclub ="
+							+ clubid + " LIMIT " + offset + "," + length;
 				}
 			}
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				Equipo equipo2 = new Equipo();
+				equipo2.setCampnombre(rs.getString("nombre"));
 				equipo2.setIdClub(clubid);
 				equipo2.setIdEquipo(rs.getString("idequipo"));
 				equipo2.setNombre(rs.getString("nombre"));
@@ -99,6 +102,7 @@ public class EquipoResource {
 				icount++;
 				while (rs.next()) {
 					Equipo equipo = new Equipo();
+					equipo.setCampnombre(rs.getString("nombre"));
 					equipo.setIdClub(clubid);
 					equipo.setIdEquipo(rs.getString("idequipo"));
 					equipo.setNombre(rs.getString("nombre"));

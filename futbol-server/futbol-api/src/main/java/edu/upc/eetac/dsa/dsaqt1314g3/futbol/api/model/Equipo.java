@@ -11,6 +11,16 @@ public class Equipo {
 	private String idEquipo;
 	private String idClub;
 	private String nombre;
+	private String campnombre;
+	
+	public String getCampnombre() {
+		return campnombre;
+	}
+
+	public void setCampnombre(String campnombre) {
+		this.campnombre = campnombre;
+	}
+
 	private String campeonato;
 
 	public String getNombre() {

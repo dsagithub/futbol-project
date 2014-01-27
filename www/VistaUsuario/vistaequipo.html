@@ -60,6 +60,7 @@
 					<div class="alert alert-info alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 						Información del equipo Elegido sus jugadores y Partidos
+						¡Clicka encima de un partido para ver su Retransmision!
 					</div>
 				</div>
 			</div><!-- /.row -->
@@ -67,20 +68,20 @@
 
 
 				<div class="col-lg-6">
-					<form action="javascript:getList($('#query').val())" ><div class="input-group">
+					<form action="javascript:getListJugadores($('#query').val())" ><div class="input-group">
 						<input type="text" class="form-control" placeholder="Busca el jugador aquí..." id="query" name="query" required/>
 						<div class="input-group-btn">
 							<button id="button_search" type="submit" class="btn btn-success"><span class="fa fa-search"></span></button>
 						</div>
 					</div></form><br>
-					    <div class="table-responsive"  style="background-image: url(http://www.minuto91.tv/fotos/abc/20121221balon_de_futbol_275.jpg)" id="listshow">
+					    <div class="table-responsive" style="background-color:rgba(255, 255, 255, 0.9)" id="listshow">
 					    No hay jugadores 
 				</div>
 			</div>
 			<div class="col-lg-6">
 				<div class="panel panel-default">
 					<div class="panel-heading">Partidos del equipo</div>
-					<div class="panel-body"  style="background-image: url(http://www.minuto91.tv/fotos/abc/20121221balon_de_futbol_275.jpg)" id="partidosshow"> 
+					<div class="panel-body" id="partidosshow"> 
 					No Hay partidos
 					</div>
 				</div>

@@ -8,10 +8,17 @@ import edu.upc.eetac.dsa.dsaqt1314g3.futbol.api.links.Link;
 public class Calendario {
 	
 	private String idCampeonato;
+	private String NomCampeonato;
 	private String idPartido;
 	private String idEquipoA;
 	private String equipoA;
 	private String idEquipoB;
+	public String getNomCampeonato() {
+		return NomCampeonato;
+	}
+	public void setNomCampeonato(String nomCampeonato) {
+		NomCampeonato = nomCampeonato;
+	}
 	private String equipoB;
 	private String jornada;
 	private String fecha;

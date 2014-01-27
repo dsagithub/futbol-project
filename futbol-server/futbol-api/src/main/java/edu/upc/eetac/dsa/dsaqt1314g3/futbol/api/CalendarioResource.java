@@ -89,13 +89,16 @@ public class CalendarioResource {
 						+ idCampeonato
 						+ " LIMIT " + offset + "," + length;
 			} else {
-				sql = "select calendario.*,equipoa.nombre as equipoa,equipob.nombre as equipob from calendario inner join equipo equipoa on calendario.idequipoa=equipoa.idequipo inner join equipo equipob on calendario.idequipob=equipob.idequipo where idcampeonato="
+				//sql = "select calendario.*,equipoa.nombre as equipoa,equipob.nombre as equipob from calendario inner join equipo equipoa on calendario.idequipoa=equipoa.idequipo inner join equipo equipob on calendario.idequipob=equipob.idequipo where idcampeonato="
+					//	+ idCampeonato + " LIMIT " + offset + "," + length;
+				sql = "select campeonatos.nombre, calendario.*,equipoa.nombre as equipoa,equipob.nombre as equipob from calendario inner join equipo equipoa on calendario.idequipoa=equipoa.idequipo inner join equipo equipob on calendario.idequipob=equipob.idequipo,campeonatos where calendario.idcampeonato=campeonatos.idcampeonatos and calendario.idcampeonato="
 						+ idCampeonato + " LIMIT " + offset + "," + length;
 			}
 
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Calendario calendario = new Calendario();
+				calendario.setNomCampeonato(rs.getString("nombre"));
 				calendario.setIdCampeonato(rs.getString("idcampeonato"));
 				calendario.setIdPartido(rs.getString("idpartido"));
 				calendario.setIdEquipoA(rs.getString("idequipoa"));
