@@ -47,7 +47,7 @@ var username = $('#username').val();
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');
 	
-		window.location.href="http://localhost:8080/futbol/administracion/clubs.html"
+		window.location.href="administracion/clubs.html"
 	}
 	 else if (response=="successusuario"){
 
@@ -57,12 +57,12 @@ var username = $('#username').val();
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');
 	
-	window.location.href="http://localhost:8080/futbol/VistaUsuario/clubsusuario.html"
+	window.location.href="VistaUsuario/clubsusuario.html"
 
 	}
 	else if (response=="wrongpass"){
 		
-		//window.location.href="http://localhost:8080/futbol/index.html"
+		
 		var htmlString ='<div class="alert  alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> La password de login que has introducido no es correcta.</div>';
 		
             $('#error').html(htmlString);
@@ -71,7 +71,7 @@ var username = $('#username').val();
 	}
 		else if (response==""){
 		
-		//window.location.href="http://localhost:8080/futbol/index.html"
+		
 		var htmlString ='<div class="alert  alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> No existe el usuario que has introducido.</div>';
 		
             $('#error').html(htmlString);
@@ -150,7 +150,7 @@ if (response.status == undefined){
 
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');
-              window.location.href="http://localhost:8080/futbol/VistaUsuario/clubsusuario.html"
+              window.location.href="VistaUsuario/clubsusuario.html"
             }
             
         

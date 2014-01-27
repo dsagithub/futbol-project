@@ -12,13 +12,24 @@ $(document).ready(function(e){
 	console.log(user);
 	
 	var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+user;
-	 htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li><a href="http://localhost:8080/futbol/VistaUsuario/perfilusuario.html">Ver perfil</a></li><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
+	 htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li onClick="javascript:deletecookie()"><a><i class="fa fa-power-off" ></i> Salir</a></li></ul></li></ul>';
+						
 	$('#usuario').html(htmlString);	
 	
 	
 });
 
 
+
+function deletecookie(){
+	console.log("dentro delete cookie");
+	$.removeCookie('usuario');
+	$.removeCookie('password');
+	var usuario = null;
+	var password = null;
+ window.location.href="../index.html"
+
+}
 
 
 function postuser(user,pass){

@@ -12,14 +12,12 @@ $(document).ready(function(e){
 $("#button_search").click(function(e){
 	e.preventDefault();
 	var msg = $('#query').val();
-	console.log(msg);
 	getList(msg);
 });
 
 $("#next").click(function(e){
 	e.preventDefault();
 	var msg = $('#next').val();
-	console.log(msg);
 	getList(msg);
 });
 
@@ -27,10 +25,8 @@ function getList(search) {
 	var url;
 	if (search!=null){
 		url = API_BASE_URL + '?offset=0&length=5&pattern='+search; 
-		console.log("search")
 	}else{
 		url = API_BASE_URL + '?offset=0&length=5'; 
-		console.log("no search")
 	}
 	$.ajax({
 		url : url,
@@ -53,35 +49,32 @@ function getList(search) {
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;		
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Siguiente</a></li></ul>';
 			}			
 			$('#listshow').html(htmlString);
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 }
 
 function getListURL(url) {
-	console.log(url);
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -103,30 +96,28 @@ function getListURL(url) {
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;		
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Siguiente</a></li></ul>';
 			}			
 			$('#listshow').html(htmlString);
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 }
 
@@ -156,26 +147,23 @@ function getNoticias(id){
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;			
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getNoticiasURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getNoticiasURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getNoticiasURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getNoticiasURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getNoticiasURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getNoticiasURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getNoticiasURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getNoticiasURL("'+next+'")">Siguiente</a></li></ul>';
 			}
 
 			url = API_BASE_URL + id + '/';
@@ -197,34 +185,36 @@ function getNoticias(id){
 					$('#nameclubshow').html(namehtmlclub);	
 					$('#clubshow').html(htmlString);	
 				},
-				error : function(jqXHR, options, error) {}
+				error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+				alertify.error("No se ha podido completar la acción");}
 			});
 
 		},
 		error : function(jqXHR, options, error) {						
-		url = API_BASE_URL + id + '/';
-		$.ajax({
-			url : url,
-			type : 'GET',
-			crossDomain : true,
-			beforeSend: function (request)
-			{
-				request.withCredentials = true;
-				request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+			url = API_BASE_URL + id + '/';
+			$.ajax({
+				url : url,
+				type : 'GET',
+				crossDomain : true,
+				beforeSend: function (request)
+				{
+					request.withCredentials = true;
+					request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 
-			},
-			success : function(data, status, jqxhr) {
-				var response = $.parseJSON(jqxhr.responseText);
+				},
+				success : function(data, status, jqxhr) {
+					var response = $.parseJSON(jqxhr.responseText);
 
-				var namehtmlclub = "Noticias del Club " + response.nombre;
+					var namehtmlclub = "Noticias del Club " + response.nombre;
 
-				$('#nameclubshow').html(namehtmlclub);
-				var htmlString = 'Este Club no tiene noticias añadidas<button type="button" class="btn btn-primary btn-xs pull-right" onClick="javascript:showAddNoticia();">+ Añadir Noticia</button><p><br>';	
-				$('#clubshow').html(htmlString);
-			},
-			error : function(jqXHR, options, error) {}
-		});}
-	});
+					$('#nameclubshow').html(namehtmlclub);
+					var htmlString = 'Este Club no tiene noticias añadidas<button type="button" class="btn btn-primary btn-xs pull-right" onClick="javascript:showAddNoticia();">+ Añadir Noticia</button><p><br>';	
+					$('#clubshow').html(htmlString);
+				},
+				error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+				alertify.error("No se ha podido completar la acción");}
+			});}
+		});
 }
 function getNoticiasURL(url){
 	$.ajax({
@@ -245,67 +235,64 @@ function getNoticiasURL(url){
 				var not = v;
 				var linkself="'"+not.links[0].uri+"'";
 				htmlString += '<tr onClick="javascript:showeditNoticia('+linkself+');"><td>'+not.idNoticia+'</td><td>'+not.titulo+'</td></tr>';
-				console.log(not.links[0].uri);
 			})
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;		
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getNoticiasURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getNoticiasURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getNoticiasURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getNoticiasURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getNoticiasURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getNoticiasURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getNoticiasURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getNoticiasURL("'+next+'")">Siguiente</a></li></ul>';
 			}			
 			$('#clubshow').html(htmlString);	
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 
 }
 
 function showAddNoticia(){
-	var htmlString = '<form><label>Titulo</label><input id="addtitle" class="form-control" required/><label>Contenido</label><input id="addcontent" class="form-control" required/><br><p></form>';
+	var htmlString = '<form><label>Titulo</label><input id="addtitle" class="form-control" required/><label>Contenido</label><textarea id="addcontent" class="form-control" rows="3"></textarea><br><p></form>';
 	BootstrapDialog.show({
-				title: 'Añadir nueva noticia',
-				message: htmlString,
-				buttons: [ {
-					label: 'Crear',
-					cssClass: 'btn-primary',
-					action: function(dialogItself){
-                  		addNoticia(),
-						dialogItself.close(),
-						getNoticias(idClub);
-					}
-				},  {
-					label: 'Cerrar',
-					action: function(dialogItself){
-						dialogItself.close();
-					}
-				}]
-			});
+		title: 'Añadir nueva noticia',
+		message: htmlString,
+		buttons: [ {
+			label: 'Crear',
+			cssClass: 'btn-primary',
+			action: function(dialogItself){
+				addNoticia(),
+				dialogItself.close(),
+				getNoticias(idClub);
+			}
+		},  {
+			label: 'Cerrar',
+			action: function(dialogItself){
+				dialogItself.close();
+			}
+		}]
+	});
 }
 
 function addNoticia(){
 
-var url = API_BASE_URL + idClub + '/noticias';
-var titulo = $('#addtitle').val();
-var contenido = $('#addcontent').val();
-var datos = '{"content":"'+contenido+'","titulo":"'+titulo+'","media":"";}';
+	var url = API_BASE_URL + idClub + '/noticias';
+	var titulo = $('#addtitle').val();
+	var contenido = $('#addcontent').val();
+	var datos = '{"content":"'+contenido+'","titulo":"'+titulo+'","media":""}';
 	$.ajax({
 		url : url,
 		type : 'POST',
@@ -321,10 +308,15 @@ var datos = '{"content":"'+contenido+'","titulo":"'+titulo+'","media":"";}';
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			getNoticias(idClub);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 }
+
 function showeditNoticia(url){
 	$.ajax({
 		url : url,
@@ -339,15 +331,15 @@ function showeditNoticia(url){
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
 
-	var htmlString = '<form><label>Titulo</label><input id="edittitle" class="form-control" value="'+response.titulo+'" required/><label>Contenido</label><input id="editcontent" class="form-control" value="'+response.content+'" required/><br><p></form>';
-		BootstrapDialog.show({
+			var htmlString = '<form><label>Titulo</label><input id="edittitle" class="form-control" value="'+response.titulo+'" required/><label>Contenido</label><textarea id="editcontent" class="form-control" rows="3">'+response.content+'</textarea><br><p></form>';
+			BootstrapDialog.show({
 				title: 'Añadir nueva noticia',
 				message: htmlString,
 				buttons: [ {
 					label: 'Editar',
 					cssClass: 'btn-primary',
 					action: function(dialogItself){
-                  		editNoticia(url)
+						editNoticia(url)
 						dialogItself.close(),
 						getNoticias(idClub);
 					}
@@ -355,7 +347,7 @@ function showeditNoticia(url){
 					label: 'Eliminar',
 					cssClass: 'btn-warning',
 					action: function(dialogItself){
-                  		deleteNoticia(url),
+						deleteNoticia(url),
 						dialogItself.close(),
 						getNoticias(idClub);
 					}
@@ -368,13 +360,14 @@ function showeditNoticia(url){
 			});	
 
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 function editNoticia(url){
-var titulo = $('#edittitle').val();
-var contenido = $('#editcontent').val();
-var datos = '{"content":"'+contenido+'","titulo":"'+titulo+'","media":"";}';
+	var titulo = $('#edittitle').val();
+	var contenido = $('#editcontent').val();
+	var datos = '{"content":"'+contenido+'","titulo":"'+titulo+'","media":"";}';
 	$.ajax({
 		url : url,
 		type : 'PUT',
@@ -389,29 +382,35 @@ var datos = '{"content":"'+contenido+'","titulo":"'+titulo+'","media":"";}';
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			getNoticias(idClub);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 function deleteNoticia(url){
-BootstrapDialog.confirm('Estas seguro que deseas eliminar la noticia?', function(result){
+	BootstrapDialog.confirm('Estas seguro que deseas eliminar la noticia?', function(result){
 		if(result) {
-                $.ajax({
-                	url : url,
-                	type : 'DELETE',
-                	crossDomain : true,
-                	beforeSend: function (request)
-                	{
-                		request.withCredentials = true;
-                		request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+			$.ajax({
+				url : url,
+				type : 'DELETE',
+				crossDomain : true,
+				beforeSend: function (request)
+				{
+					request.withCredentials = true;
+					request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 
-                	},
-                	success : function(data, status, jqxhr) {
-                		//var response = $.parseJSON(jqxhr.responseText);
-                		getNoticias(idClub);
-                	},
-                	error : function(jqXHR, options, error) {}
-                });
-            }
-        });
+				},
+				success : function(data, status, jqxhr) {
+					getNoticias(idClub);
+					alertify.log("Notification", "error", 5);
+					alertify.success("Operación completada correctamente");
+				},
+				error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+				alertify.error("No se ha podido completar la acción");}
+			});
+		}
+	});
 }

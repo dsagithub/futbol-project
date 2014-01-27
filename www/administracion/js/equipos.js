@@ -14,14 +14,12 @@ $(document).ready(function(e){
 $("#button_search").click(function(e){
 	e.preventDefault();
 	var msg = $('#query').val();
-	console.log(msg);
 	getList(msg);
 });
 
 $("#next").click(function(e){
 	e.preventDefault();
 	var msg = $('#next').val();
-	console.log(msg);
 	getList(msg);
 });
 
@@ -29,10 +27,8 @@ function getList(search) {
 	var url;
 	if (search!=null){
 		url = API_BASE_URL + '?offset=0&length=5&pattern='+search; 
-		console.log("search")
 	}else{
 		url = API_BASE_URL + '?offset=0&length=5'; 
-		console.log("no search")
 	}
 	$.ajax({
 		url : url,
@@ -42,7 +38,6 @@ function getList(search) {
 		{
 			request.withCredentials = true;
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -55,35 +50,32 @@ function getList(search) {
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;		
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Siguiente</a></li></ul>';
 			}			
 			$('#listshow').html(htmlString);
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 }
 
 function getListURL(url) {
-	console.log(url);
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -92,7 +84,6 @@ function getListURL(url) {
 		{
 			request.withCredentials = true;
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -105,30 +96,28 @@ function getListURL(url) {
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;		
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Siguiente</a></li></ul>';
 			}			
 			$('#listshow').html(htmlString);
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 }
 
@@ -144,11 +133,9 @@ function getEquipos(id){
 		{
 			request.withCredentials = true;
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			
 			var htmlString = '<button type="button" class="btn btn-primary btn-xs pull-right" onClick="javascript:showAddEquipo('+id+');">+ Añadir Equipo</button><p><br><table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Id Campeonato</th><th>Id Equipo</th><th>Nombre</th></tr></thead><tbody>';
 			$.each(response.equipos, function(i,v){
 				var equipo = v;
@@ -158,28 +145,24 @@ function getEquipos(id){
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;			
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getEquipoURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getEquipoURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getEquipoURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getEquipoURL("'+next+'")">Siguiente</a></li></ul>';
 			}
-
 			url = API_BASE_URL + id + '/';
 			$.ajax({
 				url : url,
@@ -189,17 +172,15 @@ function getEquipos(id){
 				{
 					request.withCredentials = true;
 					request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
 				},
 				success : function(data, status, jqxhr) {
 					var response = $.parseJSON(jqxhr.responseText);
-
 					var namehtmlclub = "Información de Equipos del Club " + response.nombre;
-
 					$('#nameclubshow').html(namehtmlclub);	
 					$('#clubshow').html(htmlString);	
 				},
-				error : function(jqXHR, options, error) {}
+				error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+				alertify.error("No se ha podido completar la acción");}
 			});
 
 		},
@@ -212,7 +193,6 @@ function getEquipos(id){
 			{
 				request.withCredentials = true;
 				request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
 			},
 			success : function(data, status, jqxhr) {
 				var response = $.parseJSON(jqxhr.responseText);
@@ -223,7 +203,8 @@ function getEquipos(id){
 				var htmlString = 'Este Club no tiene equipos añadidos<button type="button" class="btn btn-primary btn-xs pull-right" onClick="javascript:showAddEquipo('+id+');">+ Añadir Equipo</button><p><br>';	
 				$('#clubshow').html(htmlString);
 			},
-			error : function(jqXHR, options, error) {}
+			error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+			alertify.error("No se ha podido completar la acción");}
 		});}
 	});
 }
@@ -236,7 +217,6 @@ function getEquipoURL(url){
 		{
 			request.withCredentials = true;
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -246,44 +226,37 @@ function getEquipoURL(url){
 				var equipo = v;
 				var linkself="'"+equipo.links[0].uri+"'";
 				htmlString += '<tr onClick="javascript:getEquipo('+linkself+');"><td>'+equipo.campeonato+'</td><td>'+equipo.idEquipo+'</td><td>'+equipo.nombre+'</td></tr>';
-				console.log(equipo.links[0].uri);
 			})
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;			
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getEquipoURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getEquipoURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getEquipoURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getEquipoURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getEquipoURL("'+next+'")">Siguiente</a></li></ul>';
 			}			
 			$('#clubshow').html(htmlString);	
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
-
 }
 
 function showAddEquipo(idclub){
-
-
 	var url2 = API_BASE_URL_EQUIPOS + '/?offset=0&length=500';
-	console.log(url2);
 	var htmlString = '';
 	$.ajax({
 		url : url2,
@@ -297,7 +270,7 @@ function showAddEquipo(idclub){
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			htmlString += '<form><label>Nombre</label><input id="addname" name="addname" class="form-control" required/><br><p><label>Campeonato: </label><br><select id="campeonatonew">';
+			htmlString += '<form><label>Nombre</label><input  maxlength="35" id="addname" name="addname" class="form-control" required/><br><p><label>Campeonato: </label><br><select id="campeonatonew">';
 			$.each(response.campeonatos, function(i,v){
 				var campeonato = v;
 				htmlString += '<option value="'+campeonato.idcampeonatos+'">'+campeonato.nombre+'</option>';
@@ -311,8 +284,7 @@ function showAddEquipo(idclub){
 					cssClass: 'btn-primary',
 					action: function(dialogItself){
 						addEquipo($("#campeonatonew").val()),                   
-						dialogItself.close(),
-						getEquipos(idclub);
+						dialogItself.close();						
 					}
 				},  {
 					label: 'Cerrar',
@@ -322,7 +294,8 @@ function showAddEquipo(idclub){
 				}]
 			});
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});		
 }
 
@@ -330,7 +303,6 @@ function addEquipo(idcamp){
 	var url = API_BASE_URL + idClub + "/e";
 	var nombre = $('#addname').val();
 	var datos = '{"nombre":"'+nombre+'","campeonato":"'+idcamp+'"}';
-	console.log(datos);
 	$.ajax({
 		url : url,
 		type : 'POST',
@@ -342,18 +314,19 @@ function addEquipo(idcamp){
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 			request.setRequestHeader("Content-Type", "application/vnd.futbol.api.equipo+json");
 			request.setRequestHeader("Accept", "application/vnd.futbol.api.equipo+json");
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			getEquipos(idClub);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 }
 
 function getEquipo(url){
-
-	console.log(url);
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -370,57 +343,50 @@ function getEquipo(url){
 			var idEquip = response.idEquipo;
 			idEq = idEquip;
 			var url2 = API_BASE_URL_EQUIPOS + '?offset=0&length=50';
-	console.log(url2);
-	var htmlString = '';
-	$.ajax({
-		url : url2,
-		type : 'GET',
-		crossDomain : true,
-		beforeSend: function (request)
-		{
-			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+			var htmlString = '';
+			$.ajax({
+				url : url2,
+				type : 'GET',
+				crossDomain : true,
+				beforeSend: function (request)
+				{
+					request.withCredentials = true;
+					request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 
-		},
-		success : function(data, status, jqxhr) {
-			var response = $.parseJSON(jqxhr.responseText);
-			$("#campeonatoedit").select2();
-			htmlString += '<form><label>Nombre</label><input id="editname" class="form-control" value="'+ nombre +'" required/><br><p><label>Campeonato: </label><br><select id="campeonatoedit">';
-			$.each(response.campeonatos, function(i,v){
-				var campeonato = v;
-				htmlString += '<option value="'+campeonato.idcampeonatos+'">'+campeonato.nombre+'</option>';
-			})
-			htmlString +=  '</select></form>';
+				},
+				success : function(data, status, jqxhr) {
+					var response = $.parseJSON(jqxhr.responseText);
 
-			BootstrapDialog.show({
-				title: 'Edicion de Equipo',
-				message: htmlString,
-				buttons: [ {
-					label: 'Administrar Jugadores',
-					cssClass: 'btn-success',
-					action: function(){
-						showAdmJug();
-						//getList(),
-						//getClub(id);                    
-					}
-				},{
-					label: 'Editar',
-					cssClass: 'btn-primary',
-					action: function(dialogItself){
-						//editarClub(),
+					htmlString += '<form><label>Nombre</label><input id="editname"  maxlength="35" class="form-control" value="'+ nombre +'" required/><br><p><label>Campeonato: </label><br><select id="campeonatoedit">';
+					$.each(response.campeonatos, function(i,v){
+						var campeonato = v;
+						htmlString += '<option value="'+campeonato.idcampeonatos+'">'+campeonato.nombre+'</option>';
+					})
+					htmlString +=  '</select>';
+					$("#campeonatoedit").select2();
+					htmlString += '</form>';
+					BootstrapDialog.show({
+						title: 'Edicion de Equipo',
+						message: htmlString,
+						buttons: [ {
+							label: 'Administrar Jugadores',
+							cssClass: 'btn-success',
+							action: function(){
+								showAdmJug();                  
+							}
+						},{
+							label: 'Editar',
+							cssClass: 'btn-primary',
+							action: function(dialogItself){
 						editEquipo(idEquip),
-						dialogItself.close(),
-						getList();
-						//getClub(id);                    
+						dialogItself.close();              
 					}
 				}, {
 					label: 'Eliminar',
 					cssClass: 'btn-warning',
 					action: function(dialogItself){
-						console.log(idEquip),
 						deleteEquipo(idEquip),
-						dialogItself.close(),
-						getEquipos(idClub);						  
+						dialogItself.close();					  
 					}
 				}, {
 					label: 'Cerrar',
@@ -429,21 +395,19 @@ function getEquipo(url){
 					}
 				}]
 			});	
-		},
-		error : function(jqXHR, options, error) {}
-	});		
-
-
-		},
-		error : function(jqXHR, options, error) {}
-	});
-
+				},
+				error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+				alertify.error("No se ha podido completar la acción");}
+			});	
+},
+error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+alertify.error("No se ha podido completar la acción");}
+});
 }
 
 function editEquipo(id){
-var url = API_BASE_URL + idClub + "/e/" + id;
+	var url = API_BASE_URL + idClub + "/e/" + id;
 	var datos = '{"nombre":"'+$("#editname").val()+'","campeonato":"'+$("#campeonatoedit").val()+'"}';
-	console.log(datos);
 	$.ajax({
 		url : url,
 		type : 'PUT',
@@ -459,15 +423,18 @@ var url = API_BASE_URL + idClub + "/e/" + id;
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
+			getEquipos(idClub);
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 
 function deleteEquipo(id){
 	var url;
 	url = API_BASE_URL + idClub + '/e/' + id;
-	console.log(url);
 	$.ajax({
 		url : url,
 		type : 'DELETE',
@@ -479,18 +446,21 @@ function deleteEquipo(id){
 
 		},
 		success : function(data, status, jqxhr) {
-			var response = $.parseJSON(jqxhr.responseText);
+			getEquipos(idClub);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 var dialogInstanceshowAdmJug;
 function showAdmJug(){
 
-var API_BASE_URL_JUGADORES = API_BASE_URL + idClub + "/e/" + idEq + "/jugadores";
-var url = API_BASE_URL_JUGADORES + "?offset=0&length=15";
+	var API_BASE_URL_JUGADORES = API_BASE_URL + idClub + "/e/" + idEq + "/jugadores";
+	var url = API_BASE_URL_JUGADORES + "?offset=0&length=15";
 	
-$.ajax({
+	$.ajax({
 		url : url,
 		type : 'GET',
 		crossDomain : true,
@@ -505,7 +475,7 @@ $.ajax({
 			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>DNI</th><th>Nombre</th><th>Apellidos</th></tr></thead><tbody>';
 			$.each(response.jugadores, function(i,v){
 				var jug = v;
-				htmlString += '<tr onClick="javascript:delJug('+jug.dni+');"><td>'+jug.dni+'</td><td>'+jug.nombre+'</td><td>'+jug.apellidos+'</td></tr>'
+				htmlString += '<tr onClick="javascript:delJug('+jug.dni+');"><td>'+jug.dni+'</td><td>'+jug.nombre+'</td><td>'+jug.apellidos+'</td></tr>';
 			})
 			htmlString += '</tbody></table>';
 			dialogInstanceshowAdmJug = new BootstrapDialog({
@@ -527,15 +497,15 @@ $.ajax({
 			});
 			dialogInstanceshowAdmJug.open();
 		},
-		error : function(jqXHR, options, error) {}
-		});			
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});			
 }
 
 function delJug(dni){
 
 	BootstrapDialog.confirm('Estas seguro que deseas eliminar el jugador seleccionado?', function(result){
 		if(result) {
-                //DELTE FUNCTION
                 var url  = API_BASE_URL + idClub + "/e/" + idEq + "/jugadores/" + dni;
                 $.ajax({
                 	url : url,
@@ -545,44 +515,40 @@ function delJug(dni){
                 	{
                 		request.withCredentials = true;
                 		request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
                 	},
                 	success : function(data, status, jqxhr) {
-                		//var response = $.parseJSON(jqxhr.responseText);
                 		dialogInstanceshowAdmJug.close();
+                		alertify.log("Notification", "error", 5);
+                		alertify.success("Operación completada correctamente");
                 		showAdmJug();
                 	},
-                	error : function(jqXHR, options, error) {}
+                	error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+                	alertify.error("No se ha podido completar la acción");}
                 });
             }
         });
-	
+
 }
 
 function showAddJug(){
-
-
-	var codehtml = '<form><label>Nombre</label><input id="addjugname" class="form-control" required/><br><label>Apellidos</label><input id="addjugape" class="form-control" required/><br><label>DNI</label><input id="addjugdni" class="form-control" required/><br></form>';
-
+	var codehtml = '<form><label>Nombre</label><input id="addjugname" maxlength="28" class="form-control" required/><br><label>Apellidos</label><input id="addjugape" maxlength="28" class="form-control" required/><br><label>DNI</label><input type="number" id="addjugdni" class="form-control" required/><br></form>';
 	BootstrapDialog.show({
-            title: 'Añadir nuevo jugador',
-            message: codehtml,
-            buttons: [ {
-                label: 'Crear',
-                cssClass: 'btn-primary',
-                action: function(dialogItself){
-                    addJug(),                    
-                    dialogItself.close(),
-                    showAdmJug();
-                }
-            },  {
-                label: 'Cerrar',
-                action: function(dialogItself){
-                    dialogItself.close();
-                }
-            }]
-        });
-
+		title: 'Añadir nuevo jugador',
+		message: codehtml,
+		buttons: [ {
+			label: 'Crear',
+			cssClass: 'btn-primary submit',
+			action: function(dialogItself){
+				addJug(),                  
+				dialogItself.close();
+			}
+		},  {
+			label: 'Cerrar',
+			action: function(dialogItself){
+				dialogItself.close();
+			}
+		}]
+	});
 }
 
 function addJug(){
@@ -591,7 +557,6 @@ function addJug(){
 	var apellido = $('#addjugape').val();
 	var dni = $('#addjugdni').val();
 	var datos = '{"dni":"'+dni+'","nombre":"'+nombre+'","apellidos":"'+apellido+'"}';
-	console.log(datos);
 	$.ajax({
 		url : url,
 		type : 'POST',
@@ -603,11 +568,15 @@ function addJug(){
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 			request.setRequestHeader("Content-Type", "application/vnd.futbol.api.jugadores+json");
 			request.setRequestHeader("Accept", "application/vnd.futbol.api.jugadores+json");
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
+			showAdmJug();
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");
+		showAdmJug();}
+	});
 }

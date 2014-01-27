@@ -2,12 +2,7 @@
 <html lang="es">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="">
-	<meta name="author" content="">
-
-	<title>Clubs - Futbol Admin</title>
-
+	<title>Partidos - Futbol Admin</title>
 	<!-- Bootstrap core CSS -->
 	<link href="css/bootstrap.css" rel="stylesheet">
 	<!-- Add custom CSS here -->
@@ -16,26 +11,23 @@
 	<!-- JavaScript -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-
 	<!-- Page Specific Plugins -->
-	<script src="js/jquery.cookie.js"></script>
 	<script src="js/alertify.min.js"></script>
 	<link rel="stylesheet" href="js/themes/alertify.bootstrap.css" />
 	<link rel="stylesheet" href="js/themes/alertify.core.css" />
 	<link rel="stylesheet" href="js/themes/alertify.default.css" />
 	<script src="js/tablesorter/jquery.tablesorter.js"></script>
 	<script src="js/tablesorter/tables.js"></script>
-	<script src="js/club.js"></script>
+	<script src="js/partidos.js"></script>
 	<script src="js/jquery.validate.js "></script>
 	<link href="css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 	<script src="js/bootstrap-dialog.js"></script>
-
+	<script type="text/javascript" src="js/moment-2.4.0.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-datetimepicker.min.css">
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
 </head>
-
 <body>
-
 	<div id="wrapper">
-
 		<!-- Sidebar -->
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<!-- Brand and toggle get grouped for better mobile display -->
@@ -48,63 +40,48 @@
 				</button>
 				<a class="navbar-brand" href="index.html">FUTBOL : Panel de Administración</a>
 			</div>
-
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav">
 					<li><a href="index.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-					<li class="active"><a href="clubs.html"><i class="fa fa-bar-chart-o"></i> Clubs</a></li>
+					<li><a href="clubs.html"><i class="fa fa-bar-chart-o"></i> Clubs</a></li>
 					<li><a href="equipos.html"><i class="fa fa-table"></i> Equipos</a></li>
 					<li><a href="noticias.html"><i class="fa fa-edit"></i> Noticias</a></li>
 					<li><a href="campe.html"><i class="fa fa-font"></i> Campeonatos</a></li>
 					<li><a href="users.html"><i class="fa fa-desktop"></i> Usuarios</a></li>
-					<li><a href="partidos.html"><i class="fa fa-wrench"></i> Partidos</a></li>
+					<li class="active"><a href="partidos.html"><i class="fa fa-wrench"></i> Partidos</a></li>
 				</ul>
-				<div id ="usuario"> </div>
+				<ul class="nav navbar-nav navbar-right navbar-user">
+					<li class="dropdown user-dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="#"><i class="fa fa-user"></i> Perfil</a></li>
+							<li class="divider"></li>
+							<li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li>
+						</ul>
+					</li>
+				</ul>
 			</div><!-- /.navbar-collapse -->
 		</nav>
-
 		<div id="page-wrapper">
-
 			<div class="row">
 				<div class="col-lg-12">
-					<h1>Clubs <small>Gestión de Clubs</small></h1>
+					<h1>Partidos <small>Gestión de las retransmisiones y comentarios</small></h1>
 					<ol class="breadcrumb">
 						<li><a href="index.html"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-						<li class="active"><i class="fa fa-table"></i> Clubs</li>
-						<button type="button" class="btn btn-primary btn-xs pull-right" onClick="javascript:showAddClub();">+ Añadir Club</button>
+						<li class="active"><i class="fa fa-table"></i> Partidos</li>
 					</ol>
 					<div class="alert alert-info alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						Listado de clubs registrados. Selecciona uno para editarlo o eliminarlo. También puedes utilizar el buscador para encontrar el club.
+						Selecciona el campeonato, jornada y partido para para añadir, eliminar o editar comentarios y/o retransmisiones.
 					</div>
 				</div>
 			</div><!-- /.row -->
-			<div class="row">
-
-
-				<div class="col-lg-6">
-					<form action="javascript:getList($('#query').val())" ><div class="input-group">
-						<input type="text" class="form-control" placeholder="Busca el club aquí..." id="query" name="query" required/>
-						<div class="input-group-btn">
-							<button id="button_search" type="submit" class="btn btn-success"><span class="fa fa-search"></span></button>
-						</div>
-					</div></form><br>
-					<div class="table-responsive" id="listshow">
-					</div>
+			<div class="col-lg-12">
+				<div id="show">
 				</div>
-				<div class="col-lg-6">
-					<div class="panel panel-default">
-						<div class="panel-heading">Información de Club</div>
-						<div class="panel-body" id="clubshow">
-							No hay un club seleccionado
-						</div>
-					</div>
-				</div>
-			</div><!-- /.row -->
-
+			</div>
 		</div><!-- /#page-wrapper -->
-
-	</div><!-- /#wrapper -->
+	</div>
 </body>
 </html>
