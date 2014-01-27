@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,21 +9,30 @@
 	<title>Campeonatos - Futbol Admin</title>
 
 	<!-- Bootstrap core CSS -->
-<link href="css/bootstrap.css" rel="stylesheet">
+	<link href="css/bootstrap.css" rel="stylesheet">
 	<!-- Add custom CSS here -->
 	<link href="css/sb-admin.css" rel="stylesheet">
 	<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 	<!-- JavaScript -->
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 
-<!-- Page Specific Plugins -->
-<script src="js/tablesorter/jquery.tablesorter.js"></script>
-<script src="js/tablesorter/tables.js"></script>
-<script src="js/campe.js"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
-<link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
-<script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
+	<!-- Page Specific Plugins -->
+	<script src="js/alertify.min.js"></script>
+	<link rel="stylesheet" href="js/themes/alertify.bootstrap.css" />
+	<link rel="stylesheet" href="js/themes/alertify.core.css" />
+	<link rel="stylesheet" href="js/themes/alertify.default.css" />
+	<script src="js/tablesorter/jquery.tablesorter.js"></script>
+	<script src="js/tablesorter/tables.js"></script>
+	<script src="js/campe.js"></script>
+	<script src="js/jquery.validate.js "></script>
+	<link href="css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
+	<script src="js/bootstrap-dialog.js"></script>
+
+	<script type="text/javascript" src="js/moment-2.4.0.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap-datetimepicker.min.css">
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.js"></script>
+
 
 </head>
 
@@ -53,8 +62,7 @@
 					<li><a href="noticias.html"><i class="fa fa-edit"></i> Noticias</a></li>
 					<li class="active"><a href="campe.html"><i class="fa fa-font"></i> Campeonatos</a></li>
 					<li><a href="users.html"><i class="fa fa-desktop"></i> Usuarios</a></li>
-					<li><a href="bootstrap-grid.html"><i class="fa fa-wrench"></i> Retransmisiones</a></li>
-					<li><a href="blank-page.html"><i class="fa fa-file"></i> Comentarios</a></li>
+					<li><a href="partidos.html"><i class="fa fa-wrench"></i> Partidos</a></li>
 				</ul>
 
 				<ul class="nav navbar-nav navbar-right navbar-user">
@@ -97,26 +105,26 @@
 						</div>
 					</div></form><br>
 					<div class="table-responsive" id="listshow">
-				</div>
-			</div>
-			<div class="col-lg-6">
-				<div class="panel panel-default">
-					<div class="panel-heading" id="campename">Información del campeonato</div>
-					<div class="panel-body" id="campeshow">
-						No hay un campeonato seleccionado
 					</div>
 				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">Información de las jornadas</div>
-					<div class="panel-body" id="jorshow">
-						No hay un campeonato seleccionado
+				<div class="col-lg-6">
+					<div class="panel panel-default">
+						<div class="panel-heading" id="campename">Información del campeonato</div>
+						<div class="panel-body" id="campeshow">
+							No hay un campeonato seleccionado
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading">Información de las jornadas</div>
+						<div class="panel-body" id="jorshow">
+							No hay un campeonato seleccionado
+						</div>
 					</div>
 				</div>
-			</div>
-		</div><!-- /.row -->
+			</div><!-- /.row -->
 
-	</div><!-- /#page-wrapper -->
+		</div><!-- /#page-wrapper -->
 
-</div><!-- /#wrapper -->
+	</div><!-- /#wrapper -->
 </body>
 </html>

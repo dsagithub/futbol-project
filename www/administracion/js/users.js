@@ -13,10 +13,8 @@ function getList(search) {
 	var url;
 	if (search!=null){
 		url = API_BASE_URL + '?offset=0&length=5&pattern='+search; 
-		console.log("search")
 	}else{
 		url = API_BASE_URL + '?offset=0&length=5'; 
-		console.log("no search")
 	}
 	$.ajax({
 		url : url,
@@ -40,15 +38,12 @@ function getList(search) {
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;		
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
@@ -68,7 +63,6 @@ function getList(search) {
 }
 
 function getListURL(url) {
-	console.log(url);
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -91,15 +85,12 @@ function getListURL(url) {
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;				
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
@@ -134,12 +125,13 @@ function getUser(username){
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
 			var namehtmlcampe = "Información del usuario " + response.name;
-			var htmlString = '<div class="col-lg-4"><dl class="dl-horizontal"><dt>Username</dt><dd>'+response.username+'</dd><dt>Nombre</dt><dd>'+response.name+'</dd><dt>Email</dt><dd>'+response.email+'</dd></dl></div><button type="button" class="btn btn-danger pull-right" onClick="javascript:delUser()">Eliminar</button><button type="button" class="btn btn-primary pull-right" onClick="javascript:showEdit();">Editar</button>';
+			var htmlString = '<div class="col-lg-4"><dl class="dl-horizontal"><dt>Username</dt><dd>'+response.username+'</dd><dt>Nombre</dt><dd>'+response.name+'</dd><dt>Email</dt><dd>'+response.email+'</dd></dl></div><div class="col-lg-4"></div><div class="col-lg-4"><button type="button" class="btn btn-danger" onClick="javascript:delUser()">Eliminar</button>&nbsp;<br><br><button type="button" class="btn btn-primary" onClick="javascript:showEdit();">Editar</button></div>';
 			$('#usename').html(namehtmlcampe);
 			$('#usershow').html(htmlString);	
 			
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 }
 
@@ -158,28 +150,27 @@ function showEdit(){
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			var codehtml = '<form><label>Nombre</label><input id="nomed" class="form-control" value="'+ response.name +'" required/><label>Email</label><input id="emailed" class="form-control" value="'+ response.email +'" required/><label>NEW Password</label><input type="password" id="passed" class="form-control" required/></form>';
+			var codehtml = '<form><label>Nombre</label><input id="nomed" class="form-control" value="'+ response.name +'" required/><label>Email</label><input id="emailed" type="email" class="form-control" value="'+ response.email +'" required/><label>NEW Password</label><input type="password" id="passed" class="form-control" required/></form>';
 			BootstrapDialog.show({
-            title: 'Editar usuario '+ response.username,
-            message: codehtml,
-            buttons: [ {
-                label: 'Editar',
-                cssClass: 'btn-primary',
-                action: function(dialogItself){
-                    editUser(),
-                    location.reload(),
-                    getUser(userId),
-                    dialogItself.close();                    
-                }
-            },  {
-                label: 'Cerrar',
-                action: function(dialogItself){
-                    dialogItself.close();
-                }
-            }]
-        });			
+				title: 'Editar usuario '+ response.username,
+				message: codehtml,
+				buttons: [ {
+					label: 'Editar',
+					cssClass: 'btn-primary',
+					action: function(dialogItself){
+						editUser(),
+						dialogItself.close();                    
+					}
+				},  {
+					label: 'Cerrar',
+					action: function(dialogItself){
+						dialogItself.close();
+					}
+				}]
+			});			
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
 	});
 }
 
@@ -210,62 +201,65 @@ function editUser(){
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			getUser(userId);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 
 function delUser(){
-		BootstrapDialog.confirm('Estas seguro que deseas eliminar el usuario seleccionado?', function(result){
+	BootstrapDialog.confirm('Estas seguro que deseas eliminar el usuario seleccionado?', function(result){
 		if(result) {
-                //DELTE FUNCTION
-        var url;
-	url = API_BASE_URL + '/' + userId;
-	$.ajax({
-		url : url,
-		type : 'DELETE',
-		crossDomain : true,
-		beforeSend: function (request)
-		{
-			request.withCredentials = true;
-			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+			var url;
+			url = API_BASE_URL + '/' + userId;
+			$.ajax({
+				url : url,
+				type : 'DELETE',
+				crossDomain : true,
+				beforeSend: function (request)
+				{
+					request.withCredentials = true;
+					request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 
-		},
-		success : function(data, status, jqxhr) {
-			//var response = $.parseJSON(jqxhr.responseText);
-			location.reload();
-		},
-		error : function(jqXHR, options, error) {}
-		});
-            }
-        });
+				},
+				success : function(data, status, jqxhr) {
+					getList();
+					alertify.log("Notification", "error", 5);
+					alertify.success("Operación completada correctamente");
+				},
+				error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+				alertify.error("No se ha podido completar la acción");}
+			});
+		}
+	});
 
 }
 
 function showAddUser(){
-		var codehtml = '<form><div class="form-group input-group"><span class="input-group-addon">@</span><input id="addname" name="addname" class="form-control" placeholder="Nombre">';
-        codehtml += '<input id="addusername" type="text" class="form-control" placeholder="Username">';
-        codehtml += '<input id="addemail" type="text" class="form-control" placeholder="Email"><input id="addpass" type="password" class="form-control" placeholder="Password"></div></form>';
+	var codehtml = '<form><div class="form-group input-group"><span class="input-group-addon">@</span><input id="addname" name="addname" class="form-control" placeholder="Nombre">';
+	codehtml += '<input id="addusername" type="text" class="form-control" placeholder="Username">';
+	codehtml += '<input id="addemail" type="email" class="form-control" placeholder="Email"><input id="addpass" type="password" class="form-control" placeholder="Password"></div></form>';
 
 	BootstrapDialog.show({
-            title: 'Añadir nuevo Usuario',
-            message: codehtml,
-            buttons: [ {
-                label: 'Crear',
-                cssClass: 'btn-primary',
-                action: function(dialogItself){
-                    addUser(),                    
-                    getList(),
-                    location.reload(),
-                    dialogItself.close();                    
-                }
-            },  {
-                label: 'Cerrar',
-                action: function(dialogItself){
-                    dialogItself.close();
-                }
-            }]
-        });
+		title: 'Añadir nuevo Usuario',
+		message: codehtml,
+		buttons: [ {
+			label: 'Crear',
+			cssClass: 'btn-primary',
+			action: function(dialogItself){
+				addUser(),                    
+				dialogItself.close();                    
+			}
+		},  {
+			label: 'Cerrar',
+			action: function(dialogItself){
+				dialogItself.close();
+			}
+		}]
+	});
 }
 
 function addUser(){
@@ -275,7 +269,6 @@ function addUser(){
 	var email = $('#addemail').val();
 	var passw = $('#addpass').val();
 	var datos = '{"name":"'+nombre+'","email":"'+email+'","username":"'+usernam+'","password":"'+passw+'"}';
-	console.log(datos);
 	$.ajax({
 		url : url,
 		type : 'POST',
@@ -291,8 +284,12 @@ function addUser(){
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			location.reload();
+			getList();
+			getUser(usernam);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }

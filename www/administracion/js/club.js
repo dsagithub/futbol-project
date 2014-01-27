@@ -3,25 +3,25 @@ var user;
 var pass;
 
 $(document).ready(function(e){
-
-	//var usuario = $.cookie('usuario');
-	//var pass = $.cookie('password');
-user='admin';
-pass='admin';
-getList();
+	user=$.cookie('usuario');
+	pass=$.cookie('password');
+	var usuario = user;
+	var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+usuario;
+	htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li><a href="http://localhost:8080/futbol/VistaUsuario/perfilusuario.html">Ver perfil</a></li><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
+	
+	$('#usuario').html(htmlString);		
+	getList();
 });
 
 $("#button_search").click(function(e){
 	e.preventDefault();
 	var msg = $('#query').val();
-	console.log(msg);
 	getList(msg);
 });
 
 $("#next").click(function(e){
 	e.preventDefault();
 	var msg = $('#next').val();
-	console.log(msg);
 	getList(msg);
 });
 
@@ -29,10 +29,8 @@ function getList(search) {
 	var url;
 	if (search!=null){
 		url = API_BASE_URL + '?offset=0&length=5&pattern='+search; 
-		console.log("search")
 	}else{
 		url = API_BASE_URL + '?offset=0&length=5'; 
-		console.log("no search")
 	}
 	$.ajax({
 		url : url,
@@ -42,7 +40,6 @@ function getList(search) {
 		{
 			request.withCredentials = true;
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -55,35 +52,32 @@ function getList(search) {
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;		
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Siguiente</a></li></ul>';
 			}			
 			$('#listshow').html(htmlString);
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 
 function getListURL(url) {
-	console.log(url);
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -92,7 +86,6 @@ function getListURL(url) {
 		{
 			request.withCredentials = true;
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
@@ -105,31 +98,29 @@ function getListURL(url) {
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
-				var links = v;
-				console.log(links);				
+				var links = v;			
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Anterior</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Siguiente</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Siguiente</a></li></ul>';
 			}			
 			$('#listshow').html(htmlString);
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 
 function getClub(id){
@@ -147,76 +138,72 @@ function getClub(id){
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			console.log(response.links[0].uri);
 			var htmlString = 'Nombre: <div id="nombre" name="nombre" value="'+response.nombre+'">' + response.nombre + '</div><button type="button" class="btn btn-primary pull-right" onClick="javascript:showClub('+id+')">Editar</button>';		
 			$('#clubshow').html(htmlString);
 		},
-		error : function(jqXHR, options, error) {}
-		});
-
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 
 function showClub(id){
 	var nombre = $('#nombre').text();
-	console.log(nombre);
-	var codehtml = '<form><label>Nombre</label><input id="newname" name="newname" class="form-control" value="'+ nombre +'" required/></form>';
-			BootstrapDialog.show({
-            title: 'Edicion de Club',
-            message: codehtml,
-            buttons: [ {
-                label: 'Editar',
-                cssClass: 'btn-primary',
-                action: function(dialogItself){
-                    editarClub(id),
-                    dialogItself.close(),
-                    getList(),
-                    getClub(id);                    
-                }
-            }, {
-                label: 'Eliminar',
-                cssClass: 'btn-warning',
-                action: function(dialogItself){
-                	deleteClub(id),
-                	dialogItself.close(),
-                    getList(),
-                    limpiarclub();  
-                }
-            }, {
-                label: 'Cerrar',
-                action: function(dialogItself){
-                    dialogItself.close();
-                }
-            }]
-        });	
-        }
-        
-        function limpiarclub(){
-        	var htmlString = 'No hay un club seleccionado';	
-			$('#clubshow').html(htmlString);
-        }
+	var codehtml = '<form><label>Nombre</label><input id="newname" name="newname" class="form-control" maxlength="35" value="'+ nombre +'" required/></form>';
+	BootstrapDialog.show({
+		title: 'Edicion de Club',
+		message: codehtml,
+		buttons: [ {
+			label: 'Editar',
+			cssClass: 'btn-primary',
+			action: function(dialogItself){
+				editarClub(id),
+				dialogItself.close(),
+				getList(),
+				getClub(id);                    
+			}
+		}, {
+			label: 'Eliminar',
+			cssClass: 'btn-warning',
+			action: function(dialogItself){
+				deleteClub(id),
+				dialogItself.close(),
+				getList(),
+				limpiarclub();  
+			}
+		}, {
+			label: 'Cerrar',
+			action: function(dialogItself){
+				dialogItself.close();
+			}
+		}]
+	});	
+}
+
+function limpiarclub(){
+	var htmlString = 'No hay un club seleccionado';	
+	$('#clubshow').html(htmlString);
+}
 
 function showAddClub(){
-
-	var codehtml = '<form><label>Nombre</label><input id="addname" name="addname" class="form-control" required/></form>';
-
+	var codehtml = '<form><label>Nombre</label><input id="addname" name="addname" maxlength="35" class="form-control" required/></form>';
 	BootstrapDialog.show({
-            title: 'Añadir nuevo club',
-            message: codehtml,
-            buttons: [ {
-                label: 'Crear',
-                cssClass: 'btn-primary',
-                action: function(dialogItself){
-                    addClub(),                    
-                    dialogItself.close(),
-                    getList();
-                }
-            },  {
-                label: 'Cerrar',
-                action: function(dialogItself){
-                    dialogItself.close();
-                }
-            }]
-        });
+		title: 'Añadir nuevo club',
+		message: codehtml,
+		buttons: [ {
+			label: 'Crear',
+			cssClass: 'btn-primary',
+			action: function(dialogItself){
+				addClub(),
+				getList(),                    
+				dialogItself.close();                    
+			}
+		},  {
+			label: 'Cerrar',
+			action: function(dialogItself){
+				dialogItself.close();
+			}
+		}]
+	});
 }
 
 function deleteClub(id){
@@ -232,11 +219,14 @@ function deleteClub(id){
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 
 		},
-		success : function(data, status, jqxhr) {
-			var response = $.parseJSON(jqxhr.responseText);
-		},
-		error : function(jqXHR, options, error) {}
-		});
+		success : function(data, status, jqxhr) {alertify.log("Notification", "error", 5);
+		alertify.success("Operación completada correctamente");
+	},
+	error : function(jqXHR, options, error) {
+		alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");
+	}
+});
 }
 
 function editarClub(id){
@@ -244,7 +234,6 @@ function editarClub(id){
 	url = API_BASE_URL + id + '/';
 	var nombre = $('#newname').val();
 	var datos = '{"nombre":"'+nombre+'"}';
-	console.log(datos);
 	$.ajax({
 		url : url,
 		type : 'PUT',
@@ -256,13 +245,15 @@ function editarClub(id){
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 			request.setRequestHeader("Content-Type", "application/vnd.futbol.api.club+json");
 			request.setRequestHeader("Accept", "application/vnd.futbol.api.club+json");
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
 
 function addClub(){
@@ -280,11 +271,13 @@ function addClub(){
 			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 			request.setRequestHeader("Content-Type", "application/vnd.futbol.api.club+json");
 			request.setRequestHeader("Accept", "application/vnd.futbol.api.club+json");
-
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
+			alertify.log("Notification", "error", 5);
+			alertify.success("Operación completada correctamente");
 		},
-		error : function(jqXHR, options, error) {}
-		});
+		error : function(jqXHR, options, error) {alertify.log("Notification", "error", 5);
+		alertify.error("No se ha podido completar la acción");}
+	});
 }
