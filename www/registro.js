@@ -22,11 +22,7 @@ var username = $('#username').val();
 
 	var url= "http://localhost:8080/futbol-auth/ServletLogin";
 	var datos= 'username='+username+'&password='+password+'';
-	$.cookie('usuario', username);
-	$.cookie('password', password);
-
-	var usuario = $.cookie('usuario');
-	var pass = $.cookie('password');
+	
 	
 
 	$.ajax({
@@ -45,11 +41,21 @@ var username = $('#username').val();
 	
 	if (response=="successadmin")
 	{
+		$.cookie('usuario', username);
+	$.cookie('password', password);
+
+	var usuario = $.cookie('usuario');
+	var pass = $.cookie('password');
+	
 		window.location.href="http://localhost:8080/futbol/administracion/clubs.html"
 	}
 	 else if (response=="successusuario"){
 
-	
+	$.cookie('usuario', username,{path: '/VistaUsuario' });
+	$.cookie('password', password,{path: '/VistaUsuario' });
+
+	var usuario = $.cookie('usuario');
+	var pass = $.cookie('password');
 	
 	window.location.href="http://localhost:8080/futbol/VistaUsuario/clubsusuario.html"
 
@@ -108,9 +114,13 @@ function registro(usernamer,passwordr,name,email){
 		dataType: 'html',
 		success : function(data, status, jqxhr) {
 	var response = $.parseJSON(jqxhr.responseText);
+	console.log(response.status);
+	console.log(response);
+
+
 	
 	
-	if (response.status = 404){
+if (response.status == undefined){
 		var htmlString ='<div class="alert  alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Registro realizado correctamente. Redirigiendo...</div>';
         $('#error').html(htmlString);
 
@@ -122,7 +132,7 @@ function registro(usernamer,passwordr,name,email){
 
       setTimeout ("redireccionar()", 2000); //tiempo expresado en milisegundos
 
-	}else{
+	}else if (response.status == 404){
 	
 		        var htmlString ='<div class="alert  alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> El usuario ya existe</div>';
         $('#error').html(htmlString);

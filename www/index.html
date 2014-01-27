@@ -24,6 +24,7 @@
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
 <link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 <script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
+<script src="js/jquery.cookie.js"></script> 
 
 </head>
 
@@ -68,11 +69,11 @@
 
         </div>
       </div><!-- /.row -->
-     <div class="col-lg-4">     
+     <div class="col-lg-4" style="background-color:rgba(255, 255, 255, 0.7)">     
          <fieldset>
         <legend align= "center"><font color="black"> <B>Formulario de login </B></legend>
         <h3 class="form-signin-heading"><B>Identificate </B></h3>
-         <form action="javascript:login()" class="form-signin" >
+         <form action="javascript:login()" class="form-signin"  >
           <label for="Name">Nombre de usuario:</label>
         <input style="width: 400px" type="text" class="form-control" id="username"  name="username" placeholder="Usuario" required autofocus>
         <label for="Name">Contraseña:</label>
@@ -82,6 +83,7 @@
         </label>
         <center>
         <button   class="btn btn-lg btn-primary btn-block" style="width: 200px" id="btn_login" autofocus>Login</button>
+        <br> </br>
       </form>
       </center>
       </fieldset>
@@ -90,7 +92,7 @@
 
     </div> <!-- /cierra el de identificar -->
 <div class="col-lg-2"> </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4" style="background-color:rgba(255, 255, 255, 0.7)">
  
       <form action="javascript:registro()" class="form-signin">
         <fieldset>
@@ -128,5 +130,5 @@
 
 
 </body>
-<script src="js/jquery.cookie.js"></script> 
+
 </html>

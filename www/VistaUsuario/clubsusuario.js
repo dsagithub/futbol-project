@@ -3,17 +3,18 @@ var API_BASE_URL = "http://localhost:8080/futbol-api/club/";
 
 
 $(document).ready(function(e){
+	var usuario = $.cookie('usuario');
+	var pass = $.cookie('password');
 getList();
 
 
-	var usuario = $.cookie('usuario');
-	var pass = $.cookie('password');
+	
 
 
 
 
 var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+usuario;
- htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li><a href="http://localhost:8080/futbol/VistaUsuario/perfilusuario.html">Ver perfil</a></li><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
+ htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li><a href="../index.html"><i class="fa fa-power-off" onclick="javascript:deletecookie()"  ></i> Salir</a></li></ul></li></ul>';
 					
 $('#usuario').html(htmlString);		 
 						
@@ -35,6 +36,12 @@ $("#next").click(function(e){
 	getList(msg);
 });
 
+function deletecookie(){
+	console.log("dentro delete cookie");
+	$.removeCookie('usuario');
+
+
+}
 //Para listar los clubs
 function getList(search) {
 	var usuario = $.cookie('usuario');
@@ -283,6 +290,7 @@ var pass = $.cookie('password');
 			var response = $.parseJSON(jqxhr.responseText);
 			
 			var linkequipo = response.links[0].uri;
+			
 			createcookie(linkequipo);
 			//var name = getNameCampeonato();
 			
@@ -301,13 +309,13 @@ function createcookie(linkequipo) {
 }
 
 function getNoticiasList(idclub) {
-	var usuario = $.cookie('usuario');
+var usuario = $.cookie('usuario');
 var pass = $.cookie('password');
 
 
 
 
-	var url = API_BASE_URL +idclub+'/noticias?offset=0&length=20';
+	var url = API_BASE_URL +idclub+'/noticias?offset=0&length=10';
 	
 	$.ajax({
 		url : url,

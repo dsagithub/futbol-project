@@ -24,6 +24,7 @@
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
 <link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 <script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
+<script src="../js/jquery.cookie.js"></script>
 
 </head>
 
@@ -41,8 +42,8 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="http://localhost:8080/futbol/index.html">Futbol!</a>
-				<a class="navbar-brand" href="http://localhost:8080/futbol/VistaUsuario/clubsusuario.html">Clubs</a>
+				<a class="navbar-brand" href="../index.html">Futbol!</a>
+				<a class="navbar-brand" href="/VistaUsuario/clubsusuario.html">Clubs</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -67,25 +68,25 @@
 			<div class="row">
 
 
-				<div class="col-lg-6">
-					<form action="javascript:getList($('#query').val())" ><div class="input-group">
+				<div class="col-lg-6" >
+					<form  action="javascript:getList($('#query').val())" ><div class="input-group">
 						<input type="text" class="form-control" placeholder="Busca el club aquí..." id="query" name="query" required/>
 						<div class="input-group-btn">
 							<button id="button_search" type="submit" class="btn btn-success"><span class="fa fa-search"></span></button>
 						</div>
 					</div></form><br>
-					<div style="background:#FFFFFF" class="table-responsive" id="listshow">
+					<div style="background-color:rgba(255, 255, 255, 0.9)" class="table-responsive" id="listshow">
 				</div>
 			</div>
 			<div class="col-lg-6">
 				<div class="panel panel-default">
-					<div class="panel-heading">Información de Equipos del Club</div>
-					<div class="panel-body" id="clubshow">
+					<div style="background-color:rgba(255, 255, 255, 0.9)" class="panel-heading">Información de Equipos del Club</div>
+					<div style="background-color:rgba(255, 255, 255, 0.9)" class="panel-body"  id="clubshow">
 						No hay un club seleccionado
 					</div>
 				</div>
 			</div>
-
+<br> </br>
 			<div class="col-lg-8">
 				<div class="panel panel-default" >
 					<div class="panel-heading">Noticias del club</div>
@@ -100,5 +101,5 @@
 
  <!-- /#wrapper -->
 </body>
-<script src="../js/jquery.cookie.js"></script>
+
 </html>
