@@ -5,5 +5,11 @@
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/l_delete">
     </item>
+    
+    <item
+        android:id="@+id/miHome"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="@string/l_home">
+    </item>
  
 </menu>

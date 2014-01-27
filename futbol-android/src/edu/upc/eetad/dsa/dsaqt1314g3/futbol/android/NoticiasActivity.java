@@ -68,7 +68,10 @@ public class NoticiasActivity extends ListActivity {
 			getMenuInflater().inflate(R.menu.futbol_menu, menu);
 			return true;
 		}
-		else return false;
+		else {
+			getMenuInflater().inflate(R.menu.futbol_menu4, menu);
+			return true;
+		}
 	}
 	 
 	@Override
@@ -90,6 +93,13 @@ public class NoticiasActivity extends ListActivity {
 			startActivity(intent);
 			
 			return true;
+			
+		case R.id.miHome:
+			finish();
+			Intent intent2 = new Intent(this, FutbolMainActivity.class);
+			startActivity(intent2);
+			return true;
+	 
 	 
 		default:
 			return super.onOptionsItemSelected(item);

@@ -29,7 +29,10 @@ public class NoticiaDetail extends Activity{
 			getMenuInflater().inflate(R.menu.futbol_menu2, menu);
 			return true;
 		}
-		else return false;
+		else {
+			getMenuInflater().inflate(R.menu.futbol_menu4, menu);
+			return true;
+		}
 	}
 	 
 	@Override
@@ -45,6 +48,12 @@ public class NoticiaDetail extends Activity{
 			api.deleteNoticia(url);
 			Intent intent = new Intent(this, FutbolMainActivity.class);
 			startActivity(intent);
+			return true;
+			
+		case R.id.miHome:
+			finish();
+			Intent intent2 = new Intent(this, FutbolMainActivity.class);
+			startActivity(intent2);
 			return true;
 	 
 		default:

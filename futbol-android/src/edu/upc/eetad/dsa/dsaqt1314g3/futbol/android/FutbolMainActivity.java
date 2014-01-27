@@ -11,6 +11,7 @@ import java.util.Properties;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Club;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.ClubCollection;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
+import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.User;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,6 +21,8 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -32,6 +35,37 @@ public class FutbolMainActivity extends ListActivity {
 	private ClubAdapter adapter;
  
 	/** Called when the activity is first created. */
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.futbol_menu3, menu);
+		return true;
+	}
+	 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.miExit:
+			FutbolMainActivity.this.finish();
+			Intent intent = new Intent(this, Login.class);
+			startActivity(intent);
+			return true;
+	 
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

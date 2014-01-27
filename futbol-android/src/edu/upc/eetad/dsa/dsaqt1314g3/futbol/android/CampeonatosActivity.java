@@ -17,6 +17,8 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Campeonatos;
@@ -31,7 +33,28 @@ public class CampeonatosActivity extends ListActivity {
 	private ArrayList<Campeonatos> campeonatoList;
 	private CampeonatoAdapter adapter;
 	
-
+	
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.futbol_menu3, menu);
+		return true;
+	}
+	 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.miExit:
+			finish();
+			Intent intent = new Intent(this, Login.class);
+			startActivity(intent);
+			return true;
+	 
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	 
+	}
  
 	/** Called when the activity is first created. */
 	

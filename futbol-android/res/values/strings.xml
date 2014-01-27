@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FutbolMainActivity</string>
+    <string name="app_name">Futbol Android</string>
     <string name="login_l_username">Username</string>
 	<string name="login_l_password">Password</string>
 	<string name="login_l_signin">Sign in</string>
@@ -12,4 +12,6 @@
     <string name="lb_send">Send</string>
     <string name="l_post">Post</string>
     <string name="l_delete">Delete</string>
+    <string name="l_exit">Exit</string>
+    <string name="l_home">Ir a inicio</string>
 </resources>

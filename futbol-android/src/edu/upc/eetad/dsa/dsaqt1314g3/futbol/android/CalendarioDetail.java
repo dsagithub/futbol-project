@@ -8,6 +8,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.Calendario;
@@ -19,6 +21,27 @@ public class CalendarioDetail extends Activity{
 	private FutbolAPI api;
 	private String url2;
 
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.futbol_menu4, menu);
+		return true;
+	}
+	 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.miHome:
+			finish();
+			Intent intent = new Intent(this, FutbolMainActivity.class);
+			startActivity(intent);
+			return true;
+	 
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	 
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

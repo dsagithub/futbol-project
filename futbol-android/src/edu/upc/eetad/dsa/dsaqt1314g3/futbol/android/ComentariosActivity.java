@@ -87,7 +87,13 @@ public class ComentariosActivity extends ListActivity {
 			startActivity(intent);
 			
 			return true;
-	 
+			
+		case R.id.miHome:
+			finish();
+			Intent intent2 = new Intent(this, FutbolMainActivity.class);
+			startActivity(intent2);
+			return true;
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}

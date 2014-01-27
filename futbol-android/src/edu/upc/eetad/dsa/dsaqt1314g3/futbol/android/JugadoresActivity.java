@@ -17,6 +17,8 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import edu.upc.eetac.dsa.dsaqt1314g3.futbol.android.api.FutbolAPI;
@@ -32,6 +34,27 @@ public class JugadoresActivity extends ListActivity {
 	private JugadorAdapter adapter;
 	
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.futbol_menu4, menu);
+		return true;
+	}
+	 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.miHome:
+			finish();
+			Intent intent = new Intent(this, FutbolMainActivity.class);
+			startActivity(intent);
+			return true;
+	 
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	 
+	}
+	
  
 	/** Called when the activity is first created. */
 	
