@@ -3,7 +3,9 @@ package edu.upc.eetad.dsa.dsaqt1314g3.futbol.android;
 import java.net.URL;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -72,8 +74,35 @@ public class WriteComentario extends Activity {
  
 		//String titulo = etTitulo.getText().toString();
 		String content = etContent.getText().toString();
- 
-		(new PostComentarioTask(url)).execute(content);
+		if (content.length() > 0 && content.length() < 45){
+			(new PostComentarioTask(url)).execute(content);
+		}
+		else if (content.length() >= 45){
+			AlertDialog.Builder dialog = new AlertDialog.Builder(WriteComentario.this);
+        	dialog.setMessage("Content demasiado largo");
+        	dialog.setCancelable(false);
+        	dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        	 
+        	  @Override
+        	  public void onClick(DialogInterface dialog, int which) {
+        	     //Login.this.finish();
+        	  }
+        	});
+        	dialog.show();
+		}else {
+			AlertDialog.Builder dialog = new AlertDialog.Builder(WriteComentario.this);
+        	dialog.setMessage("Content no puede estar vacio");
+        	dialog.setCancelable(false);
+        	dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        	 
+        	  @Override
+        	  public void onClick(DialogInterface dialog, int which) {
+        	     //Login.this.finish();
+        	  }
+        	});
+        	dialog.show();
+		}
+		//(new PostComentarioTask(url)).execute(content);
 	}
 	
 	private void showComentarios(){

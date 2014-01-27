@@ -43,10 +43,10 @@ public class CalendarioDetail extends Activity{
 		TextView tvDetailHora = (TextView) findViewById(R.id.tvDetailHora);
 	 
 		tvDetailJornada.setText("Jornada: " + calendario.getJornada());
-		tvDetailEquipoA.setText(calendario.getEquipoA());
-		tvDetailEquipoB.setText(calendario.getEquipoB());
-		tvDetailFecha.setText(calendario.getFecha());
-		tvDetailHora.setText(calendario.getHora());
+		tvDetailEquipoA.setText(calendario.getEquipoA() + " " + calendario.getIdEquipoA());
+		tvDetailEquipoB.setText(calendario.getEquipoB() + " " + calendario.getIdEquipoB());
+		tvDetailFecha.setText("Dia: " + calendario.getFecha());
+		tvDetailHora.setText("Hora: " + calendario.getHora());
 	}
 	
 	public void clickcomentarios(View v) {

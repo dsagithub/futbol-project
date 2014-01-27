@@ -68,12 +68,14 @@ public class CalendarioAdapter extends BaseAdapter{
 		String jornada = data.get(position).getJornada();
 		String equipoA = data.get(position).getEquipoA();
 		String equipoB = data.get(position).getEquipoB();
+		String idequipoA = data.get(position).getIdEquipoA();
+		String idequipoB = data.get(position).getIdEquipoB();
 		String fecha = data.get(position).getFecha();
 		//poner datos
 		viewHolder.tvJornada.setText("Jornada: " + jornada);
-		viewHolder.tvEquipoA.setText(equipoA);
-		viewHolder.tvEquipoB.setText(equipoB);
-		viewHolder.tvFecha.setText(fecha);
+		viewHolder.tvEquipoA.setText(equipoA + " " + idequipoA);
+		viewHolder.tvEquipoB.setText(equipoB + " " + idequipoB);
+		viewHolder.tvFecha.setText("Dia: " + fecha);
 		return convertView;
 	}
 
