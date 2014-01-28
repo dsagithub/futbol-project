@@ -51,7 +51,6 @@ function getListJugadores(search) {
 			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Dni</th><th>Nombre</th><th>Apellidos</th></tr></thead><tbody>';	
 			$.each(response.jugadores, function(i,v){
 				var jugador = v;
-				console.log(response.jugadores);
 				htmlString += '<td>'+jugador.dni+'</td><td>'+jugador.nombre+'</td><td>'+jugador.apellidos+'</td></tr>';
 			})		
 			var next = "";
@@ -181,7 +180,6 @@ function getPartidosList(){
 					var calendario = v;
 					var linkself="'"+calendario.links[0].uri+"'";
 					htmlString += '<tr onClick="javascript:getRetransmision('+linkself+');"><td>'+calendario.fecha+'</td><td>'+calendario.hora+'</td><td>'+calendario.jornada+'</td><td>'+calendario.equipoA+'</td><td>'+calendario.equipoB+'</td><td>'+calendario.nomCampeonato+'</td></tr>'
-					console.log(htmlString);
 				})
 				var next = "";
 				var prev = "";
@@ -221,11 +219,13 @@ function getPartidosList(){
 }
 
 
-function getListpartidoURL(url,campeonatoid){
-	console.log("boton url");
-	console.log(url);
+function getListpartidoURL(url2,campeonatoid){
+	var linkequipo = $.cookie('Linkequipo')
 	var user = $.cookie('usuario');
 	var pass =  $.cookie('password');
+		url = linkequipo;
+	
+
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -241,7 +241,6 @@ function getListpartidoURL(url,campeonatoid){
 			var linkequipo = $.cookie('Linkequipo')
 			var user = $.cookie('usuario');
 			var pass =  $.cookie('password');
-			var url2 = API_BASE_URL + 'campeonato/'+ campeonatoid +'/calendario?offset=0&length=5';
 			$.ajax({
 			url : url2,
 			type : 'GET',
@@ -260,7 +259,6 @@ function getListpartidoURL(url,campeonatoid){
 					var calendario = v;
 					var linkself="'"+calendario.links[0].uri+"'";
 					htmlString += '<tr onClick="javascript:getRetransmision('+linkself+');"><td>'+calendario.fecha+'</td><td>'+calendario.hora+'</td><td>'+calendario.jornada+'</td><td>'+calendario.equipoA+'</td><td>'+calendario.equipoB+'</td><td>'+calendario.nomCampeonato+'</td></tr>'
-					console.log(htmlString);
 				})
 				var next = "";
 				var prev = "";
@@ -315,7 +313,6 @@ var pass = $.cookie('password');
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			console.log(response.links[0].uri);
 			var linkRetransmision = response.links[0].uri;
 			createcookie(linkRetransmision);
 			//var name = getNameCampeonato();
