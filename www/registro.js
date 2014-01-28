@@ -108,7 +108,8 @@ function registro(usernamer,passwordr,name,email){
 		
             $('#error').html(htmlString);
 
-	}
+	}else
+	
 	var url= "http://localhost:8080/futbol-auth/ServletRegister";
 	var datos= 'usernamer='+usernamer+'&passwordr='+passwordr+'&name='+name+'&email='+email+'';
 	$.ajax({
