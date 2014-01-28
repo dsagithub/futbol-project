@@ -1,19 +1,23 @@
 var API_BASE_URL = "http://localhost:8080/futbol-api";
-var user;
-var pass;
+
 var datos;
 
 $(document).ready(function(e){
-
+	
+	var user = $.cookie('usuario');
+	var pass =  $.cookie('password');
+	var Linkequipo = $.cookie('Linkequipo')
+	console.log("user");
+	console.log(user);
+	
 	var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+user;
 	 htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li onClick="javascript:deletecookie()"><a><i class="fa fa-power-off" ></i> Salir</a></li></ul></li></ul>';
 						
-	$('#usuario').html(htmlString);	
-	
-	var linkretra = $.cookie('LinkRetransmision');
+	$('#usuario').html(htmlString);		
+
+var linkretra = $.cookie('LinkRetransmision');
 	console.log(linkretra);
-	var user = $.cookie('usuario');
-	var pass =  $.cookie('password');
+	
 	getRetransmisiones();
 	getComments();
 });
@@ -33,10 +37,30 @@ if (text == ""){
 
 }
 else {
-	
-	var url = linkretra + '/comentarios'; 
+	var user = $.cookie('usuario');
+	var pass =  $.cookie('password');
+	var linkretra = $.cookie('LinkRetransmision');
+	var url2 = API_BASE_URL + "/users/" + user;
+	$.ajax({
+		url : url2,
+		type : 'GET',
+		crossDomain : true,
+		beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
 
-	datos= '{"texto":"'+text+'","idUsuario":"1","tiempo":"12","media":""}';
+		},
+		
+		success : function(data, status, jqxhr) {
+			var user = $.cookie('usuario');
+			var pass =  $.cookie('password');
+			var response = $.parseJSON(jqxhr.responseText);
+			var iduser = response.idusuario;
+			var linkretra = $.cookie('LinkRetransmision');
+			var url = linkretra + '/comentarios'; 
+			var text = $('#text').val();
+	var datos= '{"texto":"'+text+'","idUsuario":' + iduser +',"tiempo":"","media":""}';
 	
 	$.ajax({
 		url : url,
@@ -58,20 +82,40 @@ else {
 		},
 		error : function(jqXHR, options, error) {}
 		});
+			
+			
+	
+		},
+		error : function(jqXHR, options, error) {
+					BootstrapDialog.confirm('Comentario NO enviado');
+
+		
+		}
+	});
 	
 	
 }
 
 getComments();
 
+setTimeout ("redireccionar()", 2000);
+
+
+
 }
+function redireccionar()
+{
+	window.location.href="http://localhost:8080/futbol/VistaUsuario/Retransmision.html"
+
+}
+
 function getRetransmisiones() {
 	var user = $.cookie('usuario');
 	var pass =  $.cookie('password');
 	var linkretra = $.cookie('LinkRetransmision');
 	console.log("1inkretra seguidamente");
 	console.log(linkretra);
-	var url = linkretra + '/retra?offset=0&length=5';
+	var url = linkretra + '/retra?offset=0&length=15';
 	//var url = API_BASE_URL + '/campeonato/'+ idclub +'/calendario/' + idequipo +'/retra?offset=0&length=5';
 
 	$.ajax({
@@ -108,8 +152,8 @@ function getRetransmisiones() {
 				if (i==0){
 					console.log("dentro funcion crear lista retra");
 					console.log(retra);
-					
-				
+				console.log("retraprueva");	
+				console.log(retra.texto);
 				htmlString += '<div class="panel panel-default"> <div class="panel-heading"><h3 class="panel-title"> Minuto: '+retra.tiempo +
 				'<h3 class="panel-right">' +retra.texto;	
 				if  (retra.media == null){
@@ -147,7 +191,8 @@ function getComments() {
 	console.log(linkretra);
 
 
-	var url = linkretra + '/comentarios?offset=0&length=5'; 
+	var url = linkretra + '/comentarios?offset=0&length=15'; 
+	console.log("linkdelscomentaris");
 	console.log(url)
 
 $.ajax({
@@ -216,6 +261,8 @@ if(i==5){
 	htmlString += '</div>';
 				}
 			})
+			
+			
 
 		$('#commshow').html(htmlString);
 

@@ -41,11 +41,11 @@ function getListJugadores(search) {
 	console.log("funcion getListJugadores")
 	var url;
 	if (search!=null){
-		url = Linkequipo + '/jugadores?offset=0&length=5&pattern='+search; 
+		url = Linkequipo + '/jugadores?offset=0&length=15&pattern='+search; 
 		console.log("search");
 		console.log(search)
 	}else{
-		url = Linkequipo + '/jugadores?offset=0&length=5'; 
+		url = Linkequipo + '/jugadores?offset=0&length=15'; 
 		console.log(url);
 		console.log("no search")
 	}
@@ -152,7 +152,7 @@ function getPartidosList(){
 			var pass =  $.cookie('password');
 			console.log("campeonato");
 			console.log(response.campeonato);
-			var url2 = API_BASE_URL + 'campeonato/'+ response.campeonato +'/calendario?offset=0&length=5';
+			var url2 = API_BASE_URL + 'campeonato/'+ response.campeonato +'/calendario?offset=0&length=15';
 			console.log("url");
 			console.log(url2);
 			$.ajax({
@@ -244,9 +244,12 @@ var pass = $.cookie('password');
 function createcookie(linkRetransmision) {
 	console.log("dentro funcion cookie retra");
 		console.log(linkRetransmision);
-		
+		var user = $.cookie('usuario');
+
+		var pass =  $.cookie('password');
 		$.cookie('LinkRetransmision', linkRetransmision);
-		
+		$.cookie('usuario', user);
+		$.cookie('password', pass);
 		window.location.href="http://localhost:8080/futbol/VistaUsuario/Retransmision.html"
 	      
 	                

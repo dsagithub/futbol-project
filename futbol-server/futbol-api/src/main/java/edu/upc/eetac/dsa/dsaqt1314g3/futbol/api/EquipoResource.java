@@ -87,7 +87,7 @@ public class EquipoResource {
 			ResultSet rs = stmt.executeQuery(sql);
 			if (rs.next()) {
 				Equipo equipo2 = new Equipo();
-				equipo2.setCampnombre(rs.getString("nombre"));
+				//equipo2.setCampnombre(rs.getString("nombre"));
 				equipo2.setIdClub(clubid);
 				equipo2.setIdEquipo(rs.getString("idequipo"));
 				equipo2.setNombre(rs.getString("nombre"));
@@ -102,7 +102,7 @@ public class EquipoResource {
 				icount++;
 				while (rs.next()) {
 					Equipo equipo = new Equipo();
-					equipo.setCampnombre(rs.getString("nombre"));
+					//equipo.setCampnombre(rs.getString("nombre"));
 					equipo.setIdClub(clubid);
 					equipo.setIdEquipo(rs.getString("idequipo"));
 					equipo.setNombre(rs.getString("nombre"));
