@@ -1,28 +1,18 @@
 var API_BASE_URL = "http://localhost:8080/futbol-api/";
-var user;
-var pass;
 
 $(document).ready(function(e){
-	
 var user = $.cookie('usuario');
-
 var pass =  $.cookie('password');
 var Linkequipo = $.cookie('Linkequipo')
-
-
 var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+user;
- htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li onClick="javascript:deletecookie()"><a><i class="fa fa-power-off" ></i> Salir</a></li></ul></li></ul>';
-					
+ htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li> <a href="perfilusuario.html">Ver perfil</a></li><li onClick="javascript:deletecookie()"><a><i class="fa fa-power-off" ></i> Salir</a></li></ul></li></ul>';				
 $('#usuario').html(htmlString);		
-
-
 getListJugadores();
 getPartidosList();
 });
 
 $("#button_search").click(function(e){
 	e.preventDefault();
-	console.log("botooon");
 	var msg = $('#query').val();
 	console.log(msg);
 	getListJugadores(msg);
@@ -38,15 +28,12 @@ function getListJugadores(search) {
 	var Linkequipo = $.cookie('Linkequipo')
 	var usuario = $.cookie('usuario');
 	var pass =  $.cookie('password');
-	console.log("funcion getListJugadores")
 	var url;
 	if (search!=null){
-		url = Linkequipo + '/jugadores?offset=0&length=15&pattern='+search; 
+		url = Linkequipo + '/jugadores?offset=0&length=5&pattern='+search; 
 		console.log("search");
-		console.log(search)
 	}else{
-		url = Linkequipo + '/jugadores?offset=0&length=15'; 
-		console.log(url);
+		url = Linkequipo + '/jugadores?offset=0&length=5'; 
 		console.log("no search")
 	}
 	$.ajax({
@@ -61,23 +48,12 @@ function getListJugadores(search) {
 		},
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-
-			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Dni</th><th>Nombre</th><th>Apellidos</th></tr></thead><tbody>';
-//var htmlString = '';
-			
-			
+			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Dni</th><th>Nombre</th><th>Apellidos</th></tr></thead><tbody>';	
 			$.each(response.jugadores, function(i,v){
 				var jugador = v;
-				console.log("preeeeeeeeeva");
 				console.log(response.jugadores);
-				//htmlString += '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Dni</th><th>Nombre</th><th>Apellidos</th></tr></thead><tbody>';
 				htmlString += '<td>'+jugador.dni+'</td><td>'+jugador.nombre+'</td><td>'+jugador.apellidos+'</td></tr>';
-				
-				
-			})
-			
-
-		
+			})		
 			var next = "";
 			var prev = "";
 			$.each(response.links, function(i,v){
@@ -85,22 +61,20 @@ function getListJugadores(search) {
 				console.log(links);				
 				if (links.rel=="next"){
 					next = "'"+links.uri+"'";
-					console.log(next);
 				}
 				else if (links.rel=="prev"){
 					prev = "'"+links.uri+"'";
-					console.log(prev);
 				}				
 			})
 			if (prev!=""){
-				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListjURL('+prev+')"><a>Previous</a></li>';
 			}else{
-				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListjURL('+prev+')"><a>Previous</a></li>';
 			}
 			if (next!=""){
-				htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				htmlString += '<li class="pull-right" onClick="javascript:getListjURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
 			}else{
-				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Next</a></li></ul>';
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListjURL("'+next+'")">Next</a></li></ul>';
 			}			
 			$('#listshow').html(htmlString);
 		},
@@ -108,6 +82,55 @@ function getListJugadores(search) {
 		});
 }
 	
+function getListjURL(url){
+	var user = $.cookie('usuario');
+	var pass =  $.cookie('password');
+	$.ajax({
+		url : url,
+		type : 'GET',
+		crossDomain : true,
+		beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+
+		},
+		success : function(data, status, jqxhr) {
+			var response = $.parseJSON(jqxhr.responseText);
+			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Dni</th><th>Nombre</th><th>Apellidos</th></tr></thead><tbody>';
+			$.each(response.jugadores, function(i,v){
+				var jugador = v;
+				htmlString += '<td>'+jugador.dni+'</td><td>'+jugador.nombre+'</td><td>'+jugador.apellidos+'</td></tr>';				
+			})
+			var next = "";
+			var prev = "";
+			$.each(response.links, function(i,v){
+				var links = v;
+				if (links.rel=="next"){
+					next = "'"+links.uri+"'";
+					console.log(next);
+				}
+				else if (links.rel=="prev"){
+					prev = "'"+links.uri+"'";
+				}				
+			})
+			if (prev!=""){
+				htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListjURL('+prev+')"><a>Previous</a></li>';
+			}else{
+				htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListjURL('+prev+')"><a>Previous</a></li>';
+			}
+			if (next!=""){
+				htmlString += '<li class="pull-right" onClick="javascript:getListjURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+			}else{
+				htmlString += '<li class="hide pull-right"><a onClick="javascript:getListjURL("'+next+'")">Next</a></li></ul>';
+			}			
+			$('#listshow').html(htmlString);
+		},
+		error : function(jqXHR, options, error) {}
+		});
+		
+	
+}
 function deletecookie(){
 	console.log("dentro delete cookie");
 	$.removeCookie('usuario');
@@ -122,11 +145,7 @@ function getPartidosList(){
 	var linkequipo = $.cookie('Linkequipo')
 	var user = $.cookie('usuario');
 	var pass =  $.cookie('password');
-		console.log("funcion GetPArtidos")
 		url = linkequipo;
-		console.log("aqui equipo url");
-		console.log(linkequipo);
-		console.log(url);
 	$.ajax({
 		url : url,
 		type : 'GET',
@@ -139,22 +158,11 @@ function getPartidosList(){
 
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
-			console.log("responsta");
-			console.log(response);
-			console.log("respone");
-			console.log(response.campeonato);
 			var campeonatoid = response.campeonato;
-			console.log(campeonatoid);
-			
-			console.log(campeonatoid);
 			var linkequipo = $.cookie('Linkequipo')
 			var user = $.cookie('usuario');
 			var pass =  $.cookie('password');
-			console.log("campeonato");
-			console.log(response.campeonato);
-			var url2 = API_BASE_URL + 'campeonato/'+ response.campeonato +'/calendario?offset=0&length=15';
-			console.log("url");
-			console.log(url2);
+			var url2 = API_BASE_URL + 'campeonato/'+ campeonatoid +'/calendario?offset=0&length=5';
 			$.ajax({
 			url : url2,
 			type : 'GET',
@@ -190,14 +198,14 @@ function getPartidosList(){
 					}				
 				})
 				if (prev!=""){
-					htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+					htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListpartidoURL('+prev+','+campeonatoid+')"><a>Previous</a></li>';
 				}else{
-					htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListURL('+prev+')"><a>Previous</a></li>';
+					htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListpartidoURL('+prev+','+campeonatoid+')"><a>Previous</a></li>';
 				}
 				if (next!=""){
-					htmlString += '<li class="pull-right" onClick="javascript:getListURL('+next+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+					htmlString += '<li class="pull-right" onClick="javascript:getListpartidoURL('+next+','+campeonatoid+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
 				}else{
-					htmlString += '<li class="hide pull-right"><a onClick="javascript:getListURL("'+next+'")">Next</a></li></ul>';
+					htmlString += '<li class="hide pull-right"><a onClick="javascript:getListpartidoURL('+next+','+campeonatoid+')">Next</a></li></ul>';
 				}			
 				$('#partidosshow').html(htmlString);
 			},
@@ -213,6 +221,83 @@ function getPartidosList(){
 }
 
 
+function getListpartidoURL(url,campeonatoid){
+	console.log("boton url");
+	console.log(url);
+	var user = $.cookie('usuario');
+	var pass =  $.cookie('password');
+	$.ajax({
+		url : url,
+		type : 'GET',
+		crossDomain : true,
+			beforeSend: function (request)
+		{
+			request.withCredentials = true;
+			request.setRequestHeader("Authorization", "Basic "+ btoa(user+":"+pass));
+		},
+
+		success : function(data, status, jqxhr) {
+			var response = $.parseJSON(jqxhr.responseText);
+			var linkequipo = $.cookie('Linkequipo')
+			var user = $.cookie('usuario');
+			var pass =  $.cookie('password');
+			var url2 = API_BASE_URL + 'campeonato/'+ campeonatoid +'/calendario?offset=0&length=5';
+			$.ajax({
+			url : url2,
+			type : 'GET',
+			crossDomain : true,
+			beforeSend: function (request)
+			{
+				request.withCredentials = true;
+				request.setRequestHeader("Authorization", "Basic "+ btoa(user+':'+pass));
+
+			},
+			success : function(data, status, jqxhr) {
+				var response = $.parseJSON(jqxhr.responseText);
+				var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Fecha</th><th>Hora</th><th>Jornada</th><th>EquipoA</th><th>EquipoB</th><th>Campeonato</th></tr></thead><tbody>';
+
+				$.each(response.calendarios, function(i,v){
+					var calendario = v;
+					var linkself="'"+calendario.links[0].uri+"'";
+					htmlString += '<tr onClick="javascript:getRetransmision('+linkself+');"><td>'+calendario.fecha+'</td><td>'+calendario.hora+'</td><td>'+calendario.jornada+'</td><td>'+calendario.equipoA+'</td><td>'+calendario.equipoB+'</td><td>'+calendario.nomCampeonato+'</td></tr>'
+					console.log(htmlString);
+				})
+				var next = "";
+				var prev = "";
+				$.each(response.links, function(i,v){
+					var links = v;
+					console.log(links);				
+					if (links.rel=="next"){
+						next = "'"+links.uri+"'";
+						console.log(next);
+					}
+					else if (links.rel=="prev"){
+						prev = "'"+links.uri+"'";
+						console.log(prev);
+					}				
+				})
+				if (prev!=""){
+					htmlString += '</tbody></table><ul class="pager"><li class="pull-left" onClick="javascript:getListpartidoURL('+prev+','+campeonatoid+')"><a>Previous</a></li>';
+				}else{
+					htmlString += '</tbody></table><ul class="pager"><li class="hide pull-left" onClick="javascript:getListpartidoURL('+prev+','+campeonatoid+')"><a>Previous</a></li>';
+				}
+				if (next!=""){
+					htmlString += '<li class="pull-right" onClick="javascript:getListpartidoURL('+next+','+campeonatoid+')"><a type="submit" id="next" name="next" >Next</a></li></ul>';
+				}else{
+					htmlString += '<li class="hide pull-right"><a onClick="javascript:getListpartidoURL('+next+','+campeonatoid+')">Next</a></li></ul>';
+				}			
+				$('#partidosshow').html(htmlString);
+			},
+			error : function(jqXHR, options, error) {}
+			});	
+			
+			
+			
+		},
+		error : function(jqXHR, options, error) {}
+		});
+	
+}
 
 function getRetransmision(url){
 	console.log("Has clickado en un partido");
