@@ -52,14 +52,15 @@
 		<div id="page-wrapper">
 
 			<div class="row">
-				<div class="col-lg-12">
-					<h1> Retransmisión de Partido <small></small></h1>
+				<div style="background-color:rgba(255, 255, 255, 0.5)" class="col-lg-12">
+					<h1> Retransmisión de Partido  <small> </small></h1>
+										</div>
+					
 					
 					<div class="alert alert-info alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 						Retransmisión del partido. Arriba, las retransmisiones del partido.
 						Abajo los comentarios de los usuarios y la opción de enviar un nuevo comentario.
-					</div>
 				</div>
 			</div><!-- /.row -->
 			<div class="row">
@@ -98,7 +99,7 @@
 				
 					<div class="form-group">
                   <label style="background-color:rgba(255, 255, 255, 0.5)" class="control-label" for="text">Escribe tu comentario:</label>
-                  <input class="form-control input-lg" type="text" placeholder="Escribe tu comentario aqui." id="text">
+                  <input class="form-control input-lg" type="text" placeholder="Escribe tu comentario aqui." maxlength="45" id="text">
                 </div>
 					
        <button type="submit" class="btn btn-info" onclick="sendComment()" id="send">
