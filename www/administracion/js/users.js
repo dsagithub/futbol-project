@@ -1,13 +1,32 @@
-var API_BASE_URL = "http://localhost:8080/futbol-api/users";
+var API_BASE_URL = "http://147.83.7.157:8080/futbol-api/users";
 var pass;
 var user;
 var userId;
 
 $(document).ready(function(e){
-	user="admin";
-	pass="admin";
+	gestioncookie();
 	getList();
 });
+
+function gestioncookie(){
+	user=$.cookie('usuario');
+	pass=$.cookie('password');
+	if(user!="admin"){
+		window.location="../index.html";
+	}else{
+		var usuario = user;
+		var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>&nbsp;'+usuario;
+		htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"><a href="#"><li onClick="javascript:cerrarsesion()"><i class="fa fa-power-off"></i>&nbsp; Salir</a></li></a></ul></li></ul>';
+		$('#usuario').html(htmlString);	
+	}
+}
+function cerrarsesion(){
+	alertify.alert("Estás a punto de cerrar sesión. Continuar?", function (e) {
+		if (e) {
+      window.location="../index.html";
+  }
+});
+}
 
 function getList(search) {
 	var url;

@@ -98,7 +98,9 @@ public class CalendarioResource {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Calendario calendario = new Calendario();
-				calendario.setNomCampeonato(rs.getString("nombre"));
+				if (shjornada == null) {
+					calendario.setNomCampeonato(rs.getString("nombre"));
+				}
 				calendario.setIdCampeonato(rs.getString("idcampeonato"));
 				calendario.setIdPartido(rs.getString("idpartido"));
 				calendario.setIdEquipoA(rs.getString("idequipoa"));

@@ -1,16 +1,31 @@
-var API_BASE_URL = "http://localhost:8080/futbol-api";
+var API_BASE_URL = "http://147.83.7.157:8080/futbol-api";
 
 $(document).ready(function(e){
-	user=$.cookie('usuario');
-	pass=$.cookie('password');
-	var usuario = user;
-	var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>'+usuario;
-	htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"> <li class="divider"></li> <li><a href="http://localhost:8080/futbol/VistaUsuario/perfilusuario.html">Ver perfil</a></li><li><a href="http://localhost:8080/futbol/index.html"><i class="fa fa-power-off"></i> Salir</a></li></ul></li></ul>';
-	$('#usuario').html(htmlString);		
+	gestioncookie();
 	getClubs();
 	getUsers();
 	getCampe();
 });
+
+function gestioncookie(){
+	user=$.cookie('usuario');
+	pass=$.cookie('password');
+	if(user!="admin"){
+		window.location="../index.html";
+	}else{
+		var usuario = user;
+		var htmlString = '<ul class="nav navbar-nav navbar-right navbar-user"><li class="dropdown user-dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-user"></i>&nbsp;'+usuario;
+		htmlString += '<b class="caret"></b></a><ul class="dropdown-menu"><a href="#"><li onClick="javascript:cerrarsesion()"><i class="fa fa-power-off"></i>&nbsp; Salir</a></li></a></ul></li></ul>';
+		$('#usuario').html(htmlString);	
+	}
+}
+function cerrarsesion(){
+	alertify.alert("Estás a punto de cerrar sesión. Continuar?", function (e) {
+		if (e) {
+      window.location="../index.html";
+  }
+});
+}
 
 function getClubs() {
 	var url = API_BASE_URL + '/club?offset=0&length=9999'; 
