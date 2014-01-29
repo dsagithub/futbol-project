@@ -222,8 +222,8 @@ function getUser(user,pass) {
 			var response = $.parseJSON(jqxhr.responseText);
 			var namehtmlcampe = "Información del usuario " + response.name;
 			var htmlString = '<div class="col-lg-4"><dl class="dl-horizontal"><dt>Username</dt><dd>'+response.username+'</dd><dt>Nombre</dt><dd>'+response.name+'</dd><dt>Email</dt><dd>'+response.email+'</dd></dl></div>';
-			var nombre = '<input type="text" class="form-control" id="newname" placeholder="' + response.name +'">';
-			var Email= '<input type="text" class="form-control" id="newemail" placeholder="' + response.email +' ">';
+			var nombre = '<input type="text" class="form-control" id="newname" maxlength="45" placeholder="' + response.name +'">';
+			var Email= '<input type="text" class="form-control" id="newemail" maxlength="45" placeholder="' + response.email +' ">';
 
 
 			$('#nameshow').html(nombre);

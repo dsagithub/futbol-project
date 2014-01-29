@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://localhost:8080/futbol-api/club/";
+var API_BASE_URL = "http://147.83.7.157:8080/futbol-api/club/";
 
 
 
@@ -181,6 +181,7 @@ var pass = $.cookie('password');
 		success : function(data, status, jqxhr) {
 			var response = $.parseJSON(jqxhr.responseText);
 			
+			
 			var htmlString = '<table class="table table-bordered table-hover table-striped tablesorter"><thead><tr><th>Id Campeonato</th><th>Id Equipo</th><th>Nombre</th></tr></thead><tbody>';
 			$.each(response.equipos, function(i,v){
 				var equipo = v;
@@ -213,7 +214,10 @@ var pass = $.cookie('password');
 			}			
 			$('#clubshow').html(htmlString);	
 		},
-		error : function(jqXHR, options, error) {}
+		error : function(jqXHR, options, error) {
+		noequipo();
+
+	}
 		});
 
 }
@@ -277,6 +281,17 @@ var pass = $.cookie('password');
         	var htmlString = 'No hay un club seleccionado';	
 			$('#clubshow').html(htmlString);
         }
+         function noequipo(){
+        	var htmlString = 'No hay equipos para este club';	
+			$('#clubshow').html(htmlString);
+        }
+function nonoticias(){
+	console.log("dentro funcion");
+var htmlString = '<p><font color="white">No hay noticias para este club</font></p>';
+	$('#noticiasshow').html(htmlString);
+	
+	 
+}
 
 
 
@@ -312,7 +327,7 @@ function createcookie(linkequipo) {
 
 	
 	$.cookie('Linkequipo', linkequipo);
-	window.location.href="http://localhost:8080/futbol/VistaUsuario/vistaequipo.html"
+	window.location.href="http://147.83.7.157:8080/futbol/VistaUsuario/vistaequipo.html"
       
                 
 }
@@ -320,6 +335,8 @@ function createcookie(linkequipo) {
 function getNoticiasList(idclub) {
 var usuario = $.cookie('usuario');
 var pass = $.cookie('password');
+
+
 
 
 
@@ -347,8 +364,17 @@ var pass = $.cookie('password');
 					
 			});
 			
+
 			var noticias = response.noticias;
 			var htmlString = "";
+
+			console.log(noticias);
+			if (noticias==""){
+				nonoticias();
+				
+				
+			}
+		else{
 			
 
 			$.each(noticias, function(i,v){
@@ -365,16 +391,19 @@ var pass = $.cookie('password');
 				htmlString +='</div><br/></div></center> '
 			i++;
     }
-if(i==5){
+if(i==10){
 		htmlString += '</div>';
 					}
 				})
 
 			$('#noticiasshow').html(htmlString);
-
+}
 		},
+
 		error : function(jqXHR, options, error) {
+
 			//callbackError(jqXHR, options, error);
+
 		}
 	});
 }

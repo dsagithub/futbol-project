@@ -21,7 +21,7 @@
 <!-- Page Specific Plugins -->
 <script src="../administracion/js/tablesorter/jquery.tablesorter.js"></script>
 <script src="../administracion/js/tablesorter/tables.js"></script>
-<script src="clubsusuario.js"></script>
+<script src="js/clubsusuario.js"></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js "></script>
 <link href="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/css/bootstrap-dialog.css" rel="stylesheet" type="text/css">
 <script src="http://nakupanda.github.io/bootstrap3-dialog/assets/bootstrap-dialog/js/bootstrap-dialog.js"></script>
@@ -82,17 +82,22 @@
 			<div class="col-lg-6">
 				<div class="panel panel-default">
 					<div style="background-color:rgba(255, 255, 255, 0.9)" class="panel-heading">Información de Equipos del Club</div>
-					<div style="background-color:rgba(255, 255, 255, 0.9)" class="panel-body"  id="clubshow">
-						No hay un club seleccionado
+					<div  style="background-color:rgba(255, 255, 255, 0.9)" class="panel-body"  id="clubshow" >
+						No hay un club seleccionado 
 					</div>
 				</div>
 			</div>
 <br> </br>
 			<div class="col-lg-8">
 				<div class="panel panel-default" >
-					<div class="panel-heading">Noticias del club</div>
+					<div class="panel-heading" >Noticias del club</div>
+
+
+
 					<div style="background-image: url(http://www.minuto91.tv/fotos/abc/20121221balon_de_futbol_275.jpg);"class="panel-body" id="noticiasshow">
-						No hay un club seleccionado
+						<p><font color="white">No hay un club seleccionado</font></p>
+						<div id="nonoticias"></div>
+
 					</div>
 				</div>
 			</div>

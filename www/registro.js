@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://localhost:8080/futbol-api";
+var API_BASE_URL = "http://147.83.7.157:8080/futbol-api";
 
 
 $(document).ready(function(e){
@@ -25,7 +25,7 @@ var username = $('#username').val();
 
 	var password = $('#password').val();
 
-	var url= "http://localhost:8080/futbol-auth/ServletLogin";
+	var url= "http://147.83.7.157:8080/futbol-auth/ServletLogin";
 	var datos= 'username='+username+'&password='+password+'';
 	
 	
@@ -52,7 +52,7 @@ var username = $('#username').val();
 	var usuario = $.cookie('usuario');
 	var pass = $.cookie('password');
 	
-		window.location.href="administracion/clubs.html"
+		window.location.href="administracion/index.html"
 	}
 	 else if (response=="successusuario"){
 
@@ -108,9 +108,9 @@ function registro(usernamer,passwordr,name,email){
 		
             $('#error').html(htmlString);
 
-	}else
+	}else 
 	
-	var url= "http://localhost:8080/futbol-auth/ServletRegister";
+	var url= "http://147.83.7.157:8080/futbol-auth/ServletRegister";
 	var datos= 'usernamer='+usernamer+'&passwordr='+passwordr+'&name='+name+'&email='+email+'';
 	$.ajax({
 		url : url,
