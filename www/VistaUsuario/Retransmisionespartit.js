@@ -54,7 +54,7 @@ else {
 			var linkretra = $.cookie('LinkRetransmision');
 			var url = linkretra + '/comentarios'; 
 			var text = $('#text').val();
-	var datos= '{"texto":"'+text+'","idUsuario":' + iduser +',"tiempo":"","media":""}';
+	var datos= '{"texto":"'+text+'","idUsuario":' + iduser +',"media":""}';
 	
 	$.ajax({
 		url : url,
