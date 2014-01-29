@@ -1,5 +1,5 @@
 
-var API_BASE_URL = "http://localhost:8080/futbol-api/users";
+var API_BASE_URL = "http://147.83.7.157:8080/futbol-api/users";
 
 var userId;
 
@@ -36,7 +36,7 @@ function postuser(user,pass){
 	var user = $.cookie('usuario');
 	var pass =  $.cookie('password');
 	var passe = $('#pass').val();
-	var url1= "http://localhost:8080/futbol-auth/ServletLogin";
+	var url1= "http://147.83.7.157:8080/futbol-auth/ServletLogin";
 	var cpass= 'username='+user+'&password='+passe+'';
 	console.log(cpass);
 	console.log("nuevopost");

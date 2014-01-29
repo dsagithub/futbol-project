@@ -1,4 +1,4 @@
-var API_BASE_URL = "http://localhost:8080/futbol-api";
+var API_BASE_URL = "http://147.83.7.157:8080/futbol-api";
 
 var datos;
 
@@ -99,7 +99,7 @@ setTimeout ("redireccionar()", 2000);
 }
 function redireccionar()
 {
-	window.location.href="http://localhost:8080/futbol/VistaUsuario/Retransmision.html"
+	window.location.href="http://147.83.7.157:8080/futbol/VistaUsuario/Retransmision.html"
 
 }
 
