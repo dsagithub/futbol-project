@@ -78,10 +78,10 @@ public class EquipoResource {
 					sql = "select * from equipo where idcampeonatos=" + seacampe
 							+ " LIMIT " + offset + "," + length;
 				} else {
-					//sql = "select * from equipo where idclub=" + clubid
-						//	+ " LIMIT " + offset + "," + length;
-					sql = "select campeonatos.nombre, equipo.* from equipo, campeonatos where equipo.idcampeonatos=campeonatos.idcampeonatos and equipo.idclub ="
-							+ clubid + " LIMIT " + offset + "," + length;
+					sql = "select * from equipo where idclub=" + clubid
+							+ " LIMIT " + offset + "," + length;
+					//sql = "select campeonatos.nombre, equipo.* from equipo, campeonatos where equipo.idcampeonatos=campeonatos.idcampeonatos and equipo.idclub ="
+						//	+ clubid + " LIMIT " + offset + "," + length;
 				}
 			}
 			ResultSet rs = stmt.executeQuery(sql);
