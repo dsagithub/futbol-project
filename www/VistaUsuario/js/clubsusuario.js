@@ -327,7 +327,7 @@ function createcookie(linkequipo) {
 
 	
 	$.cookie('Linkequipo', linkequipo);
-	window.location.href="http://147.83.7.157:8080/futbol/VistaUsuario/vistaequipo.html"
+	window.location.href="vistaequipo.html"
       
                 
 }

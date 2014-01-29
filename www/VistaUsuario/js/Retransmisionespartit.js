@@ -99,7 +99,7 @@ setTimeout ("redireccionar()", 2000);
 }
 function redireccionar()
 {
-	window.location.href="http://147.83.7.157:8080/futbol/VistaUsuario/Retransmision.html"
+	window.location.href="Retransmision.html"
 
 }
 
