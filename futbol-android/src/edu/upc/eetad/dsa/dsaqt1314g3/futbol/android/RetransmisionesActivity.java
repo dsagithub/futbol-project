@@ -87,6 +87,7 @@ public class RetransmisionesActivity extends ListActivity {
 			}
 			Intent intent = new Intent(this, WriteRetransmision.class);
 			intent.putExtra("url", url);
+			intent.putExtra("url2", url2);
 			startActivity(intent);
 			
 			return true;

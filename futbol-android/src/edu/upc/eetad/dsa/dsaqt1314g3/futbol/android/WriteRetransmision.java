@@ -118,7 +118,11 @@ public class WriteRetransmision extends Activity {
 	}
 	
 	private void showRetransmisiones(){
-		Intent intent = new Intent(this, CampeonatosActivity.class);
+		Bundle extra = this.getIntent().getExtras();
+		String url2 = null;
+		url2 = extra.getString("url2");
+		Intent intent = new Intent(this, RetransmisionesActivity.class);
+		intent.putExtra("url2", url2);
 		startActivity(intent);
 	}
 }
